@@ -225,8 +225,8 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useUsersStore } from '@/stores/users'
-import UserFormModal from './UserFormModal.vue'
-import UserDeleteModal from './UserDeleteModal.vue'
+import UserFormModal from './userFormModal.vue'
+import UserDeleteModal from './userDeleteModal.vue'
 
 const usersStore = useUsersStore()
 
