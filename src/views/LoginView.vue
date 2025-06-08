@@ -1,4 +1,4 @@
-<!-- views/LoginView.vue -->
+<!-- views/LoginView.vue - Vy för att logga in -->
 
 <template>
   <div class="login-container">
@@ -25,7 +25,7 @@
               </div>
 
               <form @submit.prevent="handleLogin" class="login-form" novalidate>
-                <!-- Användarnamninmatning med validering -->
+                <!-- Inmatning i formulär av användarnamn med validering -->
                 <div class="form-group">
                   <label for="username" class="form-label">Användarnamn</label>
                   <input id="username" v-model="form.username" type="text" class="form-control"
@@ -36,7 +36,7 @@
                   </div>
                 </div>
 
-                <!-- Lösenordsinmatning med validering -->
+                <!-- Inmatning i formulär av lösenord med validering -->
                 <div class="form-group">
                   <label for="password" class="form-label">Lösenord</label>
                   <input id="password" v-model="form.password" type="password" class="form-control"
@@ -121,14 +121,14 @@ const validateForm = () => {
     password: null
   }
 
-  // Validera användarnamn enligt systemkrav
+  // Validera användarnamn
   if (!form.value.username.trim()) {
     errors.value.username = 'Användarnamn är obligatoriskt'
   } else if (form.value.username.length < 3) {
     errors.value.username = 'Användarnamnet måste vara minst 3 tecken långt'
   }
 
-  // Validera lösenord enligt säkerhetskrav
+  // Validera lösenord 
   if (!form.value.password.trim()) {
     errors.value.password = 'Lösenord är obligatoriskt'
   } else if (form.value.password.length < 6) {
@@ -144,7 +144,7 @@ const handleLogin = async () => {
   // Rensa tidigare serverfelmeddelanden
   errorMessage.value = ''
 
-  // Kör frontend-validering innan API-anrop
+  // Kör frontendvalidering innan API-anrop
   if (!validateForm()) {
     return
   }

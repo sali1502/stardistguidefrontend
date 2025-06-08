@@ -247,7 +247,7 @@ const projectToDelete = ref(null)
 const projectForChecklists = ref(null)
 const successMessage = ref('')
 
-// För att skapa eller redigera kontrolleras med isEditing
+// Skapa eller redigera projekt styrs av isEditing
 const isEditing = computed(() => !!editingProject.value)
 
 // Funktioner för att öppna och stänga modaler
@@ -291,7 +291,7 @@ const handleSave = async (projectData, callback) => {
   try {
     let result
 
-    // Avgör skapa eller uppdatera baserat på isEditing
+    // Skapa eller uppdatera projekt styrs av isEditing
     if (isEditing.value) {
       result = await projectsStore.updateProject(editingProject.value.id || editingProject.value._id, projectData)
     } else {

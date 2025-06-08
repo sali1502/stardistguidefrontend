@@ -27,7 +27,7 @@ export const useProjectsStore = defineStore('projects', () => {
     error.value = errorMessage
   }
 
-  // Hämta alla projekt från backend-API:et
+  // Hämta alla projekt från backend
   const fetchProjects = async () => {
     setLoading(true)
     clearError()

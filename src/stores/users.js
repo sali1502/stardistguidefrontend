@@ -41,7 +41,7 @@ export const useUsersStore = defineStore('users', {
   },
 
   actions: {
-    // Hämta alla användare från backend-API:et
+    // Hämta alla användare från backend
     async fetchUsers() {
       this.loading = true
       this.error = null
@@ -70,7 +70,7 @@ export const useUsersStore = defineStore('users', {
         const result = await userService.createUser(userData)
 
         if (result.success) {
-          // Lägg till den nya användaren i state-arrayen
+          // Lägg till den nya användaren i statearrayen
           this.users.push(result.user)
         }
 
@@ -93,7 +93,7 @@ export const useUsersStore = defineStore('users', {
         const result = await userService.updateUser(id, userData)
 
         if (result.success) {
-          // Uppdatera användaren i state-arrayen (stöder både MongoDB _id och id)
+          // Uppdatera användaren i statearrayen (stöder både MongoDB _id och id)
           const index = this.users.findIndex(user => user.id === id || user._id === id)
           if (index !== -1) {
             this.users[index] = result.user
@@ -146,7 +146,7 @@ export const useUsersStore = defineStore('users', {
       this.error = null
     },
 
-    // Generera statistik för dashboard-visning
+    // Generera statistik för dashboardvisning
     getStatistics() {
       return {
         total: this.totalUsers,
@@ -159,7 +159,7 @@ export const useUsersStore = defineStore('users', {
       }
     },
 
-    // Hämta användare filtrerade efter specifik roll
+    // Hämta användare filtrerade efter roll
     getUsersByRole(role) {
       return this.users.filter(user => user.role === role)
     },

@@ -1,4 +1,3 @@
-
 <!-- components/admin/PostFormModal.vue -->
 
 <template>
@@ -174,7 +173,7 @@ const validateForm = () => {
 
 // Hantera formulärinlämning
 const handleSubmit = async () => {
-  // Markera alla fält som "berörda" vid submit för att visa eventuella fel
+  // Markera alla fält som berörda vid submit för att visa eventuella fel
   hasBeenTouched.value = {
     title: true,
     role: true,
@@ -275,7 +274,7 @@ watch(() => props.post, (newPost) => {
       role: newPost.role || '',
       content: newPost.content || ''
     }
-    // Vid redigering markera alla fält som redan "berörda".
+    // Vid redigering markera alla fält som redan berörda.
     hasBeenTouched.value = {
       title: true,
       role: true,

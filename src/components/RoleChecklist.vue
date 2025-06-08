@@ -2,7 +2,7 @@
 
 <template>
   <div class="role-checklist">
-    <!-- Checklistsidhuvud med rollspecifik information -->
+    <!-- Header för checklista med rollspecifik information -->
     <div class="card mb-4">
       <div class="card-header">
         <div class="d-flex justify-content-between align-items-center">

@@ -42,7 +42,7 @@ const handleLogout = () => {
 
   isLoggingOut.value = true
 
-  // Logoutmetod från auth.js
+  // Logoutmetod från auth store
   authStore.logout()
 }
 </script>

@@ -11,7 +11,7 @@
               Välj projekt
             </label>
 
-            <!-- Bootstrap rullgardinsmeny  -->
+            <!-- Bootstrap dropdownmeny  -->
             <div class="dropdown w-100">
               <button class="btn btn-light dropdown-toggle w-100 text-start" type="button" data-bs-toggle="dropdown"
                 :disabled="loading">
@@ -120,7 +120,7 @@ const selectedProjectName = computed(() => {
   return currentProject.value ? currentProject.value.name : ''
 })
 
-// Beräknat värde för projektstatus baserat på progress
+// Beräknat värde för projektstatus baserat på progression
 const projectStatus = computed(() => {
   if (!currentProject.value || projectProgress.value.length === 0) {
     return 'active'
@@ -136,7 +136,7 @@ const projectStatus = computed(() => {
   return isCompleted ? 'completed' : 'active'
 })
 
-// Hantera projektval från rullgardinsmeny
+// Hantera projektval från dropdownmeny
 const selectProject = (project) => {
   const projectId = project ? (project.id || project._id) : ''
   selectedProject.value = projectId
@@ -246,7 +246,7 @@ onMounted(() => {
   background-color: #334155 !important;
 }
 
-/* Mobilanpassning för Bootstrap rullgardinsmeny */
+/* Mobilanpassning för Bootstrap dropdownmeny */
 @media (max-width: 576px) {
   .mobile-dropdown {
     max-width: calc(100vw - 2rem) !important;
@@ -297,7 +297,7 @@ onMounted(() => {
   z-index: 10001 !important;
 }
 
-/* Säkerställ att innehåll i rullgardinsmeny placeras ovanpå övrig text */
+/* Säkerställ att innehåll i dropdownmeny placeras ovanpå övrig text */
 .project-selector {
   position: relative;
   z-index: 9998;

@@ -123,7 +123,7 @@ const validateForm = () => {
 
 // Hantera formulärinlämning
 const handleSubmit = async () => {
-  // Markera alla fält som "berörda" vid submit för att visa eventuella fel
+  // Markera alla fält som berörda vid submit för att visa eventuella fel
   hasBeenTouched.value = {
     name: true
   }
@@ -164,14 +164,14 @@ const handleSubmit = async () => {
         return
       }
 
-      // Hantera fel via erroregenskap
+      // Hantera fel via error-egenskap
       if (result.error) {
         apiError.value = result.error
         loading.value = false
         return
       }
 
-      // Hantera fel via message utan successflagga
+      // Hantera fel via message utan success-flagga
       if (result.message && result.success !== true) {
         apiError.value = result.message
         loading.value = false

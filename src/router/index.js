@@ -96,7 +96,7 @@ const routes = [
     }
   },
 
-  // Catch-all rutt för 404-hantering - måste vara sist
+  // Catch-all rutt för 404-hantering
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',

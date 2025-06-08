@@ -35,22 +35,22 @@
 
     <!-- Innehåll för vald flik -->
     <div class="tab-content">
-      <!-- Översiktsflik med statistik och snabbnavigation -->
+      <!-- Översiktsflik med statistik och navigation -->
       <div v-if="activeTab === 'overview'" class="tab-pane active">
         <AdminOverview @navigate="activeTab = $event" />
       </div>
 
-      <!-- Användarhanteringsflik för CRUD-operationer på användare -->
+      <!-- Användarhanteringsflik med CRUD för användare -->
       <div v-if="activeTab === 'users'" class="tab-pane active">
         <UserManagement />
       </div>
 
-      <!-- Projekthanteringsflik för CRUD-operationer på projekt -->
+      <!-- Projekthanteringsflik med CRUD för projekt -->
       <div v-if="activeTab === 'projects'" class="tab-pane active">
         <ProjectManagement />
       </div>
 
-      <!-- Inläggshanteringsflik för CRUD-operationer på inlägg -->
+      <!-- Inläggshanteringsflik med CRUD för inlägg -->
       <div v-if="activeTab === 'posts'" class="tab-pane active">
         <PostManagement />
       </div>
@@ -86,7 +86,7 @@ const activeTab = ref('overview')
   transition: all 0.2s ease;
 }
 
-/* Hover-effekt för navigationslänkar */
+/* Hovereffekt för navigationslänkar */
 .admin-navigation .nav-link:hover {
   color: #343a40;
   background-color: #f8f9fa;
@@ -113,7 +113,7 @@ const activeTab = ref('overview')
   animation: fadeIn 0.3s ease-in;
 }
 
-/* Fade-in animation för mjuka övergångar */
+/* Fadein animation för mjuka övergångar */
 @keyframes fadeIn {
   from {
     opacity: 0;

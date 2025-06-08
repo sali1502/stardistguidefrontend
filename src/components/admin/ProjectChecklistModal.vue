@@ -208,7 +208,7 @@ const cancelItemDelete = () => {
   itemToDelete.value = null
 }
 
-// Gör URL:er i text klickbara - EXAKT samma som PostManagement.vue
+// Gör URL:er i text klickbara
 const makeLinksClickable = (text) => {
   if (!text) return ''
   const urlRegex = /(https?:\/\/[^\s<>"']+)/gi

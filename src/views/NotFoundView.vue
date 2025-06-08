@@ -115,7 +115,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import BaseDashboard from '@/components/BaseDashboard.vue'
 
-// Router och store-instanser
+// Router och storeinstanser
 const router = useRouter()
 const route = useRoute()
 const authStore = useAuthStore()
@@ -129,7 +129,7 @@ const requestedPath = computed(() => {
   return route.fullPath || window.location.pathname
 })
 
-// Kontrollera om användaren kan gå tillbaka i historiken
+// Kontrollera om användaren kan gå tillbaka
 const canGoBack = computed(() => {
   return window.history.length > 1
 })
@@ -161,7 +161,7 @@ const availablePages = computed(() => {
       pages.unshift(roleDashboards[userRole.value])
     }
 
-    // Administratörer kan se alla dashboards
+    // Admin kan se alla dashboards
     if (userRole.value === 'admin') {
       Object.entries(roleDashboards).forEach(([role, dashboard]) => {
         if (role !== 'admin' && !pages.find(p => p.path === dashboard.path)) {
@@ -199,7 +199,7 @@ const goBack = () => {
   if (canGoBack.value) {
     router.go(-1)
   } else {
-    // Om ingen historik finns, gå till startsidan istället
+    // Om ingen historik finns, gå till startsidan
     router.push(getHomeRoute())
   }
 }

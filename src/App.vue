@@ -1,5 +1,4 @@
 <!-- App.vue -->
-
 <!-- Rotkomponent för Vue-applikationen - hanterar routing och autentiseringsinitiering -->
 
 <template>
@@ -24,15 +23,9 @@ onMounted(() => {
 </script>
 
 <style>
-/* Global styling för hela applikationen */
+/* Styling för hela applikationen */
 #app {
   font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 }
 </style>
 
-<style>
-/* Global styling för hela applikationen */
-#app {
-  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-}
-</style>

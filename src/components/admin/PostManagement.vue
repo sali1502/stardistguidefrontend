@@ -252,7 +252,7 @@ const handleSave = async (postData) => {
   try {
     let result
 
-    // Skapa nytt eller redigera inlägg kontrolleras av isEditing
+    // Skapa nytt eller redigera inlägg styrs av isEditing
     if (isEditing.value) {
       result = await postsStore.updatePost(editingPost.value.id || editingPost.value._id, postData)
     } else {

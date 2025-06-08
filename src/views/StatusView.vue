@@ -29,7 +29,7 @@
             </h5>
           </div>
           <div class="card-body">
-            <!-- Progresskort för varje roll i projektet -->
+            <!-- Progressionskort för varje roll i projektet -->
             <div class="row g-4">
               <div v-for="progress in projectProgress" :key="progress._id" class="col-md-4">
                 <div class="progress-card">
@@ -44,7 +44,7 @@
                     </span>
                   </div>
 
-                  <!-- Visuell progressbar -->
+                  <!-- Visuell progressionsbar -->
                   <div class="progress mb-2" style="height: 8px;">
                     <div class="progress-bar" :class="getProgressBarClass(progress)"
                       :style="{ width: getProgressPercentage(progress) + '%' }"></div>
@@ -74,7 +74,7 @@
                 </div>
                 <div class="col-md-4">
                   <h4 class="text-success mb-1">{{ Math.round(getOverallProgress()) }}%</h4>
-                  <small class="text-muted">Övergripande progress</small>
+                  <small class="text-muted">Övergripande progression</small>
                 </div>
               </div>
             </div>
@@ -107,7 +107,7 @@
                     </span>
                   </div>
 
-                  <!-- Kompakt vy av rollframsteg -->
+                  <!-- Vy med rollframsteg -->
                   <div class="row g-2">
                     <div v-for="progress in projectGroup.progress" :key="progress._id" class="col-md-4">
                       <div class="mini-progress-card">
@@ -163,7 +163,7 @@ const statusMessage = computed(() => {
     : 'Välj ett projekt för att se detaljerad status.'
 })
 
-// Beräknad egenskap för att gruppera progress efter projekt
+// Beräknad egenskap för att gruppera progression efter projekt
 const groupedProgress = computed(() => {
   const groups = {}
   allProgress.value.forEach(progress => {
@@ -352,7 +352,7 @@ onMounted(() => {
   margin-bottom: 1rem;
 }
 
-/* Kompakta progresskort för översiktsvyn */
+/* Progressionskort för översiktsvyn */
 .mini-progress-card {
   background: #f8f9fa;
   border-radius: 6px;
@@ -365,7 +365,7 @@ onMounted(() => {
   box-shadow: 0 2px 8px rgba(30, 41, 59, 0.1);
 }
 
-/* Progressbar-styling */
+/* Progressionsbar-styling */
 .progress {
   border-radius: 10px;
   background-color: #e9ecef;

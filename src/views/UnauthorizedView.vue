@@ -73,7 +73,7 @@ import { computed } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import BaseDashboard from '@/components/BaseDashboard.vue'
 
-// Store-instans för autentisering
+// Storeinstans för autentisering
 const authStore = useAuthStore()
 
 // Beräknad egenskap för användarens roll

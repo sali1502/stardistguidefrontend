@@ -99,7 +99,7 @@ export const usePostsStore = defineStore('posts', {
         const result = await postService.updatePost(id, postData)
 
         if (result.success) {
-          // Uppdatera inlägget i state-arrayen
+          // Uppdatera inlägget i statearrayen
           const index = this.posts.findIndex(post => post.id === id || post._id === id)
           if (index !== -1) {
             this.posts[index] = result.post
