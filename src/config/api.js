@@ -5,7 +5,7 @@ import axios from 'axios'
 import { useAuthStore } from '@/stores/auth'
 
 // Grundläggande API-konfiguration
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://accessibility-guide-backend.onrender.com'
 
 // Samlade API-slutpunkter för enkel underhållning
 export const API_ENDPOINTS = {
