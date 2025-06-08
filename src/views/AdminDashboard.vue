@@ -61,7 +61,7 @@
 <script setup>
 import { ref } from 'vue'
 import BaseDashboard from '@/components/BaseDashboard.vue'
-import UserManagement from '@/components/admin/UserManagement.vue'
+import UserManagement from '@/components/admin/userManagement.vue'
 import ProjectManagement from '@/components/admin/ProjectManagement.vue'
 import PostManagement from '@/components/admin/PostManagement.vue'
 import AdminOverview from '@/components/admin/AdminOverview.vue'

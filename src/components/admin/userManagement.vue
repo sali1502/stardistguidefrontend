@@ -1,4 +1,4 @@
-<!-- components/admin/UserManagement.vue -->
+<!-- components/admin/userManagement.vue -->
 
 <template>
     <div class="user-management">
