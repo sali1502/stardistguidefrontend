@@ -6,10 +6,10 @@
     <div
       class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
       <div>
-        <h3 class="mb-1">
+        <h2 class="mb-1">
           <i class="bi bi-file-text me-2"></i>
           Inläggshantering
-        </h3>
+        </h2>
         <p class="text-muted mb-0">
           Skapa, redigera och radera inlägg
         </p>
@@ -28,23 +28,25 @@
     <div v-if="postsStore.error" class="alert alert-danger" role="alert">
       <i class="bi bi-exclamation-triangle-fill me-2"></i>
       {{ postsStore.error }}
-      <button type="button" class="btn-close float-end" @click="postsStore.clearError"></button>
+      <button type="button" class="btn-close float-end" @click="postsStore.clearError"
+        aria-label="Stäng felmeddelande"></button>
     </div>
 
     <!-- Framgångsmeddelande -->
     <div v-if="successMessage" class="alert alert-success" role="alert">
       <i class="bi bi-check-circle-fill me-2"></i>
       {{ successMessage }}
-      <button type="button" class="btn-close float-end" @click="successMessage = ''"></button>
+      <button type="button" class="btn-close float-end" @click="successMessage = ''"
+        aria-label="Stäng meddelande"></button>
     </div>
 
     <!-- Inläggstabell med responsiv design -->
     <div class="card">
       <div class="card-header">
-        <h5 class="mb-0">
+        <h3 class="mb-0">
           <i class="bi bi-table me-2"></i>
           Inläggslista
-        </h5>
+        </h3>
       </div>
       <div class="card-body">
         <!-- Laddningsindikator -->
@@ -307,16 +309,40 @@ const handleDelete = async () => {
   }
 }
 
-// Gör URL:er i text klickbara
+// Gör URL:er klickbara med beskrivande länktext
 const makeLinksClickable = (text) => {
   if (!text) return ''
-  const urlRegex = /(https?:\/\/[^\s<>"']+)/gi
+  
+  const urlRegex = /https?:\/\/[^\s<>"{}|\\^`]+/gi
+  
   return text.replace(urlRegex, (url) => {
-    const cleanUrl = url.replace(/[.,;:!?]+$/, '')
-    const punctuation = url.slice(cleanUrl.length)
-    return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" style="color: #0d6efd; text-decoration: none; border-bottom: 1px solid transparent; transition: all 0.2s ease;" onmouseover="this.style.borderBottomColor='#0d6efd'; this.style.color='#0a58ca'" onmouseout="this.style.borderBottomColor='transparent'; this.style.color='#0d6efd'" onclick="event.stopPropagation(); window.open('${cleanUrl}', '_blank', 'noopener,noreferrer'); return false;" title="${cleanUrl}">Länk</a>${punctuation}`
+
+    let cleanUrl = url
+    let punctuation = ''
+    
+    const punctuationMatch = url.match(/([.,!?;]+)$/)
+    if (punctuationMatch) {
+      const potentialPunct = punctuationMatch[1]
+      if (/^[.,!?;]+$/.test(potentialPunct)) {
+        cleanUrl = url.slice(0, -potentialPunct.length)
+        punctuation = potentialPunct
+      }
+    }
+    
+    try {
+      const urlObj = new URL(cleanUrl)
+      const domain = urlObj.hostname.replace('www.', '')
+      const path = urlObj.pathname.split('/')[1]
+      const linkText = path && path.length < 15 ? `${domain}/${path}` : domain
+      
+      return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="accessible-link" title="Öppnar ${linkText} i nytt fönster">${linkText}</a>${punctuation}`
+      
+    } catch (e) {
+      return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="accessible-link">Extern länk</a>${punctuation}`
+    }
   })
 }
+
 
 // Hämta ikon för given roll
 const getRoleIcon = (role) => {

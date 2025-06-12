@@ -130,14 +130,39 @@ const isFormValid = computed(() => {
     Object.keys(errors.value).length === 0
 })
 
-// Gör URL:er i text klickbara
+// Klickbar länk från backend
 const makeLinksClickable = (text) => {
   if (!text) return ''
   const urlRegex = /(https?:\/\/[^\s<>"']+)/gi
+  
   return text.replace(urlRegex, (url) => {
     const cleanUrl = url.replace(/[.,;:!?]+$/, '')
     const punctuation = url.slice(cleanUrl.length)
-    return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" style="color: #0d6efd; text-decoration: none; border-bottom: 1px solid transparent; transition: all 0.2s ease;" onmouseover="this.style.borderBottomColor='#0d6efd'; this.style.color='#0a58ca'" onmouseout="this.style.borderBottomColor='transparent'; this.style.color='#0d6efd'" onclick="event.stopPropagation(); window.open('${cleanUrl}', '_blank', 'noopener,noreferrer'); return false;" title="${cleanUrl}">Länk</a>${punctuation}`
+    
+    try {
+      const urlObj = new URL(cleanUrl)
+      const domain = urlObj.hostname.replace('www.', '')
+      const pathParts = urlObj.pathname.split('/').filter(part => part.length > 0)
+      
+      let linkText = domain
+      
+      // Om det finns en path, använd sista delen som titel
+      if (pathParts.length > 0) {
+        const lastPart = pathParts[pathParts.length - 1]
+        if (lastPart.length <= 30) {
+          linkText = lastPart
+            .replace(/-/g, ' ')
+            .replace(/_/g, ' ')
+            .replace(/\b\w/g, l => l.toUpperCase())
+        }
+      }
+      
+      return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="accessible-link" title="Öppnar ${domain} i nytt fönster">${linkText}</a>${punctuation}`
+      
+    } catch (e) {
+      const domain = cleanUrl.split('/')[2] || 'Extern länk'
+      return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="accessible-link">${domain}</a>${punctuation}`
+    }
   })
 }
 

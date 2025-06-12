@@ -5,10 +5,10 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">
+          <h4 class="modal-title">
             <i :class="isEditing ? 'bi bi-pencil' : 'bi bi-plus-lg'" class="me-2"></i>
             {{ isEditing ? 'Redigera inlägg' : 'Skapa nytt inlägg' }}
-          </h5>
+          </h4>
           <button type="button" class="btn-close" @click="$emit('close')"><span
               class="visually-hidden">Stäng</span></button>
         </div>

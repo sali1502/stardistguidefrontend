@@ -5,10 +5,10 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">
+          <h4 class="modal-title">
             <i :class="isEditing ? 'bi bi-pencil' : 'bi bi-plus-lg'" class="me-2"></i>
             {{ isEditing ? 'Redigera projekt' : 'Skapa nytt projekt' }}
-          </h5>
+          </h4>
           <button type="button" class="btn-close" @click="$emit('close')"><span
               class="visually-hidden">Stäng</span></button>
         </div>
@@ -33,10 +33,10 @@
 
             <!-- Information om vad som skapas -->
             <div class="alert alert-info">
-              <h6>
+              <h5>
                 <i class="bi bi-info-circle me-2"></i>
                 Vad händer när projektet skapas?
-              </h6>
+              </h5>
               <p class="mb-2 small">När du skapar ett nytt projekt kommer följande att skapas automatiskt:</p>
               <ul class="mb-0 small">
                 <li><strong>Checklista för designer</strong> med 3 standardpunkter</li>

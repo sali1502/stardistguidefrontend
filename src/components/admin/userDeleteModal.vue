@@ -5,19 +5,19 @@
     <div class="modal-dialog modal-sm">
       <div class="modal-content">
         <div class="modal-header border-0">
-          <h5 class="modal-title text-slate-darkest">
+          <h4 class="modal-title text-slate-darkest">
             Bekräfta borttagning
-          </h5>
+          </h4>
           <button type="button" class="btn-close" @click="$emit('cancel')"><span
               class="visually-hidden">Stäng</span></button>
         </div>
 
         <div class="modal-body text-center">
           <i class="bi bi-question-circle text-slate-medium" style="font-size: 3rem;"></i>
-          <h6 class="mt-3 mb-3 text-slate-dark">
+          <h5 class="mt-3 mb-3 text-slate-dark">
             Är du säker på att du vill radera användaren
             <strong class="text-slate-darkest">{{ user.username }}</strong>?
-          </h6>
+          </h5>
         </div>
 
         <div class="modal-footer border-0 justify-content-center">

@@ -5,10 +5,10 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">
+          <h4 class="modal-title">
             <i :class="isEditing ? 'bi bi-pencil' : 'bi bi-plus-lg'" class="me-2"></i>
             {{ isEditing ? 'Redigera användare' : 'Skapa ny användare' }}
-          </h5>
+          </h4>
           <button type="button" class="btn-close" @click="$emit('close')"><span
               class="visually-hidden">Stäng</span></button>
         </div>
@@ -70,10 +70,10 @@
 
             <!-- Beskrivning av vald roll -->
             <div v-if="form.role" class="alert alert-info">
-              <h6>
+              <h5>
                 <i :class="getRoleIcon(form.role)" class="me-2"></i>
                 {{ getRoleDisplayName(form.role) }}
-              </h6>
+              </h5>
               <p class="mb-0 small">{{ getRoleDescription(form.role) }}</p>
             </div>
 

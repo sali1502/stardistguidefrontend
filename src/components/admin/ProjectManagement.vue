@@ -6,10 +6,10 @@
     <div
       class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
       <div>
-        <h3 class="mb-1">
+        <h2 class="mb-1">
           <i class="bi bi-folder me-2"></i>
           Projekthantering
-        </h3>
+        </h2>
         <p class="text-muted mb-0">
           Skapa, redigera och radera projekt
         </p>
@@ -28,23 +28,25 @@
     <div v-if="projectsStore.error" class="alert alert-danger" role="alert">
       <i class="bi bi-exclamation-triangle-fill me-2"></i>
       {{ projectsStore.error }}
-      <button type="button" class="btn-close float-end" @click="projectsStore.clearError"></button>
+      <button type="button" class="btn-close float-end" @click="projectsStore.clearError"
+        aria-label="Stäng felmeddelande"></button>
     </div>
 
     <!-- Framgångsmeddelande -->
     <div v-if="successMessage" class="alert alert-success" role="alert">
       <i class="bi bi-check-circle-fill me-2"></i>
       {{ successMessage }}
-      <button type="button" class="btn-close float-end" @click="successMessage = ''"></button>
+      <button type="button" class="btn-close float-end" @click="successMessage = ''"
+        aria-label="Stäng meddelande"></button>
     </div>
 
     <!-- Projekttabell -->
     <div class="card">
       <div class="card-header">
-        <h5 class="mb-0">
+        <h3 class="mb-0">
           <i class="bi bi-table me-2"></i>
           Projektlista
-        </h5>
+        </h3>
       </div>
       <div class="card-body">
         <!-- Laddningsindikator -->

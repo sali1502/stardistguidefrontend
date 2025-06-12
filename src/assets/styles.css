@@ -71,15 +71,22 @@ body {
 
 /* Laddningsanimationer */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.3s;
 }
 
-.fade-enter-from, .fade-leave-to {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
 
@@ -233,14 +240,15 @@ body {
 .alert-danger {
   background: #fef2f2;
   border: 1px solid #fecaca;
-  color: #b91c1c !important; /* Förbättrad kontrast */
+  color: #b91c1c !important;
+  /* Förbättrad kontrast */
 }
 
 /* Info-alerts */
 .alert-info {
-  background-color: #f1f5f9 !important; 
-  border-color: #cbd5e1 !important;    
-  color: #1e293b !important;           
+  background-color: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #1e293b !important;
 }
 
 .login-footer {
@@ -371,11 +379,12 @@ body {
   display: flex;
   gap: clamp(1rem, 4vw, 2.5rem);
 }
+
 .main-nav .nav-link,
 .dashboard-header .nav-link {
   color: rgba(255, 255, 255, 0.9);
   text-decoration: none;
-  font-size: 1.1rem; 
+  font-size: 1.1rem;
   font-weight: 500;
   transition: all 0.2s ease;
   padding: 0.5rem 1rem;
@@ -385,6 +394,7 @@ body {
 
 /* Extra små skärmar */
 @media (max-width: 480px) {
+
   .main-nav .nav-link,
   .dashboard-header .nav-link {
     font-size: 1rem;
@@ -538,7 +548,6 @@ body {
   box-shadow: none;
 }
 
-/* Skriv över Bootstrapfärger globalt - för bättre validering i WAVE */
 .btn {
   transition: all 0.2s ease;
 }
@@ -623,6 +632,148 @@ span.badge.bg-primary {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* TILLGÄNGLIGA LÄNKAR - löser WAVE-varningar */
+.accessible-link {
+  color: #004085 !important;
+  text-decoration: none !important;
+  border-bottom: 1px solid transparent !important;
+  transition: all 0.2s ease !important;
+}
+
+.accessible-link:hover,
+.accessible-link:focus {
+  color: #002752 !important;
+  border-bottom-color: #002752 !important;
+  text-decoration: none !important;
+}
+
+.accessible-link:focus {
+  outline: 2px solid #004085 !important;
+  outline-offset: 2px !important;
+}
+
+a.accessible-link,
+a.accessible-link:visited,
+a.accessible-link:link {
+  color: #004085 !important;
+}
+
+a.accessible-link:hover,
+a.accessible-link:focus,
+a.accessible-link:active {
+  color: #002752 !important;
+}
+
+/* WAVE-RUBRIKFIX - återställ storlekar för korrekt hierarki */
+
+.role-card .role-title {
+  font-weight: 500 !important;
+  font-size: 1.25rem !important;
+}
+
+.modal-content h4.modal-title {
+  font-size: 1.25rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+}
+
+.user-management h2.mb-1 {
+  font-size: 1.75rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+}
+
+.role-card .role-title {
+  font-weight: 500 !important;
+  font-size: 1.25rem !important;
+}
+
+.modal-content h4.modal-title {
+  font-size: 1.25rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+}
+
+.modal-content .modal-body h5.text-slate-dark {
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+}
+
+.user-management h2.mb-1 {
+  font-size: 1.75rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+}
+
+.user-management .card-header h3.mb-0 {
+  font-size: 1.25rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+}
+
+div.modal-content div.modal-header h4.modal-title {
+  font-size: 1.25rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+}
+
+div.modal-content div.modal-body h5 {
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+}
+
+div.modal-content div.modal-body h6 {
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+}
+
+.modal-content .modal-body h5.h6 {
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+}
+
+.post-management h2.mb-1 {
+  font-size: 1.75rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+}
+
+.post-management .card-header h3.mb-0 {
+  font-size: 1.25rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+}
+
+.project-management h2.mb-1 {
+  font-size: 1.75rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+}
+
+.project-management .card-header h3.mb-0 {
+  font-size: 1.25rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* RESPONSIVITET */
 
 @media (max-width: 768px) {
@@ -630,7 +781,7 @@ span.badge.bg-primary {
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   .login-content {
     min-height: calc(100vh - 100px);
     padding: 1.5rem 1rem;
@@ -644,7 +795,7 @@ span.badge.bg-primary {
     display: grid;
     place-items: center;
   }
-  
+
   .login-card {
     position: static;
     left: auto;
@@ -653,7 +804,7 @@ span.badge.bg-primary {
     width: 100%;
     max-width: 100%;
   }
-  
+
   .footer {
     padding: 1.5rem 0;
   }
@@ -665,19 +816,19 @@ span.badge.bg-primary {
     padding: 0.75rem;
     min-height: calc(100vh - 140px);
   }
-  
+
   .login-card {
     padding: clamp(1rem, 3vw, 1.5rem);
   }
-  
+
   .main-nav {
     gap: 0.75rem;
   }
-  
+
   .left-section {
     gap: 0.4rem;
   }
-  
+
   .right-section {
     gap: 0.6rem;
   }

@@ -21,7 +21,7 @@
           <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4">
             <div class="login-card">
               <div class="login-card-header">
-                <h2 class="login-title">Logga in</h2>
+                <h1 class="login-title">Logga in</h1>
               </div>
 
               <form @submit.prevent="handleLogin" class="login-form" novalidate>
@@ -155,7 +155,7 @@ const handleLogin = async () => {
   try {
     // Försök autentisera användaren via auth store
     const result = await authStore.login(form.value.username, form.value.password)
-    
+
     if (result.success) {
       // Omdirigera till användarens dashboard vid framgång
       authStore.redirectToDashboard(authStore.userRole)

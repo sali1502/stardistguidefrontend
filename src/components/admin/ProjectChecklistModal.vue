@@ -5,10 +5,10 @@
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title text-blue-darkest">
+          <h4 class="modal-title text-blue-darkest">
             <i class="bi bi-check2-square me-2"></i>
             Hantera checklistor - {{ project.name }}
-          </h5>
+          </h4>
           <button type="button" class="btn-close" @click="$emit('close')"><span
               class="visually-hidden">Stäng</span></button>
         </div>
@@ -72,9 +72,9 @@
               <div v-else>
                 <!-- Rubrik och knapp för att lägga till ny punkt -->
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                  <h6 class="text-blue-darkest mb-0">
+                  <h5 class="text-blue-darkest mb-0">
                     {{ getRoleDisplayName(activeRole) }} - Checklistpunkter
-                  </h6>
+                  </h5>
                   <button class="btn btn-outline-primary btn-sm" @click="openAddItemModal" :disabled="loading">
                     <i class="bi bi-plus-lg me-1"></i>
                     Lägg till punkt
@@ -89,7 +89,7 @@
                       <div class="card-body p-3">
                         <div class="d-flex justify-content-between align-items-start">
                           <div class="flex-grow-1">
-                            <h6 class="card-title mb-1 text-blue-darkest">{{ item.title }}</h6>
+                            <h5 class="card-title mb-1 text-blue-darkest">{{ item.title }}</h5>
                             <p class="card-text text-muted small mb-0" v-html="makeLinksClickable(item.content)"></p>
                           </div>
                           <div class="btn-group btn-group-sm ms-3" role="group">
@@ -111,9 +111,9 @@
                 <!-- Meddelande när inga checklistpunkter finns -->
                 <div v-else class="text-center py-4">
                   <i class="bi bi-check2-square text-muted" style="font-size: 3rem;"></i>
-                  <h6 class="mt-3 text-muted">Inga checklistpunkter</h6>
+                  <h5 class="mt-3 text-muted">Inga checklistpunkter</h5>
                   <p class="text-muted">Lägg till den första punkten för {{ getRoleDisplayName(activeRole).toLowerCase()
-                    }}</p>
+                  }}</p>
                   <button class="btn btn-outline-primary" @click="openAddItemModal" :disabled="loading">
                     <i class="bi bi-plus-lg me-2"></i>
                     Lägg till första punkten
@@ -208,14 +208,39 @@ const cancelItemDelete = () => {
   itemToDelete.value = null
 }
 
-// Gör URL:er i text klickbara
+// Gör URL:er klickbara
 const makeLinksClickable = (text) => {
   if (!text) return ''
   const urlRegex = /(https?:\/\/[^\s<>"']+)/gi
+
   return text.replace(urlRegex, (url) => {
     const cleanUrl = url.replace(/[.,;:!?]+$/, '')
     const punctuation = url.slice(cleanUrl.length)
-    return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" style="color: #0d6efd; text-decoration: none; border-bottom: 1px solid transparent; transition: all 0.2s ease;" onmouseover="this.style.borderBottomColor='#0d6efd'; this.style.color='#0a58ca'" onmouseout="this.style.borderBottomColor='transparent'; this.style.color='#0d6efd'" onclick="event.stopPropagation(); window.open('${cleanUrl}', '_blank', 'noopener,noreferrer'); return false;" title="${cleanUrl}">Länk</a>${punctuation}`
+
+    try {
+      const urlObj = new URL(cleanUrl)
+      const domain = urlObj.hostname.replace('www.', '')
+      const pathParts = urlObj.pathname.split('/').filter(part => part.length > 0)
+
+      let linkText = domain
+
+      // Om det finns en path, använd sista delen som titel
+      if (pathParts.length > 0) {
+        const lastPart = pathParts[pathParts.length - 1]
+        if (lastPart.length <= 30) {
+          linkText = lastPart
+            .replace(/-/g, ' ')
+            .replace(/_/g, ' ')
+            .replace(/\b\w/g, l => l.toUpperCase())
+        }
+      }
+
+      return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="accessible-link" title="Öppnar ${domain} i nytt fönster">${linkText}</a>${punctuation}`
+
+    } catch (e) {
+      const domain = cleanUrl.split('/')[2] || 'Extern länk'
+      return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="accessible-link">${domain}</a>${punctuation}`
+    }
   })
 }
 

@@ -15,10 +15,10 @@
         <div class="card stat-card clickable-card" @click="navigateToUsers">
           <div class="card-body text-center">
             <i class="bi bi-people stat-icon"></i>
-            <h3 class="stat-number">
+            <h2 class="h3 stat-number">
               <span v-if="isLoading" class="spinner-border spinner-border-sm"></span>
               <span v-else>{{ stats.users.total }}</span>
-            </h3>
+            </h2>
             <p class="stat-label">Användare</p>
             <small class="text-muted mt-1">Klicka för att hantera</small>
           </div>
@@ -30,10 +30,10 @@
         <div class="card stat-card clickable-card" @click="navigateToProjects">
           <div class="card-body text-center">
             <i class="bi bi-folder stat-icon"></i>
-            <h3 class="stat-number">
+            <h2 class="h3 stat-number">
               <span v-if="isLoading" class="spinner-border spinner-border-sm"></span>
               <span v-else>{{ stats.projects.total }}</span>
-            </h3>
+            </h2>
             <p class="stat-label">Totalt projekt</p>
             <small class="text-muted mt-1">Klicka för att hantera</small>
           </div>
@@ -45,10 +45,10 @@
         <div class="card stat-card clickable-card" @click="navigateToPosts">
           <div class="card-body text-center">
             <i class="bi bi-file-text stat-icon"></i>
-            <h3 class="stat-number">
+            <h2 class="h3 stat-number">
               <span v-if="isLoading" class="spinner-border spinner-border-sm"></span>
               <span v-else>{{ stats.posts.total }}</span>
-            </h3>
+            </h2>
             <p class="stat-label">Totalt inlägg</p>
             <small class="text-muted mt-1">Klicka för att hantera</small>
           </div>
@@ -132,8 +132,6 @@
                 </div>
               </div>
             </div>
-
-
           </div>
         </div>
       </div>
@@ -151,7 +149,7 @@ const router = useRouter()
 // API-konfiguration för backendanslutning
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
-// Hämta autentiseringstoken från localStorage eller sessionStorage
+// Hämta autentiseringstoken från localStorage
 const getAuthToken = () => {
   return localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token')
 }
@@ -215,10 +213,6 @@ const navigateToRole = (role) => {
   if (roleRoutes[role]) {
     router.push(roleRoutes[role])
   }
-}
-
-const navigateToStatus = () => {
-  router.push('/status')
 }
 
 // Reaktiv data för statistikvisning
