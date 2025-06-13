@@ -1,5 +1,5 @@
-<!-- components/AppHeader.vue -->
-
+<!-- components/AppHeader.vue - sidhuvud med navigation, logotyp och utloggningsfunktion -->
+ 
 <template>
   <div class="dashboard-header">
     <div class="container-fluid">
@@ -30,7 +30,7 @@ import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
 const isLoggingOut = ref(false)
 
-// Generera korrekt dashboard-rutt baserat på användarens roll
+// Generera korrekt instrumentpanel-rutt baserat på användarens roll
 const getDashboardRoute = () => {
   const role = authStore.userRole
   return `/dashboard/${role}`
@@ -42,7 +42,7 @@ const handleLogout = () => {
 
   isLoggingOut.value = true
 
-  // Logoutmetod från auth store
+  // Metod för att logga ut - från auth store
   authStore.logout()
 }
 </script>

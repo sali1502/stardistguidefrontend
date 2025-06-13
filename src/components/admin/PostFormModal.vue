@@ -1,4 +1,4 @@
-<!-- components/admin/PostFormModal.vue -->
+<!-- components/admin/PostFormModal.vue - modal för att skapa och redigera rollspecifika inlägg -->
 
 <template>
   <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">

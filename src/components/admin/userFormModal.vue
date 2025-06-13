@@ -1,4 +1,4 @@
-<!-- components/admin/UserFormModal.vue -->
+<!-- components/admin/UserFormModal.vue - modal för att skapa och redigera användare med validering och felhantering -->
 
 <template>
   <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
@@ -237,7 +237,7 @@ const handleSubmit = async () => {
         return
       }
 
-      // Hantera fel via message utan successflagga
+      // Hantera fel via message utan success-flagga
       if (result.message && result.success !== true) {
         apiError.value = result.message
         loading.value = false

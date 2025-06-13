@@ -1,4 +1,4 @@
-<!-- components/ProjectSelector.vue -->
+<!-- components/ProjectSelector.vue - dropdown-komponent för att välja och hantera projekt med visning av progression -->
 
 <template>
   <div class="project-selector">
@@ -11,7 +11,7 @@
               Välj projekt
             </label>
 
-            <!-- Bootstrap dropdownmeny  -->
+            <!-- Bootstrap dropdown-meny  -->
             <div class="dropdown w-100">
               <button class="btn btn-light dropdown-toggle w-100 text-start" type="button" data-bs-toggle="dropdown"
                 :disabled="loading">
@@ -246,7 +246,7 @@ onMounted(() => {
   background-color: #334155 !important;
 }
 
-/* Mobilanpassning för Bootstrap dropdownmeny */
+/* Mobilanpassning för Bootstrap dropdown-meny */
 @media (max-width: 576px) {
   .mobile-dropdown {
     max-width: calc(100vw - 2rem) !important;
@@ -297,7 +297,7 @@ onMounted(() => {
   z-index: 10001 !important;
 }
 
-/* Säkerställ att innehåll i dropdownmeny placeras ovanpå övrig text */
+/* Säkerställ att innehåll i dropdown-meny placeras ovanpå övrig text */
 .project-selector {
   position: relative;
   z-index: 9998;

@@ -147,7 +147,7 @@ export const checklistService = {
     }
   },
 
-  // Växla status på checklistpunkt (alla inloggade användare)
+  // Växla status på checklistpunkt
   async toggleChecklistItem(projectId, role, itemId, completed) {
     try {
       const itemData = { itemId, completed }
@@ -176,7 +176,7 @@ export const checklistService = {
     }
   },
 
-  // Validera checklistpunktens data enligt backend-regler
+  // Validera checklistpunktens data enligt backend
   validateItemData(itemData) {
     const errors = {}
 

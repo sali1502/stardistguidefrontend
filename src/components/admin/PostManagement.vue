@@ -1,4 +1,4 @@
-<!-- components/admin/PostManagement.vue -->
+<!-- components/admin/PostManagement.vue - administrationskomponent för att hantera inlägg med CRUD-operationer och responsiv design -->
 
 <template>
   <div class="post-management">
@@ -87,7 +87,7 @@
                     </span>
                   </td>
                   <td>
-                    <div class="post-content-preview" v-html="makeLinksClickable(truncateContent(post.content, 100))">
+                    <div class="post-content-preview" v-html="makeLinksClickable(truncateContent(post.content, 100), 'desktop', post.title)">
                     </div>
                   </td>
                   <td>
@@ -127,7 +127,7 @@
                       <i :class="getRoleIcon(post.role)" class="me-2"></i>
                       <div>
                         <div class="fw-bold">{{ post.title }}</div>
-                        <div class="text-muted small" v-html="makeLinksClickable(truncateContent(post.content, 80))">
+                        <div class="text-muted small" v-html="makeLinksClickable(truncateContent(post.content, 80), 'tablet', post.title)">
                         </div>
                         <div class="text-muted small">{{ formatDate(post.createdAt) }}</div>
                       </div>
@@ -166,8 +166,7 @@
                     <span class="badge bg-darkblue" style="font-size: 0.7em;">
                       {{ getRoleDisplayName(post.role) }}
                     </span>
-                    <div class="text-muted small mt-2" v-html="makeLinksClickable(truncateContent(post.content, 120))">
-                    </div>
+                    <div class="text-muted small mt-2" v-html="makeLinksClickable(truncateContent(post.content, 120), 'mobile', post.title)"></div>
                     <div class="text-muted small mt-1">
                       Skapad: {{ formatDate(post.createdAt) }}
                     </div>
@@ -309,40 +308,77 @@ const handleDelete = async () => {
   }
 }
 
-// Gör URL:er klickbara med beskrivande länktext
-const makeLinksClickable = (text) => {
+// Enkel funktion för tillgängliga länkar med layout-specifika identifierare
+const makeLinksClickable = (text, layoutType = 'desktop', uniqueId = '') => {
   if (!text) return ''
   
-  const urlRegex = /https?:\/\/[^\s<>"{}|\\^`]+/gi
+  const urlRegex = /https?:\/\/[^\s<>"{}|\\^`\[\]]+(?:#[^\s<>"{}|\\^`\[\]]*)?/gi
   
   return text.replace(urlRegex, (url) => {
-
     let cleanUrl = url
     let punctuation = ''
     
+    // Hantera interpunktion i slutet av URL:er
     const punctuationMatch = url.match(/([.,!?;]+)$/)
     if (punctuationMatch) {
-      const potentialPunct = punctuationMatch[1]
-      if (/^[.,!?;]+$/.test(potentialPunct)) {
-        cleanUrl = url.slice(0, -potentialPunct.length)
-        punctuation = potentialPunct
-      }
+      cleanUrl = url.slice(0, -punctuationMatch[1].length)
+      punctuation = punctuationMatch[1]
     }
+    
+    // URL-säkerhet för mellanslag
+    const safeUrl = cleanUrl.replace(/\s/g, '%20')
     
     try {
       const urlObj = new URL(cleanUrl)
       const domain = urlObj.hostname.replace('www.', '')
-      const path = urlObj.pathname.split('/')[1]
-      const linkText = path && path.length < 15 ? `${domain}/${path}` : domain
+      const pathParts = urlObj.pathname.split('/').filter(part => part.length > 0)
       
-      return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="accessible-link" title="Öppnar ${linkText} i nytt fönster">${linkText}</a>${punctuation}`
+      let linkText = domain
+      let description = domain
+      
+      // Layout-suffix för unika synliga texter
+      const layoutSuffix = {
+        'desktop': '',
+        'tablet': ' (tablet)',
+        'mobile': ' (mobil)'
+      }
+      
+      // Bygg länktext med path-information
+      if (pathParts.length > 0) {
+        const lastPart = pathParts[pathParts.length - 1]
+        if (lastPart.length <= 25 && !lastPart.includes('.') && lastPart.length > 1) {
+          const readablePath = lastPart.replace(/-/g, ' ').replace(/_/g, ' ')
+          linkText = `${domain} - ${readablePath}${layoutSuffix[layoutType]}`
+          description = `${readablePath} på ${domain}`
+        } else {
+          linkText = `${domain}${layoutSuffix[layoutType]}`
+        }
+      } else {
+        linkText = `${domain}${layoutSuffix[layoutType]}`
+      }
+      
+      // Unikt title-attribut för WAVE-kompatibilitet
+      const uniqueTitle = `Öppnar ${description} i nytt fönster (${layoutType}-vy)`
+      
+      return `<a href="${safeUrl}" 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 class="accessible-link" 
+                 title="${uniqueTitle}">${linkText}</a>${punctuation}`
       
     } catch (e) {
-      return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="accessible-link">Extern länk</a>${punctuation}`
+      // Fallback för ogiltiga URLs
+      const fallbackText = cleanUrl.split('/')[2] || 'Extern länk'
+      const uniqueTitle = `Öppnar extern webbplats i nytt fönster (${layoutType}-vy)`
+      
+      return `<a href="${safeUrl}" 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 class="accessible-link"
+                 title="${uniqueTitle}">${fallbackText}</a>${punctuation}`
     }
   })
 }
-
 
 // Hämta ikon för given roll
 const getRoleIcon = (role) => {
@@ -352,16 +388,6 @@ const getRoleIcon = (role) => {
     'tester': 'bi bi-bug-fill text-darkblue'
   }
   return icons[role] || 'bi bi-file-text text-darkblue'
-}
-
-// Hämta badgeklass för given roll
-const getRoleBadgeClass = (role) => {
-  const classes = {
-    'designer': 'bg-darkblue',
-    'developer': 'bg-darkblue',
-    'tester': 'bg-darkblue'
-  }
-  return classes[role] || 'bg-darkblue'
 }
 
 // Översätt rollnamn till svenska för visning
@@ -446,42 +472,6 @@ onMounted(() => {
 
 .text-darkblue {
   color: #0f172a !important;
-}
-
-.bg-blue-darkest {
-  background-color: #0f172a !important;
-  color: white;
-}
-
-.bg-blue-dark {
-  background-color: #1e293b !important;
-  color: white;
-}
-
-.bg-blue-medium-dark {
-  background-color: #334155 !important;
-  color: white;
-}
-
-.bg-blue-medium {
-  background-color: #475569 !important;
-  color: white;
-}
-
-.text-blue-darkest {
-  color: #0f172a !important;
-}
-
-.text-blue-dark {
-  color: #1e293b !important;
-}
-
-.text-blue-medium-dark {
-  color: #334155 !important;
-}
-
-.text-blue-medium {
-  color: #475569 !important;
 }
 
 .post-card {

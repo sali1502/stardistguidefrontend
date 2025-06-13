@@ -1,4 +1,4 @@
-<!-- components/RoleChecklist.vue -->
+<!-- components/RoleChecklist.vue - checklistkomponent som visar och hanterar rollspecifika uppgifter för valt projekt -->
 
 <template>
   <div class="role-checklist">
@@ -198,42 +198,70 @@ const handleItemToggle = (item, completed) => {
   toggleChecklistItem(item, completed)
 }
 
-// Gör URL:er klickbara
-const makeLinksClickable = (text) => {
+// Funktion för tillgängliga länkar med unikt aria-label per layout
+const makeLinksClickable = (text, layoutType = 'desktop', uniqueId = '') => {
   if (!text) return ''
-  const urlRegex = /(https?:\/\/[^\s<>"']+)/gi
-
+  
+  const urlRegex = /https?:\/\/[^\s<>"{}|\\^`\[\]]+(?:#[^\s<>"{}|\\^`\[\]]*)?/gi
+  
   return text.replace(urlRegex, (url) => {
-    const cleanUrl = url.replace(/[.,;:!?]+$/, '')
-    const punctuation = url.slice(cleanUrl.length)
-
+    let cleanUrl = url
+    let punctuation = ''
+    
+    // Hantera interpunktion i slutet av URL:er
+    const punctuationMatch = url.match(/([.,!?;]+)$/)
+    if (punctuationMatch) {
+      cleanUrl = url.slice(0, -punctuationMatch[1].length)
+      punctuation = punctuationMatch[1]
+    }
+    
+    // URL-säkerhet för mellanslag
+    const safeUrl = cleanUrl.replace(/\s/g, '%20')
+    
     try {
       const urlObj = new URL(cleanUrl)
       const domain = urlObj.hostname.replace('www.', '')
       const pathParts = urlObj.pathname.split('/').filter(part => part.length > 0)
-
+      
       let linkText = domain
-
-      // Om det finns en path, använd sista delen som titel
+      let description = domain
+      
+      // Lägg till path-information om det finns en användbar sista del
       if (pathParts.length > 0) {
         const lastPart = pathParts[pathParts.length - 1]
-        if (lastPart.length <= 30) {
-          linkText = lastPart
-            .replace(/-/g, ' ')
-            .replace(/_/g, ' ')
-            .replace(/\b\w/g, l => l.toUpperCase())
+        if (lastPart.length <= 25 && !lastPart.includes('.') && lastPart.length > 1) {
+          const readablePath = lastPart.replace(/-/g, ' ').replace(/_/g, ' ')
+          linkText = `${domain} - ${readablePath}`
+          description = `${readablePath} på ${domain}`
         }
       }
-
-      return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="accessible-link" title="Öppnar ${domain} i nytt fönster">${linkText}</a>${punctuation}`
-
+      
+      // Skapa unikt aria-label med layout och post-titel (istället för ID)
+      const postTitle = uniqueId || 'inlägg'
+      const ariaLabel = `Länk till ${description} från ${layoutType}-vy i ${postTitle} (öppnas i nytt fönster)`
+      
+      return `<a href="${safeUrl}" 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 class="accessible-link" 
+                 title="Öppnar ${description} i nytt fönster"
+                 aria-label="${ariaLabel}">${linkText}</a>${punctuation}`
+      
     } catch (e) {
-      const domain = cleanUrl.split('/')[2] || 'Extern länk'
-      return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="accessible-link">${domain}</a>${punctuation}`
+      // Fallback för ogiltiga URLs
+      const fallbackText = cleanUrl.split('/')[2] || 'Extern länk'
+      const postTitle = uniqueId || 'inlägg'  
+      const ariaLabel = `Länk till extern webbplats från ${layoutType}-vy i ${postTitle} (öppnas i nytt fönster)`
+      
+      return `<a href="${safeUrl}" 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 class="accessible-link"
+                 title="Öppnar extern webbplats i nytt fönster"
+                 aria-label="${ariaLabel}">${fallbackText}</a>${punctuation}`
     }
   })
 }
-
 // Hämta ikon för given roll
 const getRoleIcon = (role) => {
   const icons = {

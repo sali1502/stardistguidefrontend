@@ -1,10 +1,11 @@
-<!-- components/BaseDashboard.vue -->
+<!-- components/BaseDashboard.vue - huvudlayout för instrumentpanelen med autentiseringskontroll och användarinfo -->
+
 <template>
   <div class="dashboard-container">
     <!-- Sidhuvud med navigation -->
     <AppHeader />
 
-    <!-- Huvudinnehåll för dashboard -->
+    <!-- Huvudinnehåll för instrumentpanel -->
     <main class="dashboard-content">
       <div class="container-fluid" v-if="authStore.user && authStore.isAuthenticated">
         <!-- Välkomstsektion med användarinformation -->

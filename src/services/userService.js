@@ -1,5 +1,5 @@
 // services/userService.js
-// Service för användarhantering - hanterar autentisering och användar-CRUD operationer
+// Service för användarhantering - hanterar autentisering och CRUD operationer för användare
 // Inkluderar inloggning, frontend-validering med svenska tecken och rollbaserad åtkomstkontroll
 // Stöder administratörsfunktioner för användaradministration och rollhantering
 
@@ -48,7 +48,7 @@ export const userService = {
     }
   },
 
-  // Hämta specifik användare baserat på användar-ID
+  // Hämta specifik användare baserat på ID
   async getUserById(id) {
     try {
       const response = await api.get(`${API_ENDPOINTS.USERS}/${id}`)
@@ -165,7 +165,7 @@ export const userService = {
       if (error.status === 404) {
         message = 'Användaren hittades inte'
       } else if (error.status === 409) {
-        message = 'Användaren kan inte tas bort (kan vara kopplad till projekt eller data)'
+        message = 'Användaren kan inte tas bort'
       }
       
       return {

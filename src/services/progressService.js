@@ -1,12 +1,12 @@
 // services/progressService.js
-// Service för projektframstegshantering - hanterar spårning av projektframsteg och completionstatus
-// Möjliggör hämtning av framstegsdata för enskilda projekt eller överblick över alla projekt
+// Service för projektprogresssion
+// Möjliggör hämtning av data för enskilda projekt eller överblick över alla projekt
 // Stöder progressionsanalys för olika roller och checklistor
 
 import api, { API_ENDPOINTS } from '@/config/api'
 
 export const progressService = {
-  // Hämta framstegsdata för specifikt projekt
+  // Hämta progression för specifikt projekt
   async getProjectProgress(projectId) {
     try {
       const response = await api.get(`${API_ENDPOINTS.PROGRESS}/${projectId}`)
@@ -19,13 +19,13 @@ export const progressService = {
     } catch (error) {
       return {
         success: false,
-        message: error.message || 'Kunde inte hämta projektframsteg',
+        message: error.message || 'Kunde inte hämta projektstatus',
         error
       }
     }
   },
 
-  // Hämta framstegsdata för alla projekt
+  // Hämta progression för alla projekt
   async getAllProgress() {
     try {
       const response = await api.get(API_ENDPOINTS.PROGRESS)
@@ -39,18 +39,18 @@ export const progressService = {
         success: true,
         data: response.data,
         progress: formattedProgress,
-        message: `Hämtade framsteg för ${formattedProgress.length} projekt`
+        message: `Hämtade status för ${formattedProgress.length} projekt`
       }
     } catch (error) {
       return {
         success: false,
-        message: error.message || 'Kunde inte hämta framstegsdata',
+        message: error.message || 'Kunde inte hämta projektstatus',
         error
       }
     }
   },
 
-  // Hämta framsteg för specifik roll i projekt
+  // Hämta progression för specifik roll i projekt
   async getRoleProgress(projectId, role) {
     try {
       const response = await api.get(`${API_ENDPOINTS.PROGRESS}/${projectId}/${role}`)
@@ -63,22 +63,22 @@ export const progressService = {
     } catch (error) {
       return {
         success: false,
-        message: error.message || `Kunde inte hämta framsteg för ${role}`,
+        message: error.message || `Kunde inte hämta status för ${role}`,
         error
       }
     }
   },
 
-  // Formatera framstegsdata för visning i användargränssnittet
+  // Formatera progression för visning i användargränssnittet
   formatProgressForDisplay(progress) {
     if (!progress) return null
     
     return {
       ...progress,
-      // Beräkna totalt framsteg i procent
+      // Beräkna total progression i procent
       totalProgressPercentage: this.calculateTotalProgress(progress),
       
-      // Formatera framsteg per roll
+      // Formatera progression per roll
       roleProgress: progress.roles ? Object.keys(progress.roles).map(role => ({
         role,
         roleDisplayName: this.getRoleDisplayName(role),
@@ -102,7 +102,7 @@ export const progressService = {
     }
   },
 
-  // Formatera rollspecifikt framsteg
+  // Formatera rollspecifik progression
   formatRoleProgressForDisplay(progress, role) {
     if (!progress) return null
     
@@ -130,7 +130,7 @@ export const progressService = {
     }
   },
 
-  // Beräkna totalt framsteg för projekt baserat på alla roller
+  // Beräkna total progression för projekt baserat på alla roller
   calculateTotalProgress(progress) {
     if (!progress.roles) return 0
     
@@ -151,7 +151,7 @@ export const progressService = {
     return names[role] || role
   },
 
-  // Hämta progress-statistik för dashboard
+  // Hämta progressions-statistik för instrumentpanel
   getProgressStatistics(progressData) {
     if (!Array.isArray(progressData)) return null
     

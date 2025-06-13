@@ -1,5 +1,5 @@
 
-<!-- views/AdminDashboard.vue - Huvuddashboard för admin -->
+<!-- views/AdminDashboard.vue - Vy för admin -->
  
 <template>
   <BaseDashboard>
@@ -113,7 +113,7 @@ const activeTab = ref('overview')
   animation: fadeIn 0.3s ease-in;
 }
 
-/* Fadein animation för mjuka övergångar */
+/* Fade-in animation för mjuka övergångar */
 @keyframes fadeIn {
   from {
     opacity: 0;

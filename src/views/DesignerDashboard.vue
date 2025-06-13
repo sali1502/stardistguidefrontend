@@ -1,4 +1,4 @@
-<!-- views/DesignerDashboard.vue - Dashboard för designerrollen -->
+<!-- views/DesignerDashboard.vue - Vy för designerrollen -->
  
 <template>
   <BaseDashboard>

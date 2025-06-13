@@ -53,8 +53,9 @@ const routes = [
     }
   },
 
-  // Rollspecifika dashboards med hierarkisk åtkomstkontroll
-  // Administratörer har tillgång till alla dashboards
+  // Rollspecifika instrumentpaneler med åtkomstkontroll
+
+  // Admin har tillgång till alla sidor
   {
     path: '/dashboard/admin',
     name: 'AdminDashboard',

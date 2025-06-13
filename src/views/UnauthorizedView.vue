@@ -1,4 +1,4 @@
-<!-- views/UnauthorizedView.vue - Sida för användare utan behörighet -->
+<!-- views/UnauthorizedView.vue - Vy för användare utan behörighet -->
 
 <template>
   <BaseDashboard>
@@ -33,14 +33,14 @@
             
             <!-- Handlingsalternativ för användaren -->
             <div class="d-flex gap-3 justify-content-center flex-wrap">
-              <!-- Länk till användarens dashboard för inloggade användare -->
+              <!-- Länk till användarens instrumentpanel för inloggade användare -->
               <router-link 
                 :to="getDashboardRoute()" 
                 class="btn btn-primary"
                 v-if="userRole"
               >
                 <i class="bi bi-house me-2"></i>
-                Till min dashboard
+                Till min instrumentpanel
               </router-link>
               
               <!-- Inloggningslänk för icke-autentiserade användare -->

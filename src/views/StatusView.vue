@@ -1,4 +1,4 @@
-<!-- views/StatusView.vue -->
+<!-- views/StatusView.vue - Vy för visning av projektprogression -->
 
 <template>
   <BaseDashboard>
@@ -10,7 +10,7 @@
       <!-- Laddningsindikator -->
       <div v-if="loading" class="text-center py-5">
         <div class="spinner-border text-primary mb-3"></div>
-        <p class="text-muted">Laddar projektsstatus...</p>
+        <p class="text-muted">Laddar projektstatus...</p>
       </div>
 
       <!-- Felmeddelande -->
@@ -33,7 +33,7 @@
             <div class="row g-4">
               <div v-for="progress in projectProgress" :key="progress._id" class="col-md-4">
                 <div class="progress-card">
-                  <!-- Rollnamn och procentuell framsteg -->
+                  <!-- Rollnamn och procentuella framsteg -->
                   <div class="d-flex justify-content-between align-items-center mb-3">
                     <div class="d-flex align-items-center">
                       <i :class="getRoleIcon(progress.role)" class="me-2"></i>
@@ -135,7 +135,7 @@
       <!-- Meddelande när ingen data finns tillgänglig -->
       <div v-else class="text-center py-5">
         <i class="bi bi-graph-up text-muted" style="font-size: 3rem;"></i>
-        <h5 class="mt-3 text-muted">Ingen projektsstatus tillgänglig</h5>
+        <h5 class="mt-3 text-muted">Ingen projektstatus tillgänglig</h5>
         <p class="text-muted">{{ statusMessage }}</p>
       </div>
     </div>
@@ -159,7 +159,7 @@ const error = ref('')
 // Meddelande för tom status
 const statusMessage = computed(() => {
   return selectedProjectId.value 
-    ? 'Ingen progress hittades för detta projekt.'
+    ? 'Ingen progression hittades för detta projekt.'
     : 'Välj ett projekt för att se detaljerad status.'
 })
 
@@ -196,7 +196,7 @@ const handleProjectSelected = (project) => {
   }
 }
 
-// Ladda progressdata för ett specifikt projekt
+// Ladda progressionsdata för ett specifikt projekt
 const loadProjectProgress = async (projectId) => {
   try {
     loading.value = true
@@ -219,7 +219,7 @@ const loadProjectProgress = async (projectId) => {
   }
 }
 
-// Ladda progressdata för alla projekt
+// Ladda progressionsdata för alla projekt
 const loadAllProgress = async () => {
   try {
     loading.value = true
@@ -235,20 +235,20 @@ const loadAllProgress = async () => {
     }
 
   } catch (err) {
-    error.value = 'Kunde inte ladda projektsstatus'
+    error.value = 'Kunde inte ladda projektstatus'
     allProgress.value = []
   } finally {
     loading.value = false
   }
 }
 
-// Beräkna procentuell framsteg för en roll
+// Beräkna procentuella framsteg för en roll
 const getProgressPercentage = (progress) => {
   if (!progress.totalItems || progress.totalItems === 0) return 0
   return (progress.completedItems / progress.totalItems) * 100
 }
 
-// Bestäm färgklass för progressbar baserat på framsteg
+// Bestäm färgklass för progressionsbar baserat på framsteg
 const getProgressBarClass = (progress) => {
   const percentage = getProgressPercentage(progress)
   if (percentage === 100) return 'bg-success'
@@ -322,14 +322,14 @@ watch(() => selectedProjectId.value, (newProjectId) => {
   }
 })
 
-// Ladda all progressdata när komponenten monteras
+// Ladda all progressionsdata när komponenten monteras
 onMounted(() => {
   loadAllProgress()
 })
 </script>
 
 <style scoped>
-/* Styling för individuella progresskort */
+/* Styling för individuella progressionskort */
 .progress-card {
   background: white;
   border: 1px solid #e2e8f0;

@@ -1,4 +1,4 @@
-// stores/users.js - Pinia store för användarhantering med Options API
+// stores/users.js - Pinia-store för användarhantering med Options API
 
 import { defineStore } from 'pinia'
 import { userService } from '@/services/userService'
@@ -70,7 +70,7 @@ export const useUsersStore = defineStore('users', {
         const result = await userService.createUser(userData)
 
         if (result.success) {
-          // Lägg till den nya användaren i statearrayen
+          // Lägg till den nya användaren i state-arrayen
           this.users.push(result.user)
         }
 
@@ -146,7 +146,7 @@ export const useUsersStore = defineStore('users', {
       this.error = null
     },
 
-    // Generera statistik för dashboardvisning
+    // Generera statistik för instrumentpanelvisning
     getStatistics() {
       return {
         total: this.totalUsers,

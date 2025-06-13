@@ -6,7 +6,7 @@
       <div class="row justify-content-center">
         <div class="col-lg-8">
           <div class="text-center">
-            <!-- 404-nummer med stor visuell impact -->
+            <!-- 404-nummer  -->
             <div class="mb-4">
               <h1 class="display-1 fw-bold text-primary" style="font-size: 8rem;">
                 404
@@ -63,7 +63,7 @@
                     <i class="bi bi-speedometer2 text-warning" style="font-size: 2rem;"></i>
                     <h5 class="card-title mt-3">Min instrumentpanel</h5>
                     <p class="card-text text-muted">
-                      Gå till din personliga instrumentpanel.
+                      Gå till din rollbaserade instrumentpanel.
                     </p>
                   </div>
                 </div>

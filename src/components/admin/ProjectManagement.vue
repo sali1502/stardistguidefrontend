@@ -1,4 +1,4 @@
-<!-- components/admin/ProjectManagement.vue -->
+<!-- components/admin/ProjectManagement.vue - adminkomponent för att hantera projekt med CRUD-operationer och checklisthantering -->
 
 <template>
   <div class="project-management">

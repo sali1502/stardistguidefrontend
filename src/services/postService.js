@@ -6,12 +6,12 @@
 import api, { API_ENDPOINTS } from '@/config/api'
 
 export const postService = {
-  // Hämta alla inlägg från backend med flexibel datastruktur-hantering
+  // Hämta alla inlägg från backend
   async getAllPosts() {
     try {
       const response = await api.get(API_ENDPOINTS.POSTS)
 
-      // Hantera olika response-strukturer från backend
+      // Hantera olika respons-strukturer från backend
       let posts = []
 
       if (Array.isArray(response.data)) {
@@ -175,7 +175,7 @@ export const postService = {
     }
   },
 
-  // Validera inläggsdata enligt backend-regler
+  // Validera inläggsdata enligt backend
   validatePostData(postData) {
     const errors = {}
 

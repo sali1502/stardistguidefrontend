@@ -1,4 +1,4 @@
-// stores/projects.js - Pinia store för projekthantering med Composition API
+// stores/projects.js - Pinia-store för projekthantering med Composition API
 
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
@@ -128,7 +128,7 @@ export const useProjectsStore = defineStore('projects', () => {
     }
   }
 
-  // Hämta specifikt projekt baserat på id
+  // Hämta specifikt projekt baserat på ID
   const getProjectById = async (id) => {
     try {
       const result = await projectService.getProjectById(id)

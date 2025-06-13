@@ -1,4 +1,5 @@
 <!-- App.vue -->
+
 <!-- Rotkomponent för Vue-applikationen - hanterar routing och autentiseringsinitiering -->
 
 <template>
@@ -12,7 +13,7 @@
 import { onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 
-// Initiera auth store för global autentiseringshantering
+// Initiera authstore för global autentiseringshantering
 const authStore = useAuthStore()
 
 // Återställ autentiseringsstatus vid appstart

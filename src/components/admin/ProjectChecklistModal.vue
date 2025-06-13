@@ -1,4 +1,4 @@
-<!-- components/admin/ProjectChecklistModal.vue -->
+<!-- components/admin/ProjectChecklistModal.vue - modal för att hantera checklistpunkter för alla roller inom ett projekt -->
 
 <template>
   <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
@@ -149,7 +149,7 @@ import { checklistService } from '@/services/checklistService'
 import ChecklistItemModal from './ChecklistItemModal.vue'
 import ChecklistItemDeleteModal from './ChecklistItemDeleteModal.vue'
 
-// Props från föräldrakomponent (StatusView.vue via ProjectManagement.vue)
+// Props från föräldrakomponent
 const props = defineProps({
   project: {
     type: Object,
@@ -208,38 +208,105 @@ const cancelItemDelete = () => {
   itemToDelete.value = null
 }
 
-// Gör URL:er klickbara
+// Funktion för tillgängliga länkar med domän och beskrivning
 const makeLinksClickable = (text) => {
   if (!text) return ''
-  const urlRegex = /(https?:\/\/[^\s<>"']+)/gi
-
+  
+  const urlRegex = /https?:\/\/[^\s<>"{}|\\^`]+/gi
+  const usedLinkTexts = new Set() // Spåra använda länktexter för unikhet
+  
   return text.replace(urlRegex, (url) => {
-    const cleanUrl = url.replace(/[.,;:!?]+$/, '')
-    const punctuation = url.slice(cleanUrl.length)
-
+    let cleanUrl = url
+    let punctuation = ''
+    
+    // Hantera interpunktion i slutet av URL:er
+    const punctuationMatch = url.match(/([.,!?;]+)$/)
+    if (punctuationMatch) {
+      const potentialPunct = punctuationMatch[1]
+      if (/^[.,!?;]+$/.test(potentialPunct)) {
+        cleanUrl = url.slice(0, -potentialPunct.length)
+        punctuation = potentialPunct
+      }
+    }
+    
     try {
       const urlObj = new URL(cleanUrl)
       const domain = urlObj.hostname.replace('www.', '')
       const pathParts = urlObj.pathname.split('/').filter(part => part.length > 0)
-
+      
       let linkText = domain
-
-      // Om det finns en path, använd sista delen som titel
+      let description = domain
+      
+      // Bygg beskrivande länktext baserat på path
       if (pathParts.length > 0) {
         const lastPart = pathParts[pathParts.length - 1]
-        if (lastPart.length <= 30) {
-          linkText = lastPart
+        
+        // Kontrollera om sista delen är användbar (inte för lång och inte innehåller filändelser)
+        if (lastPart.length <= 25 && !lastPart.includes('.') && lastPart.length > 1) {
+          const readablePath = lastPart
             .replace(/-/g, ' ')
             .replace(/_/g, ' ')
             .replace(/\b\w/g, l => l.toUpperCase())
+          
+          linkText = `${domain} - ${readablePath}`
+          description = `${readablePath} på ${domain}`
+        } else if (pathParts.length === 1 && pathParts[0].length <= 15) {
+          // För enkla paths som är korta
+          linkText = `${domain}/${pathParts[0]}`
+          description = `${pathParts[0]} på ${domain}`
+        } else if (pathParts.length > 1) {
+          // För längre paths, använd första delen om den är kort
+          const firstPart = pathParts[0]
+          if (firstPart.length <= 15 && !firstPart.includes('.')) {
+            const readableFirst = firstPart
+              .replace(/-/g, ' ')
+              .replace(/_/g, ' ')
+              .replace(/\b\w/g, l => l.toUpperCase())
+            
+            linkText = `${domain} - ${readableFirst}`
+            description = `${readableFirst} på ${domain}`
+          }
         }
       }
-
-      return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="accessible-link" title="Öppnar ${domain} i nytt fönster">${linkText}</a>${punctuation}`
-
+      
+      // Hantera duplicerade länktexter genom att lägga till nummer
+      let finalLinkText = linkText
+      let counter = 1
+      
+      while (usedLinkTexts.has(finalLinkText)) {
+        finalLinkText = `${linkText} (${counter + 1})`
+        counter++
+      }
+      
+      usedLinkTexts.add(finalLinkText)
+      
+      // Skapa tillgänglig länk med beskrivande text och attribut
+      return `<a href="${cleanUrl}" 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 class="accessible-link" 
+                 title="Öppnar ${description} i nytt fönster"
+                 aria-label="Länk till ${description} (öppnas i nytt fönster)">${finalLinkText}</a>${punctuation}`
+      
     } catch (e) {
-      const domain = cleanUrl.split('/')[2] || 'Extern länk'
-      return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="accessible-link">${domain}</a>${punctuation}`
+      // Fallback för ogiltiga URLs
+      let fallbackText = `${cleanUrl.split('/')[2] || 'Extern länk'}`
+      
+      // Hantera duplicerade fallback-texter
+      let counter = 1
+      while (usedLinkTexts.has(fallbackText)) {
+        fallbackText = `Extern länk (${counter + 1})`
+        counter++
+      }
+      
+      usedLinkTexts.add(fallbackText)
+      
+      return `<a href="${cleanUrl}" 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 class="accessible-link"
+                 title="Öppnar extern webbplats i nytt fönster"
+                 aria-label="Länk till extern webbplats (öppnas i nytt fönster)">${fallbackText}</a>${punctuation}`
     }
   })
 }

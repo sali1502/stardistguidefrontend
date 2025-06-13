@@ -25,7 +25,7 @@
               </div>
 
               <form @submit.prevent="handleLogin" class="login-form" novalidate>
-                <!-- Inmatning i formulär av användarnamn med validering -->
+                <!-- Inmatning i formulär med användarnamn och validering -->
                 <div class="form-group">
                   <label for="username" class="form-label">Användarnamn</label>
                   <input id="username" v-model="form.username" type="text" class="form-control"
@@ -36,7 +36,7 @@
                   </div>
                 </div>
 
-                <!-- Inmatning i formulär av lösenord med validering -->
+                <!-- Inmatning i formulär med lösenord och validering -->
                 <div class="form-group">
                   <label for="password" class="form-label">Lösenord</label>
                   <input id="password" v-model="form.password" type="password" class="form-control"
@@ -113,7 +113,7 @@ const isFormValid = computed(() => {
     !errors.value.password
 })
 
-// Frontend-validering av formulärfält
+// Frontendvalidering av formulärfält
 const validateForm = () => {
   // Återställ alla valideringsfel
   errors.value = {
@@ -191,7 +191,7 @@ const clearFieldErrors = () => {
 
 // Kontrollera autentiseringsstatus vid komponentinitiering
 onMounted(() => {
-  // Omdirigera redan inloggade användare till deras dashboard
+  // Omdirigera redan inloggade användare till deras instrumentpanel
   if (authStore.isAuthenticated && authStore.user) {
     authStore.redirectToDashboard(authStore.userRole)
   }

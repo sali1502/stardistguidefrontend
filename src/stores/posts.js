@@ -1,4 +1,4 @@
-// stores/posts.js - Pinia store för inläggshantering anpassad för MongoDB-backend
+// stores/posts.js - Pinia-store för inläggshantering
 
 import { defineStore } from 'pinia'
 import { postService } from '@/services/postService'
@@ -38,7 +38,7 @@ export const usePostsStore = defineStore('posts', {
         .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
         .slice(0, 10),
 
-    // Filtrera inlägg baserat på användarroll (admin ser alla, andra ser sin egen roll)
+    // Filtrera inlägg baserat på användarroll (admin ser alla, användare ser sin egen roll)
     postsByRole: (state) => (role) => {
       if (role === 'admin') return state.posts
       return state.posts.filter(post => post.role === role)
@@ -46,7 +46,7 @@ export const usePostsStore = defineStore('posts', {
   },
 
   actions: {
-    // Hämta alla inlägg från backend-API:et
+    // Hämta alla inlägg från backend-API
     async fetchPosts() {
       this.loading = true
       this.error = null
@@ -99,7 +99,7 @@ export const usePostsStore = defineStore('posts', {
         const result = await postService.updatePost(id, postData)
 
         if (result.success) {
-          // Uppdatera inlägget i statearrayen
+          // Uppdatera inlägget i state-arrayen
           const index = this.posts.findIndex(post => post.id === id || post._id === id)
           if (index !== -1) {
             this.posts[index] = result.post

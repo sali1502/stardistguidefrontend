@@ -1,5 +1,4 @@
-<!-- components/admin/AdminOverview.vue -->
-
+<!-- components/admin/AdminOverview.vue - adminöversikt med statistik och navigation till olika adminfunktioner -->
 <template>
   <div class="admin-overview">
     <!-- Felmeddelande vid problem med datainhämtning -->

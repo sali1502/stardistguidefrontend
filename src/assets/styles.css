@@ -633,14 +633,21 @@ span.badge.bg-primary {
 }
 
 /* TILLGÄNGLIGA LÄNKAR - löser WAVE-varningar */
+
 .accessible-link {
   color: #004085 !important;
   text-decoration: none !important;
   border-bottom: 1px solid transparent !important;
   transition: all 0.2s ease !important;
+  
+
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  display: inline !important;
+  white-space: normal !important;
 }
 
-.accessible-link:hover,
+.accessible-link:hover, 
 .accessible-link:focus {
   color: #002752 !important;
   border-bottom-color: #002752 !important;
@@ -652,14 +659,14 @@ span.badge.bg-primary {
   outline-offset: 2px !important;
 }
 
-a.accessible-link,
-a.accessible-link:visited,
+a.accessible-link, 
+a.accessible-link:visited, 
 a.accessible-link:link {
   color: #004085 !important;
 }
 
-a.accessible-link:hover,
-a.accessible-link:focus,
+a.accessible-link:hover, 
+a.accessible-link:focus, 
 a.accessible-link:active {
   color: #002752 !important;
 }

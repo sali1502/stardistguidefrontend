@@ -1,4 +1,4 @@
-// stores/auth.js - Pinia store för autentisering och användarhantering
+// stores/auth.js - Pinia-store för autentisering och användarhantering
 
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'

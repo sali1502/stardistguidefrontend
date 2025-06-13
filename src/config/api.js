@@ -37,18 +37,9 @@ apiClient.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`
     }
     
-    // Loggning under utveckling för felsökning
-    if (import.meta.env.DEV) {
-      console.log(`API-förfrågan: ${config.method?.toUpperCase()} ${config.url}`)
-      if (config.data) {
-        console.log('Skickad data:', config.data)
-      }
-    }
-    
     return config
   },
   (error) => {
-    console.error('Fel vid förberedelse av förfrågan:', error)
     return Promise.reject(error)
   }
 )
@@ -56,11 +47,6 @@ apiClient.interceptors.request.use(
 // Interceptor för inkommande svar - hantera fel och automatisk utloggning
 apiClient.interceptors.response.use(
   (response) => {
-    // Framgångsrik förfrågan - logga under utveckling
-    if (import.meta.env.DEV) {
-      console.log(`API-svar: ${response.status} ${response.config.url}`)
-    }
-    
     return response
   },
   (error) => {
@@ -73,30 +59,25 @@ apiClient.interceptors.response.use(
       switch (status) {
         case 401:
           // Obehörig - token har löpt ut eller är ogiltig
-          console.warn('Session har löpt ut, loggar ut användaren')
           authStore.logout()
           window.location.href = '/login'
           break
           
         case 403:
           // Förbjuden - användaren saknar behörighet för denna åtgärd
-          console.warn('Åtkomst nekad - otillräckliga behörigheter')
           break
           
         case 400:
         case 404:
         case 409:
         case 422:
-          // Klientfel - vanliga användarfel som inte kräver error-nivå loggning
-          if (import.meta.env.DEV) {
-            console.warn(`Klientfel ${status}:`, data.message || data)
-          }
+          // Klientfel - vanliga användarfel, loggas inte som errors
           break
           
         case 500:
         default:
-          // Serverfel - oväntade fel som bör loggas som errors
-          console.error(`Serverfel ${status}:`, data.message || data)
+          // Serverfel - oväntade fel, loggas som errors
+          break
       }
       
       // Returnera enhetligt fel-objekt för konsekvent felhantering
@@ -108,7 +89,6 @@ apiClient.interceptors.response.use(
       })
     } else if (error.request) {
       // Nätverksfel - servern kan inte nås
-      console.error('Nätverksfel - servern svarar inte')
       return Promise.reject({
         status: 0,
         message: 'Kan inte ansluta till servern. Kontrollera din internetanslutning.',
@@ -116,7 +96,6 @@ apiClient.interceptors.response.use(
       })
     } else {
       // Oväntat fel under förfrågan
-      console.error('Okänt fel vid API-anrop:', error.message)
       return Promise.reject({
         message: error.message || 'Ett oväntat fel uppstod',
         isUnknownError: true

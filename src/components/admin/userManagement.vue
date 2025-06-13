@@ -1,8 +1,8 @@
-<!-- components/admin/userManagement.vue -->
+<!-- components/admin/userManagement.vue - adminkomponent för att hantera användare med CRUD-operationer och responsiv design -->
 
 <template>
     <div class="user-management">
-        <!-- Sidhuvud med titel och skapaknapp -->
+        <!-- Sidhuvud med titel och skapa-knapp -->
         <div
             class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
             <div>

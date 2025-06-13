@@ -1,4 +1,4 @@
-<!-- components/admin/ChecklistItemModal.vue -->
+<!-- components/admin/ChecklistItemModal.vue - modal för att skapa och redigera checklistpunkter med unikhetstvalidering -->
 
 <template>
   <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.7);">
@@ -79,7 +79,7 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
 
-// Props från ProjectChecklistModal.vue (föräldrakomponent)
+// Props från föräldrakomponent
 const props = defineProps({
   item: {
     type: Object,
@@ -103,7 +103,7 @@ const props = defineProps({
   }
 })
 
-// Events som skickas till ProjectChecklistModal.vue (föräldrakomponent)
+// Events som skickas till föräldrakomponent
 const emit = defineEmits(['save', 'close'])
 
 // Formulärdata för checklistpunkt
@@ -130,38 +130,67 @@ const isFormValid = computed(() => {
     Object.keys(errors.value).length === 0
 })
 
-// Klickbar länk från backend
-const makeLinksClickable = (text) => {
+// Funktion för tillgängliga länkar med unikt aria-label
+const makeLinksClickable = (text, layoutType = 'desktop', uniqueId = '') => {
   if (!text) return ''
-  const urlRegex = /(https?:\/\/[^\s<>"']+)/gi
-  
+
+  const urlRegex = /https?:\/\/[^\s<>"{}|\\^`\[\]]+(?:#[^\s<>"{}|\\^`\[\]]*)?/gi
+
   return text.replace(urlRegex, (url) => {
-    const cleanUrl = url.replace(/[.,;:!?]+$/, '')
-    const punctuation = url.slice(cleanUrl.length)
-    
+    let cleanUrl = url
+    let punctuation = ''
+
+    // Hantera interpunktion i slutet av URL:er
+    const punctuationMatch = url.match(/([.,!?;]+)$/)
+    if (punctuationMatch) {
+      cleanUrl = url.slice(0, -punctuationMatch[1].length)
+      punctuation = punctuationMatch[1]
+    }
+
+    // URL-säkerhet för mellanslag
+    const safeUrl = cleanUrl.replace(/\s/g, '%20')
+
     try {
       const urlObj = new URL(cleanUrl)
       const domain = urlObj.hostname.replace('www.', '')
       const pathParts = urlObj.pathname.split('/').filter(part => part.length > 0)
-      
+
       let linkText = domain
-      
-      // Om det finns en path, använd sista delen som titel
+      let description = domain
+
+      // Lägg till path-information om det finns en användbar sista del
       if (pathParts.length > 0) {
         const lastPart = pathParts[pathParts.length - 1]
-        if (lastPart.length <= 30) {
-          linkText = lastPart
-            .replace(/-/g, ' ')
-            .replace(/_/g, ' ')
-            .replace(/\b\w/g, l => l.toUpperCase())
+        if (lastPart.length <= 25 && !lastPart.includes('.') && lastPart.length > 1) {
+          const readablePath = lastPart.replace(/-/g, ' ').replace(/_/g, ' ')
+          linkText = `${domain} - ${readablePath}`
+          description = `${readablePath} på ${domain}`
         }
       }
-      
-      return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="accessible-link" title="Öppnar ${domain} i nytt fönster">${linkText}</a>${punctuation}`
-      
+
+      // Skapa unikt aria-label med layout och post-titel
+      const postTitle = uniqueId || 'inlägg'
+      const ariaLabel = `Länk till ${description} från ${layoutType}-vy i ${postTitle} (öppnas i nytt fönster)`
+
+      return `<a href="${safeUrl}" 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 class="accessible-link" 
+                 title="Öppnar ${description} i nytt fönster"
+                 aria-label="${ariaLabel}">${linkText}</a>${punctuation}`
+
     } catch (e) {
-      const domain = cleanUrl.split('/')[2] || 'Extern länk'
-      return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="accessible-link">${domain}</a>${punctuation}`
+      // Fallback för ogiltiga URLs
+      const fallbackText = cleanUrl.split('/')[2] || 'Extern länk'
+      const postTitle = uniqueId || 'inlägg'
+      const ariaLabel = `Länk till extern webbplats från ${layoutType}-vy i ${postTitle} (öppnas i nytt fönster)`
+
+      return `<a href="${safeUrl}" 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 class="accessible-link"
+                 title="Öppnar extern webbplats i nytt fönster"
+                 aria-label="${ariaLabel}">${fallbackText}</a>${punctuation}`
     }
   })
 }

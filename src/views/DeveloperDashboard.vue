@@ -1,4 +1,4 @@
-<!-- views/DeveloperDashboard.vue - Dashboard för utvecklarrollen -->
+<!-- views/DeveloperDashboard.vue - Vy för utvecklarrollen -->
 
 <template>
   <BaseDashboard>

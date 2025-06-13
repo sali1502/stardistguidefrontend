@@ -1,5 +1,5 @@
 // services/projectService.js
-// Service för projekthantering - hanterar all kommunikation med backend för projekt-CRUD operationer
+// Service för projekthantering - hanterar all kommunikation med backend för CRUD operationer för projekt
 // Inkluderar frontend-validering, felhantering och dataformatering för UI-komponenter
 // Stöder administratörsfunktioner för att skapa, läsa, uppdatera och ta bort projekt
 
@@ -84,7 +84,7 @@ export const projectService = {
         }
       }
       
-      // Fallback för axios response-fel
+      // Fallback för axios responsfel
       if (error.response) {
         const status = error.response.status
         const data = error.response.data
@@ -128,7 +128,7 @@ export const projectService = {
         message: 'Projekt uppdaterat framgångsrikt'
       }
     } catch (error) {
-      // Specialhantering för MongoDB duplicate key-fel
+      // Kontroll om projektnamn redan finns lagrad i databasen
       if (error.message && error.message.includes('E11000 duplicate key error')) {
         return {
           success: false,
@@ -155,7 +155,7 @@ export const projectService = {
         }
       }
       
-      // Fallback för axios response-fel
+      // Fallback för axios responsfel
       if (error.response) {
         const status = error.response.status
         const data = error.response.data
@@ -196,7 +196,7 @@ export const projectService = {
         message: 'Projekt borttaget framgångsrikt'
       }
     } catch (error) {
-      // Hantera Axios response-fel
+      // Hantera Axios responsfel
       if (error.response) {
         const data = error.response.data
         return {

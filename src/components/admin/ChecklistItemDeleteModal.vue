@@ -1,5 +1,4 @@
-<!-- components/admin/ChecklistItemDeleteModal.vue -->
-
+<!-- components/admin/ChecklistItemDeleteModal.vue - bekräftelsedialog för borttagning av checklistpunkter -->
 <template>
   <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.8);">
     <div class="modal-dialog modal-sm">
