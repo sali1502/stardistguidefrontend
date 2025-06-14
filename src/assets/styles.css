@@ -767,19 +767,72 @@ div.modal-content div.modal-body h6 {
   line-height: 1.2 !important;
 }
 
+/* RUBRIKHIERARKI - ENDAST FÖR 404-SIDAN */
+/* Uppdaterad för korrekt HTML-struktur: H2, H3, H4, H5 */
 
+/* H2 - 404-numret (tidigare H1) */
+.container .row.justify-content-center .col-lg-8 .text-center .mb-4 h2.display-1,
+.container .row.justify-content-center .col-lg-8 .text-center .mb-4 h2.display-1.fw-bold {
+  font-size: 8rem !important;
+  font-weight: bold !important;
+  color: var(--bs-primary) !important;
+}
 
+/* H3 - "Sidan hittades inte" med ikon (tidigare H2) */
+.container .row.justify-content-center .col-lg-8 .text-center h3.h1.mb-3,
+.container .row.justify-content-center .col-lg-8 .text-center > h3:has(i.bi-search),
+.container .row.justify-content-center .col-lg-8 .text-center > h3.h1:first-of-type {
+  font-size: 2.5rem !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  margin-bottom: 1rem !important;
+}
 
+/* H4 - Kort-titlar (tidigare H5) */
+.container .row.justify-content-center .col-lg-8 .text-center .row.g-4.my-5 .card-title,
+.container .row.justify-content-center .col-lg-8 .text-center .row.g-4.my-5 h4.card-title.mt-3,
+.container .row.justify-content-center .col-lg-8 .text-center .card h4.card-title {
+  font-size: 1.125rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+  margin-top: 1rem !important;
+}
 
+/* H5 - "Eller besök en av dessa sidor" (tidigare H4) */
+.container .row.justify-content-center .col-lg-8 .text-center .mt-5 h5.h5.mb-3,
+.container .row.justify-content-center .col-lg-8 .text-center div.mt-5 h5.h5,
+.container .row.justify-content-center .col-lg-8 .text-center > div:has(.d-flex.gap-2) h5 {
+  font-size: 1.25rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+  margin-bottom: 1rem !important;
+}
 
+/* Fallback-selektorer för äldre browsers (utan :has()) */
+.container .row.justify-content-center .col-lg-8 .text-center > h3 > i.bi-search {
+  font-size: inherit !important;
+}
 
+/* Extra specifika selektorer för säkerhet */
+div.container div.row.justify-content-center div.col-lg-8 div.text-center h2.display-1.fw-bold {
+  font-size: 8rem !important;
+  font-weight: bold !important;
+}
 
+div.container div.row.justify-content-center div.col-lg-8 div.text-center h3.h1.mb-3 {
+  font-size: 2.5rem !important;
+  font-weight: 600 !important;
+}
 
+div.container div.row.justify-content-center div.col-lg-8 div.text-center div.mt-5 h5.h5.mb-3 {
+  font-size: 1.25rem !important;
+  font-weight: 500 !important;
+}
 
-
-
-
-
+div.container div.row.justify-content-center div.col-lg-8 div.text-center .card-body h4.card-title {
+  font-size: 1.125rem !important;
+  font-weight: 500 !important;
+}
 
 /* RESPONSIVITET */
 
@@ -792,6 +845,24 @@ div.modal-content div.modal-body h6 {
   .login-content {
     min-height: calc(100vh - 100px);
     padding: 1.5rem 1rem;
+  }
+
+  /* 404-sida responsiv anpassning */
+  .container .row.justify-content-center .col-lg-8 .text-center .mb-4 h2.display-1 {
+    font-size: 6rem !important;
+  }
+  
+  .container .row.justify-content-center .col-lg-8 .text-center h3.h1.mb-3,
+  .container .row.justify-content-center .col-lg-8 .text-center > h3:has(i.bi-search) {
+    font-size: 2rem !important;
+  }
+  
+  .container .row.justify-content-center .col-lg-8 .text-center .mt-5 h5.h5.mb-3 {
+    font-size: 1.125rem !important;
+  }
+  
+  .container .row.justify-content-center .col-lg-8 .text-center .card h4.card-title {
+    font-size: 1rem !important;
   }
 }
 
@@ -814,6 +885,24 @@ div.modal-content div.modal-body h6 {
 
   .footer {
     padding: 1.5rem 0;
+  }
+
+  /* 404-sida responsiv anpassning för mycket små skärmar */
+  .container .row.justify-content-center .col-lg-8 .text-center .mb-4 h2.display-1 {
+    font-size: 4.5rem !important;
+  }
+  
+  .container .row.justify-content-center .col-lg-8 .text-center h3.h1.mb-3,
+  .container .row.justify-content-center .col-lg-8 .text-center > h3:has(i.bi-search) {
+    font-size: 1.75rem !important;
+  }
+  
+  .container .row.justify-content-center .col-lg-8 .text-center .mt-5 h5.h5.mb-3 {
+    font-size: 1rem !important;
+  }
+  
+  .container .row.justify-content-center .col-lg-8 .text-center .card h4.card-title {
+    font-size: 0.95rem !important;
   }
 }
 

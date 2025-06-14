@@ -1,4 +1,4 @@
-<!-- views/NotFoundView.vue - 404-sida med rollbaserad navigation -->
+<!-- views/NotFoundView.vue - 404-sida med rollbaserad navigation och korrekt rubrikhierarki -->
 
 <template>
   <BaseDashboard>
@@ -6,18 +6,16 @@
       <div class="row justify-content-center">
         <div class="col-lg-8">
           <div class="text-center">
-            <!-- 404-nummer  -->
             <div class="mb-4">
-              <h1 class="display-1 fw-bold text-primary" style="font-size: 8rem;">
+              <h2 class="display-1 fw-bold text-primary" style="font-size: 8rem;">
                 404
-              </h1>
+              </h2>
             </div>
 
-            <!-- Huvudrubrik med ikon -->
-            <h2 class="h1 mb-3">
+            <h3 class="h1 mb-3">
               <i class="bi bi-search me-2"></i>
               Sidan hittades inte
-            </h2>
+            </h3>
 
             <!-- Förklarande beskrivning -->
             <p class="lead text-muted mb-4">
@@ -37,7 +35,7 @@
                 <div class="card h-100 border-0 shadow-sm">
                   <div class="card-body text-center">
                     <i class="bi bi-house-door text-primary" style="font-size: 2rem;"></i>
-                    <h5 class="card-title mt-3">Gå till startsidan</h5>
+                    <h4 class="card-title mt-3">Gå till startsidan</h4>
                     <p class="card-text text-muted">
                       Börja om från början och hitta det du letar efter.
                     </p>
@@ -49,7 +47,7 @@
                 <div class="card h-100 border-0 shadow-sm">
                   <div class="card-body text-center">
                     <i class="bi bi-arrow-left-circle text-success" style="font-size: 2rem;"></i>
-                    <h5 class="card-title mt-3">Gå tillbaka</h5>
+                    <h4 class="card-title mt-3">Gå tillbaka</h4>
                     <p class="card-text text-muted">
                       Återvänd till den föregående sidan du besökte.
                     </p>
@@ -61,7 +59,7 @@
                 <div class="card h-100 border-0 shadow-sm">
                   <div class="card-body text-center">
                     <i class="bi bi-speedometer2 text-warning" style="font-size: 2rem;"></i>
-                    <h5 class="card-title mt-3">Min instrumentpanel</h5>
+                    <h4 class="card-title mt-3">Min instrumentpanel</h4>
                     <p class="card-text text-muted">
                       Gå till din rollbaserade instrumentpanel.
                     </p>
@@ -85,7 +83,7 @@
 
             <!-- Snabblänkar till tillgängliga sidor för inloggade användare -->
             <div v-if="isAuthenticated && availablePages.length > 0" class="mt-5">
-              <h4 class="h5 mb-3">Eller besök en av dessa sidor:</h4>
+              <h5 class="h5 mb-3">Eller besök en av dessa sidor:</h5>
               <div class="d-flex gap-2 justify-content-center flex-wrap">
                 <router-link v-for="page in availablePages" :key="page.path" :to="page.path"
                   class="btn btn-outline-secondary btn-sm">
@@ -147,7 +145,7 @@ const availablePages = computed(() => {
     }
   ]
 
-  // Rollspecifika dashboardsidor
+  // Rollspecifika instrumentpaneler
   if (userRole.value) {
     const roleDashboards = {
       'admin': { path: '/dashboard/admin', name: 'Admin', icon: 'bi bi-gear' },
@@ -156,12 +154,12 @@ const availablePages = computed(() => {
       'tester': { path: '/dashboard/tester', name: 'Testare', icon: 'bi bi-bug' }
     }
 
-    // Lägg till användarens egen dashboard först
-    if (roleDashboards[userRole.value]) {
+    // Lägg till användarens egen instrumentpanel
+    if (userRole.value !== 'admin' && roleDashboards[userRole.value]) {
       pages.unshift(roleDashboards[userRole.value])
     }
 
-    // Admin kan se alla dashboards
+    // Admin kan se alla andra instrumentpaneler
     if (userRole.value === 'admin') {
       Object.entries(roleDashboards).forEach(([role, dashboard]) => {
         if (role !== 'admin' && !pages.find(p => p.path === dashboard.path)) {
@@ -180,7 +178,7 @@ const getHomeRoute = () => {
     return '/login'
   }
 
-  // Omdirigera till användarens rollspecifika dashboard
+  // Omdirigera till användarens rollspecifika instrumentpanel
   if (userRole.value) {
     const dashboardRoutes = {
       'admin': '/dashboard/admin',

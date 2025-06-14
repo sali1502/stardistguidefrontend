@@ -6,15 +6,18 @@
       <div class="card-body">
         <div class="row align-items-center">
           <div class="col-md-8">
-            <label for="project-dropdown" class="form-label mb-2">
+            <div id="project-label" class="form-label mb-2">
               <i class="bi bi-folder me-2"></i>
               Välj projekt
-            </label>
+            </div>
 
             <!-- Bootstrap dropdown-meny  -->
             <div class="dropdown w-100">
-              <button id="project-dropdown" class="btn btn-light dropdown-toggle w-100 text-start" type="button" data-bs-toggle="dropdown"
-                :disabled="loading">
+              <button class="btn btn-light dropdown-toggle w-100 text-start" 
+                      type="button" 
+                      data-bs-toggle="dropdown"
+                      aria-labelledby="project-label"
+                      :disabled="loading">
                 {{ selectedProjectName || 'Välj ett projekt...' }}
               </button>
               <ul class="dropdown-menu w-100 mobile-dropdown">
@@ -244,6 +247,15 @@ onMounted(() => {
 
 .badge.bg-success {
   background-color: #334155 !important;
+}
+
+/* Säkerställ att label-elementet ser ut som en form-label */
+#project-label {
+  color: #374151;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
 }
 
 /* Mobilanpassning för Bootstrap dropdown-meny */
