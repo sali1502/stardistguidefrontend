@@ -1,4 +1,4 @@
-<!-- components/admin/UserFormModal.vue - modal för att skapa och redigera användare med validering och felhantering -->
+<!-- components/admin/PostFormModal.vue - modal för att skapa och redigera rollspecifika inlägg -->
 
 <template>
   <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
@@ -7,7 +7,7 @@
         <div class="modal-header">
           <h4 class="modal-title">
             <i :class="isEditing ? 'bi bi-pencil' : 'bi bi-plus-lg'" class="me-2"></i>
-            {{ isEditing ? 'Redigera användare' : 'Skapa ny användare' }}
+            {{ isEditing ? 'Redigera inlägg' : 'Skapa nytt inlägg' }}
           </h4>
           <button type="button" class="btn-close" @click="$emit('close')"><span
               class="visually-hidden">Stäng</span></button>
@@ -15,20 +15,20 @@
 
         <form @submit.prevent="handleSubmit">
           <div class="modal-body">
-            <!-- Användarnamn -->
+            <!-- Titel för inlägget -->
             <div class="mb-3">
-              <label for="username" class="form-label">
-                Användarnamn <span class="text-danger">*</span>
+              <label for="title" class="form-label">
+                Titel <span class="text-danger">*</span>
               </label>
-              <input id="username" v-model="form.username" type="text" class="form-control"
-                :class="{ 'is-invalid': hasBeenTouched.username && errors.username }" placeholder="Skriv användarnamn"
-                required @blur="hasBeenTouched.username = true" />
-              <div v-if="hasBeenTouched.username && errors.username" class="invalid-feedback">
-                {{ errors.username }}
+              <input id="title" v-model="form.title" type="text" class="form-control"
+                :class="{ 'is-invalid': hasBeenTouched.title && errors.title }" placeholder="Skriv en titel" required
+                @blur="hasBeenTouched.title = true" />
+              <div v-if="hasBeenTouched.title && errors.title" class="invalid-feedback">
+                {{ errors.title }}
               </div>
             </div>
 
-            <!-- Rollval för användaren -->
+            <!-- Rollval (följer backend enum) -->
             <div class="mb-3">
               <label for="role" class="form-label">
                 Roll <span class="text-danger">*</span>
@@ -37,7 +37,6 @@
                 :class="{ 'is-invalid': hasBeenTouched.role && errors.role }" required
                 @blur="hasBeenTouched.role = true" @change="hasBeenTouched.role = true">
                 <option value="">Välj roll</option>
-                <option value="admin">Administratör</option>
                 <option value="designer">Designer</option>
                 <option value="developer">Utvecklare</option>
                 <option value="tester">Testare</option>
@@ -45,42 +44,42 @@
               <div v-if="hasBeenTouched.role && errors.role" class="invalid-feedback">
                 {{ errors.role }}
               </div>
+              <div class="form-text">
+                <i class="bi bi-info-circle me-1"></i>
+                Admins kan se alla inlägg oavsett roll.
+              </div>
             </div>
 
-            <!-- Lösenordsfält med visa/dölj-funktionalitet -->
+            <!-- Innehåll för inlägget -->
             <div class="mb-3">
-              <label for="password" class="form-label">
-                {{ isEditing ? 'Nytt lösenord (lämna tomt för att behålla)' : 'Lösenord' }}
-                <span v-if="!isEditing" class="text-danger">*</span>
+              <label for="content" class="form-label">
+                Innehåll <span class="text-danger">*</span>
               </label>
-              <div class="input-group">
-                <input id="password" v-model="form.password" :type="showPassword ? 'text' : 'password'"
-                  class="form-control" :class="{ 'is-invalid': hasBeenTouched.password && errors.password }"
-                  placeholder="Skriv lösenord (minst 6 tecken)" :required="!isEditing"
-                  @blur="hasBeenTouched.password = true" />
-                <button type="button" class="btn btn-outline-secondary" @click="showPassword = !showPassword"
-                  :title="showPassword ? 'Dölj lösenord' : 'Visa lösenord'">
-                  <i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
-                </button>
+              <textarea id="content" v-model="form.content" class="form-control"
+                :class="{ 'is-invalid': hasBeenTouched.content && errors.content }" rows="3"
+                placeholder="Skriv ditt innehåll här..." required @blur="hasBeenTouched.content = true"></textarea>
+              <div class="form-text">
+                <i class="bi bi-link-45deg me-1"></i>
+                Skriv hela webbadresser med https:// (t.ex. https://digg.se) så blir de automatiskt klickbara länkar som
+                öppnas i nytt fönster.
               </div>
-              <div v-if="hasBeenTouched.password && errors.password" class="invalid-feedback">
-                {{ errors.password }}
+              <div v-if="hasBeenTouched.content && errors.content" class="invalid-feedback">
+                {{ errors.content }}
               </div>
             </div>
 
-            <!-- Beskrivning av vald roll -->
-            <div v-if="form.role" class="alert alert-info">
-              <h5>
+            <!-- Rollbeskrivning (visas när roll är vald) -->
+            <div v-if="form.role" class="alert alert-info py-2">
+              <div class="d-flex align-items-center">
                 <i :class="getRoleIcon(form.role)" class="me-2"></i>
-                {{ getRoleDisplayName(form.role) }}
-              </h5>
-              <p class="mb-0 small">{{ getRoleDescription(form.role) }}</p>
+                <small>{{ getRoleDescription(form.role) }}</small>
+              </div>
             </div>
 
             <!-- Felmeddelande från API vid problem -->
-            <div v-if="apiError" class="alert alert-danger">
+            <div v-if="apiError" class="alert alert-danger py-2">
               <i class="bi bi-exclamation-triangle-fill me-2"></i>
-              {{ apiError }}
+              <small>{{ apiError }}</small>
             </div>
           </div>
 
@@ -90,7 +89,7 @@
             </button>
             <button type="submit" class="btn btn-primary" :disabled="loading || !isFormValid">
               <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
-              {{ isEditing ? 'Uppdatera' : 'Skapa' }} användare
+              {{ isEditing ? 'Uppdatera' : 'Skapa' }} inlägg
             </button>
           </div>
         </form>
@@ -104,7 +103,7 @@ import { ref, computed, watch, onMounted } from 'vue'
 
 // Props från föräldrakomponent
 const props = defineProps({
-  user: {
+  post: {
     type: Object,
     default: null
   },
@@ -117,31 +116,30 @@ const props = defineProps({
 // Events som skickas till föräldrakomponent
 const emit = defineEmits(['save', 'close'])
 
-// Formulärdata för användare
+// Formulärdata för inlägg
 const form = ref({
-  username: '',
+  title: '',
   role: '',
-  password: ''
+  content: ''
 })
 
 // Felhantering och validering
 const errors = ref({})
 const apiError = ref('')
 const loading = ref(false)
-const showPassword = ref(false)
 
 // Spåra vilka fält användaren har interagerat med för bättre UX
 const hasBeenTouched = ref({
-  username: false,
+  title: false,
   role: false,
-  password: false
+  content: false
 })
 
 // Kontrollera om formuläret är giltigt för att aktivera submitknapp
 const isFormValid = computed(() => {
-  return form.value.username.trim() &&
+  return form.value.title.trim() &&
     form.value.role &&
-    (props.isEditing || form.value.password) &&
+    form.value.content.trim() &&
     Object.keys(errors.value).length === 0
 })
 
@@ -149,15 +147,13 @@ const isFormValid = computed(() => {
 const validateForm = () => {
   errors.value = {}
 
-  // Validera användarnamn med stöd för svenska tecken
-  if (!form.value.username.trim()) {
-    errors.value.username = 'Användarnamn är obligatoriskt'
-  } else if (form.value.username.trim().length < 3) {
-    errors.value.username = 'Användarnamn måste vara minst 3 tecken'
-  } else if (form.value.username.trim().length > 50) {
-    errors.value.username = 'Användarnamn får inte vara längre än 50 tecken'
-  } else if (!/^[\p{L}0-9._-]+$/u.test(form.value.username.trim())) {
-    errors.value.username = 'Användarnamn får bara innehålla bokstäver (inklusive åäö), siffror, punkt, underscore och bindestreck'
+  // Validera titel
+  if (!form.value.title.trim()) {
+    errors.value.title = 'Titel är obligatorisk'
+  } else if (form.value.title.trim().length < 3) {
+    errors.value.title = 'Titel måste vara minst 3 tecken'
+  } else if (form.value.title.trim().length > 100) {
+    errors.value.title = 'Titel får inte vara längre än 100 tecken'
   }
 
   // Validera roll
@@ -165,15 +161,11 @@ const validateForm = () => {
     errors.value.role = 'Roll är obligatorisk'
   }
 
-  // Validera lösenord (endast obligatoriskt för nya användare)
-  if (!props.isEditing) {
-    if (!form.value.password) {
-      errors.value.password = 'Lösenord är obligatoriskt'
-    } else if (form.value.password.length < 6) {
-      errors.value.password = 'Lösenord måste vara minst 6 tecken'
-    }
-  } else if (form.value.password && form.value.password.length < 6) {
-    errors.value.password = 'Lösenord måste vara minst 6 tecken'
+  // Validera innehåll
+  if (!form.value.content.trim()) {
+    errors.value.content = 'Innehåll är obligatoriskt'
+  } else if (form.value.content.trim().length < 10) {
+    errors.value.content = 'Innehåll måste vara minst 10 tecken'
   }
 
   return Object.keys(errors.value).length === 0
@@ -181,11 +173,11 @@ const validateForm = () => {
 
 // Hantera formulärinlämning
 const handleSubmit = async () => {
-  // Markera alla fält som "berörda" vid submit för att visa eventuella fel
+  // Markera alla fält som berörda vid submit för att visa eventuella fel
   hasBeenTouched.value = {
-    username: true,
+    title: true,
     role: true,
-    password: true
+    content: true
   }
 
   // Rensa tidigare API-fel
@@ -199,78 +191,40 @@ const handleSubmit = async () => {
   loading.value = true
 
   try {
-    const userData = {
-      username: form.value.username.trim(),
-      role: form.value.role
+    const postData = {
+      title: form.value.title.trim(),
+      role: form.value.role,
+      content: form.value.content.trim()
     }
 
-    // Lägg till lösenord endast om det är ifyllt
-    if (form.value.password) {
-      userData.password = form.value.password
-    }
+    const result = await emit('save', postData)
 
-    // Skicka data till föräldrakomponent med callback för hantering av resultat
-    emit('save', userData, (result) => {
-      // Hantera undefined/null resultat
-      if (!result) {
-        apiError.value = 'Ingen respons från servern'
-        loading.value = false
-        return
+    // Hantera fel från föräldrakomponent
+    if (result && result.success === false) {
+      // Backend returnerar fel
+      apiError.value = result.message || 'Ett fel uppstod'
+
+      if (result.errors) {
+        errors.value = { ...errors.value, ...result.errors }
       }
+    } else if (result && result.error) {
+      // API-fel struktur (från api.js)
+      apiError.value = result.error
 
-      // Hantera explicit fel (success: false)
-      if (result.success === false) {
-        apiError.value = result.message || 'Ett fel uppstod'
-
-        // Hantera fältspecifika fel om de finns
-        if (result.errors) {
-          errors.value = { ...errors.value, ...result.errors }
+      // Om det finns fältspecifika fel
+      if (result.field && result.error) {
+        errors.value = {
+          [result.field]: result.error
         }
-        loading.value = false
-        return
       }
-
-      // Hantera fel via erroregenskap
-      if (result.error) {
-        apiError.value = result.error
-        loading.value = false
-        return
-      }
-
-      // Hantera fel via message utan success-flagga
-      if (result.message && result.success !== true) {
-        apiError.value = result.message
-        loading.value = false
-        return
-      }
-
-      // Hantera HTTP-felkoder
-      if (result.status >= 400 || result.statusCode >= 400) {
-        apiError.value = result.message || 'Ett fel uppstod vid skapande av användare'
-        loading.value = false
-        return
-      }
-
-      // Framgång - stäng modal
-      loading.value = false
+    } else if (result && result.success === true) {
+      // Stäng modal vid framgång
       emit('close')
-    })
-
+    }
   } catch (error) {
     // Hantera oväntade fel under formulärhantering
-    if (error.response) {
-      // HTTP-fel med response från server
-      const errorMessage = error.response.data?.message ||
-        error.response.data?.error ||
-        `Server error: ${error.response.status}`
-      apiError.value = errorMessage
-    } else if (error.message) {
-      // Vanligt JavaScript-fel
-      apiError.value = error.message
-    } else {
-      // Fallback för okända fel
-      apiError.value = 'Ett oväntat fel uppstod'
-    }
+    apiError.value = 'Ett oväntat fel uppstod'
+  } finally {
     loading.value = false
   }
 }
@@ -278,18 +232,16 @@ const handleSubmit = async () => {
 // Hämta ikon för given roll
 const getRoleIcon = (role) => {
   const icons = {
-    'admin': 'bi bi-gear-fill',
     'designer': 'bi bi-palette-fill',
     'developer': 'bi bi-code-slash',
     'tester': 'bi bi-bug-fill'
   }
-  return icons[role] || 'bi bi-person'
+  return icons[role] || 'bi bi-file-text'
 }
 
 // Översätt rollnamn till svenska för visning
 const getRoleDisplayName = (role) => {
   const names = {
-    'admin': 'Administratör',
     'designer': 'Designer',
     'developer': 'Utvecklare',
     'tester': 'Testare'
@@ -300,71 +252,63 @@ const getRoleDisplayName = (role) => {
 // Hämta beskrivning för vald roll
 const getRoleDescription = (role) => {
   const descriptions = {
-    'admin': 'Full åtkomst till alla funktioner.',
-    'designer': 'Kan se designerspecifika checklistor och inlägg.',
-    'developer': 'Kan se utvecklarspecifika checklistor och inlägg.',
-    'tester': 'Kan se testspecifika checklistor och inlägg.'
+    'designer': 'Inlägget kommer endast synas för användare med designerrollen.',
+    'developer': 'Inlägget kommer endast synas för användare med utvecklarrollen.',
+    'tester': 'Inlägget kommer endast synas för användare med testrollen.'
   }
   return descriptions[role] || ''
 }
 
 // Realtidsvalidering när användaren skriver (endast för berörda fält)
-watch([() => form.value.username, () => form.value.password, () => form.value.role], () => {
-  if (hasBeenTouched.value.username || hasBeenTouched.value.password || hasBeenTouched.value.role) {
+watch([() => form.value.title, () => form.value.content, () => form.value.role], () => {
+  if (hasBeenTouched.value.title || hasBeenTouched.value.content || hasBeenTouched.value.role) {
     validateForm()
   }
 })
 
-// Initiera formulär när användardata ändras (för redigeringsläge)
-watch(() => props.user, (newUser) => {
-  if (newUser && props.isEditing) {
+// Initiera formulär när inläggsdata ändras (för redigeringsläge)
+watch(() => props.post, (newPost) => {
+  if (newPost && props.isEditing) {
     form.value = {
-      username: newUser.username || '',
-      role: newUser.role || '',
-      password: ''
+      title: newPost.title || '',
+      role: newPost.role || '',
+      content: newPost.content || ''
     }
-    // Vid redigering markera användarnamn och roll som redan berörda
+    // Vid redigering markera alla fält som redan berörda.
     hasBeenTouched.value = {
-      username: true,
+      title: true,
       role: true,
-      password: false
+      content: true
     }
   }
 }, { immediate: true })
 
 // Initiera formulär när komponenten laddas
 onMounted(() => {
-  if (props.user && props.isEditing) {
+  if (props.post && props.isEditing) {
     // Redigeringsläge - fyll i befintliga data
     form.value = {
-      username: props.user.username || '',
-      role: props.user.role || '',
-      password: ''
+      title: props.post.title || '',
+      role: props.post.role || '',
+      content: props.post.content || ''
     }
     hasBeenTouched.value = {
-      username: true,
+      title: true,
       role: true,
-      password: false
+      content: true
     }
   } else {
-    // Skapa ny användare - börja med tomt formulär
+    // Skapa nytt inlägg - börja med tomt formulär
     form.value = {
-      username: '',
+      title: '',
       role: '',
-      password: ''
+      content: ''
     }
     hasBeenTouched.value = {
-      username: false,
+      title: false,
       role: false,
-      password: false
+      content: false
     }
-
-    // Säkerställ att fälten är tomma
-    setTimeout(() => {
-      form.value.username = ''
-      form.value.role = ''
-      form.value.password = ''
-    }, 0)
   }
 
   // Rensa alla fel vid start
@@ -398,34 +342,71 @@ onMounted(() => {
   border-radius: 8px;
 }
 
-.input-group .btn {
-  border-left: 0;
+.modal-dialog {
+  max-width: 500px;
 }
 
-.input-group .form-control:focus+.btn {
+.form-control[rows] {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-control:focus,
+.form-select:focus {
   border-color: #86b7fe;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
 
 .form-text {
-  font-size: 0.875rem;
   color: #6c757d;
+  font-size: 0.8em;
 }
 
-::placeholder {
-  color: #6c757d !important;
-  opacity: 1;
+.alert-info {
+  background-color: #cff4fc;
+  border-color: #b6effb;
+  color: #055160;
 }
 
-::-moz-placeholder {
-  color: #6c757d !important;
-  opacity: 1;
+.alert-danger {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
 }
 
-::-webkit-input-placeholder {
-  color: #6c757d !important;
+/* Responsiv anpassning för olika skärmstorlekar */
+@media (max-width: 768px) {
+  .modal-dialog {
+    max-width: 95%;
+    margin: 1rem auto;
+  }
+
+  .form-control[rows] {
+    min-height: 70px;
+  }
 }
 
-::-ms-input-placeholder {
-  color: #6c757d !important;
+@media (max-width: 576px) {
+  .modal-dialog {
+    margin: 0.5rem;
+  }
+
+  .modal-header {
+    padding: 0.75rem;
+  }
+
+  .modal-body {
+    padding: 0.75rem;
+  }
+
+  .modal-footer {
+    padding: 0.75rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .modal-footer .btn {
+    width: 100%;
+  }
 }
 </style>

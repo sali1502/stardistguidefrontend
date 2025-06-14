@@ -198,8 +198,8 @@ const handleItemToggle = (item, completed) => {
   toggleChecklistItem(item, completed)
 }
 
-// Funktion för tillgängliga länkar med layout-specifika identifierare
-const makeLinksClickable = (text, layoutType = 'desktop', uniqueId = '') => {
+// Klickbara länkar - tillgänglighetsanpassade
+const makeLinksClickable = (text) => {
   if (!text) return ''
   
   const urlRegex = /https?:\/\/[^\s<>"{}|\\^`\[\]]+(?:#[^\s<>"{}|\\^`\[\]]*)?/gi
@@ -215,7 +215,6 @@ const makeLinksClickable = (text, layoutType = 'desktop', uniqueId = '') => {
       punctuation = punctuationMatch[1]
     }
     
-    // URL-säkerhet för mellanslag
     const safeUrl = cleanUrl.replace(/\s/g, '%20')
     
     try {
@@ -226,39 +225,33 @@ const makeLinksClickable = (text, layoutType = 'desktop', uniqueId = '') => {
       let linkText = domain
       let description = domain
       
-      // Bygg länktext med path-information (utan layout-suffix)
+      // Bygg länktext med path-information
       if (pathParts.length > 0) {
         const lastPart = pathParts[pathParts.length - 1]
-        if (lastPart.length <= 25 && !lastPart.includes('.') && lastPart.length > 1) {
-          const readablePath = lastPart.replace(/-/g, ' ').replace(/_/g, ' ')
+        if (lastPart.length > 1 && !lastPart.includes('.')) {
+          let readablePath = lastPart.replace(/-/g, ' ').replace(/_/g, ' ')
+          
+          // Klipp av om för långt (istället för att utesluta)
+          if (readablePath.length > 30) {
+            readablePath = readablePath.substring(0, 27) + '...'
+          }
+          
           linkText = `${domain} - ${readablePath}`
           description = `${readablePath} på ${domain}`
-        } else {
-          linkText = domain
         }
-      } else {
-        linkText = domain
       }
       
-      // Unikt title-attribut för WAVE-kompatibilitet med layout-info
-      const uniqueTitle = `Öppnar ${description} i nytt fönster (${layoutType}-vy)`
-      
       return `<a href="${safeUrl}" 
                  target="_blank" 
                  rel="noopener noreferrer" 
-                 class="accessible-link" 
-                 title="${uniqueTitle}">${linkText}</a>${punctuation}`
+                 title="Öppnar ${description} i nytt fönster">${linkText}</a>${punctuation}`
       
     } catch (e) {
-      // Fallback för ogiltiga URLs
       const fallbackText = cleanUrl.split('/')[2] || 'Extern länk'
-      const uniqueTitle = `Öppnar extern webbplats i nytt fönster (${layoutType}-vy)`
-      
       return `<a href="${safeUrl}" 
                  target="_blank" 
                  rel="noopener noreferrer" 
-                 class="accessible-link"
-                 title="${uniqueTitle}">${fallbackText}</a>${punctuation}`
+                 title="Öppnar extern webbplats i nytt fönster">${fallbackText}</a>${punctuation}`
     }
   })
 }
@@ -360,5 +353,39 @@ watch(() => [props.projectId, props.userRole], () => {
 
 .role-checklist .text-success {
   color: #28a745 !important;
+}
+
+.role-checklist a,
+.role-checklist a:link,
+.role-checklist a:visited {
+  color: #004085 !important;
+  text-decoration: none !important;
+  border-bottom: 1px solid transparent !important;
+  transition: all 0.2s ease !important;
+}
+
+.role-checklist a:hover,
+.role-checklist a:focus {
+  color: #002752 !important;
+  border-bottom-color: #002752 !important;
+  text-decoration: none !important;
+}
+
+.role-checklist a:focus {
+  outline: 2px solid #004085 !important;
+  outline-offset: 2px !important;
+}
+
+/* Ytterligare säkerhet för alla länktyper */
+.checklist-items a,
+.checklist-items a:link,
+.checklist-items a:visited {
+  color: #004085 !important;
+}
+
+.checklist-items a:hover,
+.checklist-items a:focus,
+.checklist-items a:active {
+  color: #002752 !important;
 }
 </style>

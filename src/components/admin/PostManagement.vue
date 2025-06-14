@@ -87,7 +87,7 @@
                     </span>
                   </td>
                   <td>
-                    <div class="post-content-preview" v-html="makeLinksClickable(truncateContent(post.content, 100), 'desktop', post.title)">
+                    <div class="post-content-preview" v-html="makeLinksClickable(truncateContent(post.content, 100))">
                     </div>
                   </td>
                   <td>
@@ -127,7 +127,7 @@
                       <i :class="getRoleIcon(post.role)" class="me-2"></i>
                       <div>
                         <div class="fw-bold">{{ post.title }}</div>
-                        <div class="text-muted small" v-html="makeLinksClickable(truncateContent(post.content, 80), 'tablet', post.title)">
+                        <div class="text-muted small" v-html="makeLinksClickable(truncateContent(post.content, 80))">
                         </div>
                         <div class="text-muted small">{{ formatDate(post.createdAt) }}</div>
                       </div>
@@ -166,7 +166,7 @@
                     <span class="badge bg-darkblue" style="font-size: 0.7em;">
                       {{ getRoleDisplayName(post.role) }}
                     </span>
-                    <div class="text-muted small mt-2" v-html="makeLinksClickable(truncateContent(post.content, 120), 'mobile', post.title)"></div>
+                    <div class="text-muted small mt-2" v-html="makeLinksClickable(truncateContent(post.content, 120))"></div>
                     <div class="text-muted small mt-1">
                       Skapad: {{ formatDate(post.createdAt) }}
                     </div>
@@ -308,8 +308,8 @@ const handleDelete = async () => {
   }
 }
 
-// Funktion för tillgängliga länkar med layout-specifika identifierare
-const makeLinksClickable = (text, layoutType = 'desktop', uniqueId = '') => {
+// Klickbara länkar - tillgänglinghetsanpassade
+const makeLinksClickable = (text) => {
   if (!text) return ''
   
   const urlRegex = /https?:\/\/[^\s<>"{}|\\^`\[\]]+(?:#[^\s<>"{}|\\^`\[\]]*)?/gi
@@ -325,7 +325,6 @@ const makeLinksClickable = (text, layoutType = 'desktop', uniqueId = '') => {
       punctuation = punctuationMatch[1]
     }
     
-    // URL-säkerhet för mellanslag
     const safeUrl = cleanUrl.replace(/\s/g, '%20')
     
     try {
@@ -339,38 +338,67 @@ const makeLinksClickable = (text, layoutType = 'desktop', uniqueId = '') => {
       // Bygg länktext med path-information
       if (pathParts.length > 0) {
         const lastPart = pathParts[pathParts.length - 1]
-        if (lastPart.length <= 25 && !lastPart.includes('.') && lastPart.length > 1) {
-          const readablePath = lastPart.replace(/-/g, ' ').replace(/_/g, ' ')
+        if (lastPart.length > 1 && !lastPart.includes('.')) {
+          let readablePath = lastPart.replace(/-/g, ' ').replace(/_/g, ' ')
+          
+          // Klipp av om för långt
+          if (readablePath.length > 30) {
+            readablePath = readablePath.substring(0, 27) + '...'
+          }
+          
           linkText = `${domain} - ${readablePath}`
           description = `${readablePath} på ${domain}`
-        } else {
-          linkText = domain
         }
-      } else {
-        linkText = domain
       }
       
-      // Unikt title-attribut för WAVE-kompatibilitet med layout-info
-      const uniqueTitle = `Öppnar ${description} i nytt fönster (${layoutType}-vy)`
-      
       return `<a href="${safeUrl}" 
                  target="_blank" 
                  rel="noopener noreferrer" 
-                 class="accessible-link" 
-                 title="${uniqueTitle}">${linkText}</a>${punctuation}`
+                 title="Öppnar ${description} i nytt fönster">${linkText}</a>${punctuation}`
       
     } catch (e) {
-      // Fallback för ogiltiga URLs
       const fallbackText = cleanUrl.split('/')[2] || 'Extern länk'
-      const uniqueTitle = `Öppnar extern webbplats i nytt fönster (${layoutType}-vy)`
-      
       return `<a href="${safeUrl}" 
                  target="_blank" 
                  rel="noopener noreferrer" 
-                 class="accessible-link"
-                 title="${uniqueTitle}">${fallbackText}</a>${punctuation}`
+                 title="Öppnar extern webbplats i nytt fönster">${fallbackText}</a>${punctuation}`
     }
   })
+}
+
+// Funktion som respekterar hela URLs
+const truncateContent = (content, maxLength) => {
+  if (!content) return '-'
+  if (content.length <= maxLength) return content
+  
+  // Hitta alla URLs i texten
+  const urlRegex = /https?:\/\/[^\s<>"{}|\\^`\[\]]+/gi
+  const urls = content.match(urlRegex) || []
+  
+  // Om texten innehåller URLs, var försiktig med trunkering
+  if (urls.length > 0) {
+    // Hitta position för första URL
+    const firstUrlStart = content.search(urlRegex)
+    
+    if (firstUrlStart < maxLength) {
+      // URL:en börjar före trunkerings-punkten
+      const firstUrl = urls[0]
+      const urlEnd = firstUrlStart + firstUrl.length
+      
+      if (urlEnd > maxLength) {
+        // URL:en skulle klippas av - trunkera före URL:en istället
+        if (firstUrlStart > 20) {
+          return content.substring(0, firstUrlStart - 1).trim() + '...'
+        } else {
+          // URL:en startar tidigt - behåll hela URL:en även om det blir längre
+          return content.substring(0, urlEnd) + (content.length > urlEnd ? '...' : '')
+        }
+      }
+    }
+  }
+  
+  // Standard-trunkering om inga URLs påverkas
+  return content.substring(0, maxLength) + '...'
 }
 
 // Hämta ikon för given roll
@@ -386,13 +414,6 @@ const getRoleIcon = (role) => {
 // Översätt rollnamn till svenska för visning
 const getRoleDisplayName = (role) => {
   return postsStore.getRoleDisplayName(role)
-}
-
-// Förkorta innehåll för förhandsvisning i tabeller
-const truncateContent = (content, maxLength) => {
-  if (!content) return '-'
-  if (content.length <= maxLength) return content
-  return content.substring(0, maxLength) + '...'
 }
 
 // Formatera datum för visning i användargränssnittet
@@ -525,12 +546,13 @@ onMounted(() => {
   color: white !important;
 }
 
-/* Små skärmar - förbättra responsivitet */
+/* Fix för små skärmar - förbättra responsivitet */
 @media (max-width: 400px) {
   .post-card {
     padding: 0.75rem;
   }
   
+  /* Direkt övergång till vertikal layout vid 400px för att undvika hopp */
   .post-card .d-flex {
     flex-direction: column;
     gap: 0.5rem;
@@ -562,5 +584,4 @@ onMounted(() => {
   hyphens: auto;
   line-height: 1.3;
 }
-
 </style>

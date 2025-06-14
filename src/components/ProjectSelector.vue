@@ -6,14 +6,14 @@
       <div class="card-body">
         <div class="row align-items-center">
           <div class="col-md-8">
-            <label class="form-label mb-2">
+            <label for="project-dropdown" class="form-label mb-2">
               <i class="bi bi-folder me-2"></i>
               Välj projekt
             </label>
 
             <!-- Bootstrap dropdown-meny  -->
             <div class="dropdown w-100">
-              <button class="btn btn-light dropdown-toggle w-100 text-start" type="button" data-bs-toggle="dropdown"
+              <button id="project-dropdown" class="btn btn-light dropdown-toggle w-100 text-start" type="button" data-bs-toggle="dropdown"
                 :disabled="loading">
                 {{ selectedProjectName || 'Välj ett projekt...' }}
               </button>
