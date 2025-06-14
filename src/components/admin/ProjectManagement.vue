@@ -178,9 +178,9 @@
           <div class="d-sm-none">
             <div v-for="project in projectsStore.projects" :key="project.id || project._id" class="project-card mb-3">
               <div class="d-flex justify-content-between align-items-start">
-                <div class="d-flex align-items-center flex-grow-1">
-                  <i class="bi bi-folder text-blue-medium me-3"></i>
-                  <div>
+                <div class="d-flex align-items-start flex-grow-1">
+                  <i class="bi bi-folder text-blue-medium me-3 mt-1"></i>
+                  <div class="flex-grow-1">
                     <div class="fw-bold mb-1">{{ project.name }}</div>
                     <div class="text-muted small mt-1">
                       Skapad: {{ formatDate(project.createdAt) }}
@@ -491,5 +491,44 @@ onMounted(() => {
 
 .btn-delete i {
   color: white !important;
+}
+
+/* Fix för små skärmar - förbättra responsivitet för projektkort */
+@media (max-width: 400px) {
+  .project-card {
+    padding: 0.75rem;
+  }
+  
+  /* Direkt övergång till vertikal layout vid 400px för att undvika hopp */
+  .project-card .d-flex {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .project-card .btn-group {
+    align-self: flex-end;
+    margin-top: 0.5rem;
+    min-width: 120px; /* Lite bredare för tre knappar */
+    flex-shrink: 0;
+  }
+  
+  .project-card .flex-grow-1 {
+    min-width: 0; /* Tillåt content att krympa */
+    word-break: break-word;
+  }
+  
+  .project-card .fw-bold {
+    line-height: 1.2;
+    word-break: break-word;
+    hyphens: auto;
+  }
+}
+
+/* Förbättra hantering av långa projektnamn på alla skärmstorlekar */
+.project-card .fw-bold {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+  line-height: 1.3;
 }
 </style>

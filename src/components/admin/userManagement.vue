@@ -179,9 +179,9 @@
                     <div class="d-sm-none">
                         <div v-for="user in usersStore.users" :key="user.id || user._id" class="user-card mb-3">
                             <div class="d-flex justify-content-between align-items-start">
-                                <div class="d-flex align-items-center flex-grow-1">
-                                    <i :class="getRoleIcon(user.role)" class="me-3"></i>
-                                    <div>
+                                <div class="d-flex align-items-start flex-grow-1">
+                                    <i :class="getRoleIcon(user.role)" class="me-3 mt-1"></i>
+                                    <div class="flex-grow-1">
                                         <div class="fw-bold mb-1">{{ user.username }}</div>
                                         <span class="badge bg-darkblue">
                                             {{ user.roleDisplayName }}
@@ -537,5 +537,44 @@ onMounted(() => {
 
 .btn-delete i {
     color: white !important;
+}
+
+/* Fix för små skärmar - förbättra responsivitet för användarkort */
+@media (max-width: 400px) {
+    .user-card {
+        padding: 0.75rem;
+    }
+    
+    /* Direkt övergång till vertikal layout vid 400px för att undvika hopp */
+    .user-card .d-flex {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .user-card .btn-group {
+        align-self: flex-end;
+        margin-top: 0.5rem;
+        min-width: 80px;
+        flex-shrink: 0;
+    }
+    
+    .user-card .flex-grow-1 {
+        min-width: 0; /* Tillåt content att krympa */
+        word-break: break-word;
+    }
+    
+    .user-card .fw-bold {
+        line-height: 1.2;
+        word-break: break-word;
+        hyphens: auto;
+    }
+}
+
+/* Förbättra hantering av långa användarnamn på alla skärmstorlekar */
+.user-card .fw-bold {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+    line-height: 1.3;
 }
 </style>

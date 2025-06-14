@@ -308,7 +308,7 @@ const handleDelete = async () => {
   }
 }
 
-// Enkel funktion för tillgängliga länkar med layout-specifika identifierare
+// Funktion för tillgängliga länkar med layout-specifika identifierare
 const makeLinksClickable = (text, layoutType = 'desktop', uniqueId = '') => {
   if (!text) return ''
   
@@ -336,28 +336,21 @@ const makeLinksClickable = (text, layoutType = 'desktop', uniqueId = '') => {
       let linkText = domain
       let description = domain
       
-      // Layout-suffix för unika synliga texter
-      const layoutSuffix = {
-        'desktop': '',
-        'tablet': ' (tablet)',
-        'mobile': ' (mobil)'
-      }
-      
       // Bygg länktext med path-information
       if (pathParts.length > 0) {
         const lastPart = pathParts[pathParts.length - 1]
         if (lastPart.length <= 25 && !lastPart.includes('.') && lastPart.length > 1) {
           const readablePath = lastPart.replace(/-/g, ' ').replace(/_/g, ' ')
-          linkText = `${domain} - ${readablePath}${layoutSuffix[layoutType]}`
+          linkText = `${domain} - ${readablePath}`
           description = `${readablePath} på ${domain}`
         } else {
-          linkText = `${domain}${layoutSuffix[layoutType]}`
+          linkText = domain
         }
       } else {
-        linkText = `${domain}${layoutSuffix[layoutType]}`
+        linkText = domain
       }
       
-      // Unikt title-attribut för WAVE-kompatibilitet
+      // Unikt title-attribut för WAVE-kompatibilitet med layout-info
       const uniqueTitle = `Öppnar ${description} i nytt fönster (${layoutType}-vy)`
       
       return `<a href="${safeUrl}" 
@@ -531,4 +524,43 @@ onMounted(() => {
 .btn-delete i {
   color: white !important;
 }
+
+/* Små skärmar - förbättra responsivitet */
+@media (max-width: 400px) {
+  .post-card {
+    padding: 0.75rem;
+  }
+  
+  .post-card .d-flex {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .post-card .btn-group {
+    align-self: flex-end;
+    margin-top: 0.5rem;
+    min-width: 80px;
+    flex-shrink: 0;
+  }
+  
+  .post-card .flex-grow-1 {
+    min-width: 0; /* Tillåt content att krympa */
+    word-break: break-word;
+  }
+  
+  .post-card .fw-bold {
+    line-height: 1.2;
+    word-break: break-word;
+    hyphens: auto;
+  }
+}
+
+/* Förbättra hantering av långa titlar på alla skärmstorlekar */
+.post-card .fw-bold {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+  line-height: 1.3;
+}
+
 </style>

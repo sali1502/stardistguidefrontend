@@ -70,67 +70,67 @@ const posts = ref([])
 const loading = ref(true)
 const error = ref('')
 
-// Funktion för tillgängliga länkar med unikt aria-label
+// Funktion för tillgängliga länkar med layout-specifika identifierare
 const makeLinksClickable = (text, layoutType = 'desktop', uniqueId = '') => {
   if (!text) return ''
-
+  
   const urlRegex = /https?:\/\/[^\s<>"{}|\\^`\[\]]+(?:#[^\s<>"{}|\\^`\[\]]*)?/gi
-
+  
   return text.replace(urlRegex, (url) => {
     let cleanUrl = url
     let punctuation = ''
-
+    
     // Hantera interpunktion i slutet av URL:er
     const punctuationMatch = url.match(/([.,!?;]+)$/)
     if (punctuationMatch) {
       cleanUrl = url.slice(0, -punctuationMatch[1].length)
       punctuation = punctuationMatch[1]
     }
-
+    
     // URL-säkerhet för mellanslag
     const safeUrl = cleanUrl.replace(/\s/g, '%20')
-
+    
     try {
       const urlObj = new URL(cleanUrl)
       const domain = urlObj.hostname.replace('www.', '')
       const pathParts = urlObj.pathname.split('/').filter(part => part.length > 0)
-
+      
       let linkText = domain
       let description = domain
-
-      // Lägg till path-information om det finns en användbar sista del
+      
+      // Bygg länktext med path-information
       if (pathParts.length > 0) {
         const lastPart = pathParts[pathParts.length - 1]
         if (lastPart.length <= 25 && !lastPart.includes('.') && lastPart.length > 1) {
           const readablePath = lastPart.replace(/-/g, ' ').replace(/_/g, ' ')
           linkText = `${domain} - ${readablePath}`
           description = `${readablePath} på ${domain}`
+        } else {
+          linkText = domain
         }
+      } else {
+        linkText = domain
       }
-
-      // Skapa unikt aria-label med layout och post-titel
-      const postTitle = uniqueId || 'inlägg'
-      const ariaLabel = `Länk till ${description} från ${layoutType}-vy i ${postTitle} (öppnas i nytt fönster)`
-
+      
+      // Unikt title-attribut för WAVE-kompatibilitet med layout-info
+      const uniqueTitle = `Öppnar ${description} i nytt fönster (${layoutType}-vy)`
+      
       return `<a href="${safeUrl}" 
                  target="_blank" 
                  rel="noopener noreferrer" 
                  class="accessible-link" 
-                 title="Öppnar ${description} i nytt fönster"
-                 aria-label="${ariaLabel}">${linkText}</a>${punctuation}`
-
+                 title="${uniqueTitle}">${linkText}</a>${punctuation}`
+      
     } catch (e) {
       // Fallback för ogiltiga URLs
       const fallbackText = cleanUrl.split('/')[2] || 'Extern länk'
-      const postTitle = uniqueId || 'inlägg'
-      const ariaLabel = `Länk till extern webbplats från ${layoutType}-vy i ${postTitle} (öppnas i nytt fönster)`
-
+      const uniqueTitle = `Öppnar extern webbplats i nytt fönster (${layoutType}-vy)`
+      
       return `<a href="${safeUrl}" 
                  target="_blank" 
                  rel="noopener noreferrer" 
                  class="accessible-link"
-                 title="Öppnar extern webbplats i nytt fönster"
-                 aria-label="${ariaLabel}">${fallbackText}</a>${punctuation}`
+                 title="${uniqueTitle}">${fallbackText}</a>${punctuation}`
     }
   })
 }

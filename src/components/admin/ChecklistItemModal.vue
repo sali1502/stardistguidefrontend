@@ -130,91 +130,97 @@ const isFormValid = computed(() => {
     Object.keys(errors.value).length === 0
 })
 
-// Funktion för tillgängliga länkar med unikt aria-label
-const makeLinksClickable = (text, layoutType = 'desktop', uniqueId = '') => {
-  if (!text) return ''
+// Validera att titeln är unik bland befintliga checklistpunkter
+const validateUniqueTitle = (title, existingItems, currentItemId) => {
+  if (!title || !existingItems || existingItems.length === 0) {
+    return true
+  }
 
-  const urlRegex = /https?:\/\/[^\s<>"{}|\\^`\[\]]+(?:#[^\s<>"{}|\\^`\[\]]*)?/gi
-
-  return text.replace(urlRegex, (url) => {
-    let cleanUrl = url
-    let punctuation = ''
-
-    // Hantera interpunktion i slutet av URL:er
-    const punctuationMatch = url.match(/([.,!?;]+)$/)
-    if (punctuationMatch) {
-      cleanUrl = url.slice(0, -punctuationMatch[1].length)
-      punctuation = punctuationMatch[1]
+  const trimmedTitle = title.trim().toLowerCase()
+  
+  return !existingItems.some(item => {
+    // Exkludera aktuell item vid redigering
+    if (currentItemId && (item.id === currentItemId || item._id === currentItemId)) {
+      return false
     }
-
-    // URL-säkerhet för mellanslag
-    const safeUrl = cleanUrl.replace(/\s/g, '%20')
-
-    try {
-      const urlObj = new URL(cleanUrl)
-      const domain = urlObj.hostname.replace('www.', '')
-      const pathParts = urlObj.pathname.split('/').filter(part => part.length > 0)
-
-      let linkText = domain
-      let description = domain
-
-      // Lägg till path-information om det finns en användbar sista del
-      if (pathParts.length > 0) {
-        const lastPart = pathParts[pathParts.length - 1]
-        if (lastPart.length <= 25 && !lastPart.includes('.') && lastPart.length > 1) {
-          const readablePath = lastPart.replace(/-/g, ' ').replace(/_/g, ' ')
-          linkText = `${domain} - ${readablePath}`
-          description = `${readablePath} på ${domain}`
-        }
-      }
-
-      // Skapa unikt aria-label med layout och post-titel
-      const postTitle = uniqueId || 'inlägg'
-      const ariaLabel = `Länk till ${description} från ${layoutType}-vy i ${postTitle} (öppnas i nytt fönster)`
-
-      return `<a href="${safeUrl}" 
-                 target="_blank" 
-                 rel="noopener noreferrer" 
-                 class="accessible-link" 
-                 title="Öppnar ${description} i nytt fönster"
-                 aria-label="${ariaLabel}">${linkText}</a>${punctuation}`
-
-    } catch (e) {
-      // Fallback för ogiltiga URLs
-      const fallbackText = cleanUrl.split('/')[2] || 'Extern länk'
-      const postTitle = uniqueId || 'inlägg'
-      const ariaLabel = `Länk till extern webbplats från ${layoutType}-vy i ${postTitle} (öppnas i nytt fönster)`
-
-      return `<a href="${safeUrl}" 
-                 target="_blank" 
-                 rel="noopener noreferrer" 
-                 class="accessible-link"
-                 title="Öppnar extern webbplats i nytt fönster"
-                 aria-label="${ariaLabel}">${fallbackText}</a>${punctuation}`
-    }
+    
+    return item.title && item.title.trim().toLowerCase() === trimmedTitle
   })
 }
 
 // Översätt rollnamn till svenska för visning
 const getRoleDisplayName = (role) => {
   const names = {
-    designer: 'Designer',
-    developer: 'Utvecklare',
-    tester: 'Testare'
+    'designer': 'Designer',
+    'developer': 'Utvecklare', 
+    'tester': 'Testare'
   }
   return names[role] || role
 }
 
-// Validera att titel är unik inom befintliga checklistpunkter
-const validateUniqueTitle = (newTitle, existingItems, excludeId = null) => {
-  if (!newTitle || !newTitle.trim()) return true
-
-  const trimmedTitle = newTitle.toLowerCase().trim()
-
-  return !existingItems.some(item =>
-    item.title.toLowerCase().trim() === trimmedTitle &&
-    (item._id !== excludeId && item.id !== excludeId)
-  )
+// Funktion för tillgängliga länkar med layout-specifika identifierare
+const makeLinksClickable = (text, layoutType = 'desktop', uniqueId = '') => {
+  if (!text) return ''
+  
+  const urlRegex = /https?:\/\/[^\s<>"{}|\\^`\[\]]+(?:#[^\s<>"{}|\\^`\[\]]*)?/gi
+  
+  return text.replace(urlRegex, (url) => {
+    let cleanUrl = url
+    let punctuation = ''
+    
+    // Hantera interpunktion i slutet av URL:er
+    const punctuationMatch = url.match(/([.,!?;]+)$/)
+    if (punctuationMatch) {
+      cleanUrl = url.slice(0, -punctuationMatch[1].length)
+      punctuation = punctuationMatch[1]
+    }
+    
+    // URL-säkerhet för mellanslag
+    const safeUrl = cleanUrl.replace(/\s/g, '%20')
+    
+    try {
+      const urlObj = new URL(cleanUrl)
+      const domain = urlObj.hostname.replace('www.', '')
+      const pathParts = urlObj.pathname.split('/').filter(part => part.length > 0)
+      
+      let linkText = domain
+      let description = domain
+      
+      // Bygg länktext med path-information
+      if (pathParts.length > 0) {
+        const lastPart = pathParts[pathParts.length - 1]
+        if (lastPart.length <= 25 && !lastPart.includes('.') && lastPart.length > 1) {
+          const readablePath = lastPart.replace(/-/g, ' ').replace(/_/g, ' ')
+          linkText = `${domain} - ${readablePath}`
+          description = `${readablePath} på ${domain}`
+        } else {
+          linkText = domain
+        }
+      } else {
+        linkText = domain
+      }
+      
+      // Unikt title-attribut för WAVE-kompatibilitet med layout-info
+      const uniqueTitle = `Öppnar ${description} i nytt fönster (${layoutType}-vy)`
+      
+      return `<a href="${safeUrl}" 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 class="accessible-link" 
+                 title="${uniqueTitle}">${linkText}</a>${punctuation}`
+      
+    } catch (e) {
+      // Fallback för ogiltiga URLs
+      const fallbackText = cleanUrl.split('/')[2] || 'Extern länk'
+      const uniqueTitle = `Öppnar extern webbplats i nytt fönster (${layoutType}-vy)`
+      
+      return `<a href="${safeUrl}" 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 class="accessible-link"
+                 title="${uniqueTitle}">${fallbackText}</a>${punctuation}`
+    }
+  })
 }
 
 // Validera formulärfält

@@ -208,105 +208,67 @@ const cancelItemDelete = () => {
   itemToDelete.value = null
 }
 
-// Funktion för tillgängliga länkar med domän och beskrivning
-const makeLinksClickable = (text) => {
+// Funktion för tillgängliga länkar med layout-specifika identifierare
+const makeLinksClickable = (text, layoutType = 'desktop', uniqueId = '') => {
   if (!text) return ''
-  
-  const urlRegex = /https?:\/\/[^\s<>"{}|\\^`]+/gi
-  const usedLinkTexts = new Set() // Spåra använda länktexter för unikhet
-  
+
+  const urlRegex = /https?:\/\/[^\s<>"{}|\\^`\[\]]+(?:#[^\s<>"{}|\\^`\[\]]*)?/gi
+
   return text.replace(urlRegex, (url) => {
     let cleanUrl = url
     let punctuation = ''
-    
+
     // Hantera interpunktion i slutet av URL:er
     const punctuationMatch = url.match(/([.,!?;]+)$/)
     if (punctuationMatch) {
-      const potentialPunct = punctuationMatch[1]
-      if (/^[.,!?;]+$/.test(potentialPunct)) {
-        cleanUrl = url.slice(0, -potentialPunct.length)
-        punctuation = potentialPunct
-      }
+      cleanUrl = url.slice(0, -punctuationMatch[1].length)
+      punctuation = punctuationMatch[1]
     }
-    
+
+    // URL-säkerhet för mellanslag
+    const safeUrl = cleanUrl.replace(/\s/g, '%20')
+
     try {
       const urlObj = new URL(cleanUrl)
       const domain = urlObj.hostname.replace('www.', '')
       const pathParts = urlObj.pathname.split('/').filter(part => part.length > 0)
-      
+
       let linkText = domain
       let description = domain
-      
-      // Bygg beskrivande länktext baserat på path
+
+      // Bygg länktext med path-information
       if (pathParts.length > 0) {
         const lastPart = pathParts[pathParts.length - 1]
-        
-        // Kontrollera om sista delen är användbar (inte för lång och inte innehåller filändelser)
         if (lastPart.length <= 25 && !lastPart.includes('.') && lastPart.length > 1) {
-          const readablePath = lastPart
-            .replace(/-/g, ' ')
-            .replace(/_/g, ' ')
-            .replace(/\b\w/g, l => l.toUpperCase())
-          
+          const readablePath = lastPart.replace(/-/g, ' ').replace(/_/g, ' ')
           linkText = `${domain} - ${readablePath}`
           description = `${readablePath} på ${domain}`
-        } else if (pathParts.length === 1 && pathParts[0].length <= 15) {
-          // För enkla paths som är korta
-          linkText = `${domain}/${pathParts[0]}`
-          description = `${pathParts[0]} på ${domain}`
-        } else if (pathParts.length > 1) {
-          // För längre paths, använd första delen om den är kort
-          const firstPart = pathParts[0]
-          if (firstPart.length <= 15 && !firstPart.includes('.')) {
-            const readableFirst = firstPart
-              .replace(/-/g, ' ')
-              .replace(/_/g, ' ')
-              .replace(/\b\w/g, l => l.toUpperCase())
-            
-            linkText = `${domain} - ${readableFirst}`
-            description = `${readableFirst} på ${domain}`
-          }
+        } else {
+          linkText = domain
         }
+      } else {
+        linkText = domain
       }
-      
-      // Hantera duplicerade länktexter genom att lägga till nummer
-      let finalLinkText = linkText
-      let counter = 1
-      
-      while (usedLinkTexts.has(finalLinkText)) {
-        finalLinkText = `${linkText} (${counter + 1})`
-        counter++
-      }
-      
-      usedLinkTexts.add(finalLinkText)
-      
-      // Skapa tillgänglig länk med beskrivande text och attribut
-      return `<a href="${cleanUrl}" 
+
+      // Unikt title-attribut för WAVE-kompatibilitet med layout-info
+      const uniqueTitle = `Öppnar ${description} i nytt fönster (${layoutType}-vy)`
+
+      return `<a href="${safeUrl}" 
                  target="_blank" 
                  rel="noopener noreferrer" 
                  class="accessible-link" 
-                 title="Öppnar ${description} i nytt fönster"
-                 aria-label="Länk till ${description} (öppnas i nytt fönster)">${finalLinkText}</a>${punctuation}`
-      
+                 title="${uniqueTitle}">${linkText}</a>${punctuation}`
+
     } catch (e) {
       // Fallback för ogiltiga URLs
-      let fallbackText = `${cleanUrl.split('/')[2] || 'Extern länk'}`
-      
-      // Hantera duplicerade fallback-texter
-      let counter = 1
-      while (usedLinkTexts.has(fallbackText)) {
-        fallbackText = `Extern länk (${counter + 1})`
-        counter++
-      }
-      
-      usedLinkTexts.add(fallbackText)
-      
-      return `<a href="${cleanUrl}" 
+      const fallbackText = cleanUrl.split('/')[2] || 'Extern länk'
+      const uniqueTitle = `Öppnar extern webbplats i nytt fönster (${layoutType}-vy)`
+
+      return `<a href="${safeUrl}" 
                  target="_blank" 
                  rel="noopener noreferrer" 
                  class="accessible-link"
-                 title="Öppnar extern webbplats i nytt fönster"
-                 aria-label="Länk till extern webbplats (öppnas i nytt fönster)">${fallbackText}</a>${punctuation}`
+                 title="${uniqueTitle}">${fallbackText}</a>${punctuation}`
     }
   })
 }
