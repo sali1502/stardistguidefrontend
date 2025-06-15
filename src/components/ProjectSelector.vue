@@ -6,18 +6,15 @@
       <div class="card-body">
         <div class="row align-items-center">
           <div class="col-md-8">
-            <div id="project-label" class="form-label mb-2">
+            <h2 id="project-label" class="form-label mb-2">
               <i class="bi bi-folder me-2"></i>
               Välj projekt
-            </div>
+            </h2>
 
             <!-- Bootstrap dropdown-meny  -->
             <div class="dropdown w-100">
-              <button class="btn btn-light dropdown-toggle w-100 text-start" 
-                      type="button" 
-                      data-bs-toggle="dropdown"
-                      aria-labelledby="project-label"
-                      :disabled="loading">
+              <button class="btn btn-light dropdown-toggle w-100 text-start" type="button" data-bs-toggle="dropdown"
+                aria-labelledby="project-label" :disabled="loading">
                 {{ selectedProjectName || 'Välj ett projekt...' }}
               </button>
               <ul class="dropdown-menu w-100 mobile-dropdown">
@@ -73,7 +70,7 @@
         <div v-if="currentProject" class="mt-3 p-3 bg-light rounded">
           <div class="d-flex justify-content-between align-items-center">
             <div>
-              <h6 class="mb-1">{{ currentProject.name }}</h6>
+              <h3 class="mb-1">{{ currentProject.name }}</h3>
               <small class="text-muted">
                 Skapat: {{ formatDate(currentProject.createdAt) }}
               </small>

@@ -7,10 +7,10 @@
       <div class="card-header">
         <div class="d-flex justify-content-between align-items-center">
           <div>
-            <h5 class="mb-0">
+            <h3 class="mb-0">
               <i :class="getRoleIcon(userRole)" class="me-2"></i>
               {{ getRoleDisplayName(userRole) }} Checklista
-            </h5>
+            </h3>
             <small class="text-muted" v-if="projectName">{{ projectName }}</small>
           </div>
           <div v-if="checklist && checklist.items">
@@ -57,9 +57,9 @@
               </div>
 
               <div class="flex-grow-1">
-                <h6 class="mb-2" :class="{ 'text-decoration-line-through text-muted': item.completed }">
+                <h4 class="mb-2" :class="{ 'text-decoration-line-through text-muted': item.completed }">
                   {{ item.title }}
-                </h6>
+                </h4>
                 <div class="mb-0 text-muted" :class="{ 'text-decoration-line-through': item.completed }"
                   v-html="makeLinksClickable(item.content)">
                 </div>
@@ -78,7 +78,7 @@
     <!-- Meddelande när inga checklistpunkter finns -->
     <div v-else class="text-center py-5">
       <i class="bi bi-list-check text-muted" style="font-size: 3rem;"></i>
-      <h5 class="mt-3 text-muted">Ingen checklista tillgänglig</h5>
+      <h4 class="mt-3 text-muted">Ingen checklista tillgänglig</h4>
       <p class="text-muted">{{ checklistMessage }}</p>
     </div>
   </div>
@@ -201,51 +201,51 @@ const handleItemToggle = (item, completed) => {
 // Klickbara länkar - tillgänglighetsanpassade
 const makeLinksClickable = (text) => {
   if (!text) return ''
-  
+
   const urlRegex = /https?:\/\/[^\s<>"{}|\\^`\[\]]+(?:#[^\s<>"{}|\\^`\[\]]*)?/gi
-  
+
   return text.replace(urlRegex, (url) => {
     let cleanUrl = url
     let punctuation = ''
-    
+
     // Hantera interpunktion i slutet av URL:er
     const punctuationMatch = url.match(/([.,!?;]+)$/)
     if (punctuationMatch) {
       cleanUrl = url.slice(0, -punctuationMatch[1].length)
       punctuation = punctuationMatch[1]
     }
-    
+
     const safeUrl = cleanUrl.replace(/\s/g, '%20')
-    
+
     try {
       const urlObj = new URL(cleanUrl)
       const domain = urlObj.hostname.replace('www.', '')
       const pathParts = urlObj.pathname.split('/').filter(part => part.length > 0)
-      
+
       let linkText = domain
       let description = domain
-      
+
       // Bygg länktext med path-information
       if (pathParts.length > 0) {
         const lastPart = pathParts[pathParts.length - 1]
         if (lastPart.length > 1 && !lastPart.includes('.')) {
           let readablePath = lastPart.replace(/-/g, ' ').replace(/_/g, ' ')
-          
+
           // Klipp av om för långt (istället för att utesluta)
           if (readablePath.length > 30) {
             readablePath = readablePath.substring(0, 27) + '...'
           }
-          
+
           linkText = `${domain} - ${readablePath}`
           description = `${readablePath} på ${domain}`
         }
       }
-      
+
       return `<a href="${safeUrl}" 
                  target="_blank" 
                  rel="noopener noreferrer" 
                  title="Öppnar ${description} i nytt fönster">${linkText}</a>${punctuation}`
-      
+
     } catch (e) {
       const fallbackText = cleanUrl.split('/')[2] || 'Extern länk'
       return `<a href="${safeUrl}" 
