@@ -1,4 +1,4 @@
-<!-- views/NotFoundView.vue - 404-sida med rollbaserad navigation och korrekt rubrikhierarki -->
+<!-- views/NotFoundView.vue - 404-sida med rollbaserad navigation -->
 
 <template>
   <BaseDashboard>
@@ -31,19 +31,7 @@
 
             <!-- Visuella förslag på vad användaren kan göra -->
             <div class="row g-4 my-5">
-              <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                  <div class="card-body text-center">
-                    <i class="bi bi-house-door text-primary" style="font-size: 2rem;"></i>
-                    <h4 class="card-title mt-3">Gå till startsidan</h4>
-                    <p class="card-text text-muted">
-                      Börja om från början och hitta det du letar efter.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-4">
+              <div class="col-md-6">
                 <div class="card h-100 border-0 shadow-sm">
                   <div class="card-body text-center">
                     <i class="bi bi-arrow-left-circle text-success" style="font-size: 2rem;"></i>
@@ -55,7 +43,7 @@
                 </div>
               </div>
 
-              <div class="col-md-4">
+              <div class="col-md-6">
                 <div class="card h-100 border-0 shadow-sm">
                   <div class="card-body text-center">
                     <i class="bi bi-speedometer2 text-warning" style="font-size: 2rem;"></i>
@@ -83,7 +71,9 @@
 
             <!-- Snabblänkar till tillgängliga sidor för inloggade användare -->
             <div v-if="isAuthenticated && availablePages.length > 0" class="mt-5">
-              <h5 class="h5 mb-3">Eller besök en av dessa sidor:</h5>
+              <h5 class="h5 mb-3">
+                Eller besök {{ availablePages.length === 1 ? 'denna sida' : 'en av dessa sidor' }}:
+              </h5>
               <div class="d-flex gap-2 justify-content-center flex-wrap">
                 <router-link v-for="page in availablePages" :key="page.path" :to="page.path"
                   class="btn btn-outline-secondary btn-sm">
@@ -145,28 +135,15 @@ const availablePages = computed(() => {
     }
   ]
 
-  // Rollspecifika instrumentpaneler
-  if (userRole.value) {
-    const roleDashboards = {
-      'admin': { path: '/dashboard/admin', name: 'Admin', icon: 'bi bi-gear' },
-      'designer': { path: '/dashboard/designer', name: 'Designer', icon: 'bi bi-palette' },
-      'developer': { path: '/dashboard/developer', name: 'Utvecklare', icon: 'bi bi-code-slash' },
-      'tester': { path: '/dashboard/tester', name: 'Testare', icon: 'bi bi-bug' }
-    }
-
-    // Lägg till användarens egen instrumentpanel
-    if (userRole.value !== 'admin' && roleDashboards[userRole.value]) {
-      pages.unshift(roleDashboards[userRole.value])
-    }
-
-    // Admin kan se alla andra instrumentpaneler
-    if (userRole.value === 'admin') {
-      Object.entries(roleDashboards).forEach(([role, dashboard]) => {
-        if (role !== 'admin' && !pages.find(p => p.path === dashboard.path)) {
-          pages.push(dashboard)
-        }
-      })
-    }
+  // Admin kan se alla andra instrumentpaneler
+  if (userRole.value === 'admin') {
+    const roleDashboards = [
+      { path: '/dashboard/designer', name: 'Designer', icon: 'bi bi-palette' },
+      { path: '/dashboard/developer', name: 'Utvecklare', icon: 'bi bi-code-slash' },
+      { path: '/dashboard/tester', name: 'Testare', icon: 'bi bi-bug' }
+    ]
+    
+    pages.push(...roleDashboards)
   }
 
   return pages

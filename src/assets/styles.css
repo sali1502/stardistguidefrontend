@@ -192,7 +192,7 @@ body {
   color: #9ca3af;
 }
 
-/* TILLGÄNGLIGHET -  ändrade färger för korrekt validering i WAVE */
+/* TILLGÄNGLIGHET - ändrade färger för korrekt validering i WAVE */
 
 .invalid-feedback {
   color: #b91c1c !important;
@@ -241,7 +241,6 @@ body {
   background: #fef2f2;
   border: 1px solid #fecaca;
   color: #b91c1c !important;
-  /* Förbättrad kontrast */
 }
 
 /* Info-alerts */
@@ -474,7 +473,7 @@ body {
   }
 }
 
-/* SIDFOT*/
+/* SIDFOT */
 
 .footer {
   background: #f8fafc;
@@ -632,43 +631,42 @@ span.badge.bg-primary {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* TILLGÄNGLIGA LÄNKAR - löser WAVE-varningar */
-
-.accessible-link {
-  color: #004085 !important;
-  text-decoration: none !important;
-  border-bottom: 1px solid transparent !important;
+/* WCAG AA-KOMPATIBLA LÄNKAR - enhetligt system med samma färg som tabbarna */
+.role-checklist a,
+.role-checklist a:link,
+.role-checklist a:visited,
+.role-posts a,
+.role-posts a:link, 
+.role-posts a:visited,
+.post-management a,
+.post-management a:link,
+.post-management a:visited,
+.checklist-items a,
+.checklist-items a:link,
+.checklist-items a:visited {
+  color: #1e293b !important;
+  text-decoration: underline !important;
   transition: all 0.2s ease !important;
-  
-
-  word-break: break-word !important;
-  overflow-wrap: break-word !important;
-  display: inline !important;
-  white-space: normal !important;
 }
 
-.accessible-link:hover, 
-.accessible-link:focus {
-  color: #002752 !important;
-  border-bottom-color: #002752 !important;
-  text-decoration: none !important;
+.role-checklist a:hover,
+.role-checklist a:focus,
+.role-posts a:hover,
+.role-posts a:focus,
+.post-management a:hover,
+.post-management a:focus,
+.checklist-items a:hover,
+.checklist-items a:focus {
+  color: #334155 !important;
+  text-decoration: underline !important;
 }
 
-.accessible-link:focus {
-  outline: 2px solid #004085 !important;
+.role-checklist a:focus,
+.role-posts a:focus,
+.post-management a:focus,
+.checklist-items a:focus {
+  outline: 2px solid #1e293b !important;
   outline-offset: 2px !important;
-}
-
-a.accessible-link, 
-a.accessible-link:visited, 
-a.accessible-link:link {
-  color: #004085 !important;
-}
-
-a.accessible-link:hover, 
-a.accessible-link:focus, 
-a.accessible-link:active {
-  color: #002752 !important;
 }
 
 /* WAVE-RUBRIKFIX - återställ storlekar för korrekt hierarki */
@@ -690,25 +688,8 @@ a.accessible-link:active {
   line-height: 1.2 !important;
 }
 
-.role-card .role-title {
-  font-weight: 500 !important;
-  font-size: 1.25rem !important;
-}
-
-.modal-content h4.modal-title {
-  font-size: 1.25rem !important;
-  font-weight: 500 !important;
-  line-height: 1.2 !important;
-}
-
 .modal-content .modal-body h5.text-slate-dark {
   font-size: 1rem !important;
-  font-weight: 500 !important;
-  line-height: 1.2 !important;
-}
-
-.user-management h2.mb-1 {
-  font-size: 1.75rem !important;
   font-weight: 500 !important;
   line-height: 1.2 !important;
 }
