@@ -23,10 +23,10 @@
       <div v-else-if="selectedProjectId && projectProgress.length > 0">
         <div class="card">
           <div class="card-header">
-            <h5 class="mb-0">
+            <h3 class="mb-0">
               <i class="bi bi-graph-up me-2"></i>
               Projektstatus: {{ selectedProjectName }}
-            </h5>
+            </h3>
           </div>
           <div class="card-body">
             <!-- Progressionskort för varje roll i projektet -->
@@ -37,7 +37,7 @@
                   <div class="d-flex justify-content-between align-items-center mb-3">
                     <div class="d-flex align-items-center">
                       <i :class="getRoleIcon(progress.role)" class="me-2"></i>
-                      <h6 class="mb-0">{{ getRoleDisplayName(progress.role) }}</h6>
+                      <h4 class="mb-0 role-name">{{ getRoleDisplayName(progress.role) }}</h4>
                     </div>
                     <span class="badge bg-primary">
                       {{ Math.round(getProgressPercentage(progress)) }}%
@@ -65,16 +65,16 @@
             <div class="mt-4 p-3 bg-light rounded">
               <div class="row text-center">
                 <div class="col-md-4">
-                  <h4 class="text-primary mb-1">{{ getTotalCompleted() }}</h4>
-                  <small class="text-muted">Totalt klara uppgifter</small>
+                  <span class="text-primary stat-number">{{ getTotalCompleted() }}</span>
+                  <h5 class="text-muted stat-label">Totalt klara uppgifter</h5>
                 </div>
                 <div class="col-md-4">
-                  <h4 class="text-info mb-1">{{ getTotalItems() }}</h4>
-                  <small class="text-muted">Totalt antal uppgifter</small>
+                  <span class="text-info stat-number">{{ getTotalItems() }}</span>
+                  <h5 class="text-muted stat-label">Totalt antal uppgifter</h5>
                 </div>
                 <div class="col-md-4">
-                  <h4 class="text-success mb-1">{{ Math.round(getOverallProgress()) }}%</h4>
-                  <small class="text-muted">Övergripande progression</small>
+                  <span class="text-success stat-number">{{ Math.round(getOverallProgress()) }}%</span>
+                  <h5 class="text-muted stat-label">Övergripande progression</h5>
                 </div>
               </div>
             </div>
@@ -86,10 +86,10 @@
       <div v-else-if="!selectedProjectId && allProgress.length > 0">
         <div class="card">
           <div class="card-header">
-            <h5 class="mb-0">
+            <h3 class="mb-0">
               <i class="bi bi-clipboard-data me-2"></i>
               Övergripande projektstatus
-            </h5>
+            </h3>
           </div>
           <div class="card-body">
             <!-- Grupperade projekt med rollframsteg -->
@@ -98,10 +98,10 @@
                 <div class="project-summary-card">
                   <!-- Projektnamn och övergripande framsteg -->
                   <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h6 class="mb-0">
+                    <h4 class="mb-0">
                       <i class="bi bi-folder me-2"></i>
                       {{ projectGroup.projectName }}
-                    </h6>
+                    </h4>
                     <span class="badge bg-secondary">
                       {{ Math.round(getProjectOverallProgress(projectGroup.progress)) }}%
                     </span>
@@ -135,7 +135,7 @@
       <!-- Meddelande när ingen data finns tillgänglig -->
       <div v-else class="text-center py-5">
         <i class="bi bi-graph-up text-muted" style="font-size: 3rem;"></i>
-        <h5 class="mt-3 text-muted">Ingen projektstatus tillgänglig</h5>
+        <h4 class="mt-3 text-muted">Ingen projektstatus tillgänglig</h4>
         <p class="text-muted">{{ statusMessage }}</p>
       </div>
     </div>
@@ -158,7 +158,7 @@ const error = ref('')
 
 // Meddelande för tom status
 const statusMessage = computed(() => {
-  return selectedProjectId.value 
+  return selectedProjectId.value
     ? 'Ingen progression hittades för detta projekt.'
     : 'Välj ett projekt för att se detaljerad status.'
 })

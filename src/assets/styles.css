@@ -1,4 +1,6 @@
-/* GLOBAL CSS */
+/* ========================================================================
+   GLOBAL CSS
+   ======================================================================== */
 
 * {
   box-sizing: border-box;
@@ -16,40 +18,47 @@ body {
   font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Container för hela applikationen */
+/* ========================================================================
+   LAYOUT
+   ======================================================================== */
+
+/* Huvudcontainer för hela applikationen med maxbredd */
 .app-container {
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
 }
 
-/* Responsiv container för olika skärmstorlekar */
+/* Responsiva container-storlekar för olika skärmstorlekar */
 @media (min-width: 1600px) {
   .app-container {
-    max-width: 1500px;
+    max-width: 1500px; /* Större skärmar får mer plats */
   }
 }
 
 @media (max-width: 1199px) {
   .app-container {
     max-width: 100%;
-    padding: 0 1rem;
+    padding: 0 1rem; /* Tablets får mindre padding */
   }
 }
 
 @media (max-width: 767px) {
   .app-container {
-    padding: 0 0.75rem;
+    padding: 0 0.75rem; /* Mobiler får ännu mindre padding */
   }
 }
 
 @media (max-width: 575px) {
   .app-container {
-    padding: 0 0.5rem;
+    padding: 0 0.5rem; /* Små mobiler får minimal padding */
   }
 }
 
-/* Anpassade scrollbars */
+/* ========================================================================
+   SCROLLBAR
+   ======================================================================== */
+
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -67,19 +76,21 @@ body {
   background: #a8a8a8;
 }
 
-/* ANIMATIONER */
+/* ========================================================================
+   ANIMATIONER
+   ======================================================================== */
 
-/* Laddningsanimationer */
+/* Fade-in animation för laddningselement */
 @keyframes fadeIn {
   from {
     opacity: 0;
   }
-
   to {
     opacity: 1;
   }
 }
 
+/* Vue.js transition-klasser för övergångar */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s;
@@ -90,7 +101,9 @@ body {
   opacity: 0;
 }
 
-/* INLOGGNING */
+/* ========================================================================
+   INLOGGNING
+   ======================================================================== */
 
 .login-container {
   min-height: 100vh;
@@ -104,7 +117,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - 200px);
+  min-height: calc(100vh - 200px); /* Utrymme för header/footer */
   padding: 2rem 1rem;
   flex: 1;
   position: relative;
@@ -122,19 +135,21 @@ body {
   }
 }
 
+/* Huvudkortet för inloggningsformuläret */
 .login-card {
   background: white;
   border-radius: 12px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  padding: clamp(1.5rem, 4vw, 2.5rem);
+  padding: clamp(1.5rem, 4vw, 2.5rem); /* Responsiv padding */
   width: 100%;
-  max-width: min(400px, 90vw);
+  max-width: min(400px, 90vw); /* Begränsa bredd men anpassa till viewport */
   margin: 0 auto;
   position: relative;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%); /* Centrera horisontellt */
 }
 
+/* Inloggningsformulär-komponenter */
 .login-card-header {
   text-align: center;
   margin-bottom: 2rem;
@@ -142,7 +157,7 @@ body {
 
 .login-title {
   color: #1a1a1a;
-  font-size: clamp(1.2rem, 4vw, 1.75rem);
+  font-size: clamp(1.2rem, 4vw, 1.75rem); /* Responsiv textstorlek */
   font-weight: 700;
   margin-bottom: 0.5rem;
   letter-spacing: -0.025em;
@@ -162,6 +177,10 @@ body {
 .form-group {
   margin-bottom: 1.5rem;
 }
+
+/* ========================================================================
+   FORMULÄR
+   ======================================================================== */
 
 .form-label {
   color: #374151;
@@ -192,31 +211,33 @@ body {
   color: #9ca3af;
 }
 
-/* TILLGÄNGLIGHET - ändrade färger för korrekt validering i WAVE */
+/* ========================================================================
+   TILLGÄNGLIGHET - WCAG-kompatibla färger
+   ======================================================================== */
 
+/* Förbättrade kontraster för felmeddelanden och varningar */
 .invalid-feedback {
-  color: #b91c1c !important;
+  color: #b91c1c !important; /* Mörkare röd för bättre kontrast */
   font-size: 0.875rem;
   margin-top: 0.25rem;
 }
 
 .text-danger {
-  color: #b91c1c !important;
+  color: #b91c1c !important; /* WCAG AA-kompatibel röd */
 }
 
-/* Info-text */
 .text-info {
-  color: #0c63e4 !important;
+  color: #0c63e4 !important; /* WCAG AA-kompatibel blå */
 }
 
 .text-success {
-  color: #198754 !important;
+  color: #198754 !important; /* WCAG AA-kompatibel grön */
 }
 
-/* Inputfält med fel - röd border */
+/* Inputfält med felstatus */
 .form-control.is-invalid {
   border-color: #b91c1c !important;
-  background: #fef2f2;
+  background: #fef2f2; /* Ljusröd bakgrund för fel */
 }
 
 .was-validated .form-control:invalid {
@@ -229,21 +250,24 @@ body {
   box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.25) !important;
 }
 
-/* Varningsmeddelanden */
+/* ========================================================================
+   VARNINGSMEDDELANDEN
+   ======================================================================== */
+
 .alert {
   border-radius: 8px;
   font-size: 0.875rem;
   margin-bottom: 1.5rem;
 }
 
-/* Alert-boxar */
+/* Felmeddelanden med förbättrad kontrast */
 .alert-danger {
   background: #fef2f2;
   border: 1px solid #fecaca;
   color: #b91c1c !important;
 }
 
-/* Info-alerts */
+/* Informationsmeddelanden */
 .alert-info {
   background-color: #f1f5f9 !important;
   border-color: #cbd5e1 !important;
@@ -256,7 +280,9 @@ body {
   border-top: 1px solid #e5e7eb;
 }
 
-/* DASHBOARDS */
+/* ========================================================================
+   DASHBOARD
+   ======================================================================== */
 
 .dashboard-container {
   min-height: 100vh;
@@ -266,9 +292,11 @@ body {
   flex-direction: column;
 }
 
-/* SIDHUVUD */
+/* ========================================================================
+   SIDHUVUD
+   ======================================================================== */
 
-/* Inloggning - sidhuvud */
+/* Inloggningssidans sidhuvud */
 .login-header {
   background: #f8fafc;
   color: white;
@@ -278,13 +306,13 @@ body {
 }
 
 .login-header .container {
-  background: #1e293b;
+  background: #1e293b; /* Mörk blå-grå bakgrund */
   max-width: 1400px;
   margin: 0 auto;
   padding: 1rem clamp(1rem, 3vw, 2rem);
   width: 100%;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border-radius: 0 0 8px 8px;
+  border-radius: 0 0 8px 8px; /* Rundade hörn nedtill */
 }
 
 @media (min-width: 1600px) {
@@ -293,7 +321,7 @@ body {
   }
 }
 
-/* Dashboard - sidhuvud */
+/* Dashboard-sidhuvud */
 .dashboard-header {
   background: #f8fafc;
   color: white;
@@ -318,7 +346,7 @@ body {
   }
 }
 
-/* Layout för sidhuvud */
+/* Headerlayout för flexpositionering */
 .header-row {
   display: flex;
   justify-content: space-between;
@@ -331,6 +359,10 @@ body {
   align-items: center;
   gap: clamp(0.5rem, 4vw, 2rem);
 }
+
+/* ========================================================================
+   LOGOTYP
+   ======================================================================== */
 
 .logo {
   color: white;
@@ -357,12 +389,12 @@ body {
   font-weight: 300;
   letter-spacing: -0.5px;
   white-space: nowrap;
-  display: none;
+  display: none; /* Dölj på små skärmar */
 }
 
 @media (min-width: 768px) {
   .logo-text {
-    display: block;
+    display: block; /* Visa på större skärmar */
   }
 }
 
@@ -372,13 +404,16 @@ body {
   gap: clamp(0.75rem, 3vw, 2rem);
 }
 
-/* NAVIGATION */
+/* ========================================================================
+   NAVIGATION
+   ======================================================================== */
 
 .main-nav {
   display: flex;
   gap: clamp(1rem, 4vw, 2.5rem);
 }
 
+/* Navigationslänkar för header */
 .main-nav .nav-link,
 .dashboard-header .nav-link {
   color: rgba(255, 255, 255, 0.9);
@@ -391,9 +426,8 @@ body {
   background: transparent;
 }
 
-/* Extra små skärmar */
+/* Anpassning för extra små skärmar */
 @media (max-width: 480px) {
-
   .main-nav .nav-link,
   .dashboard-header .nav-link {
     font-size: 1rem;
@@ -401,16 +435,16 @@ body {
   }
 }
 
-/* Hovereffekt för sidhuvudnavigation */
+/* Hover-effekter för navigationslänkar */
 .main-nav .nav-link:hover,
 .dashboard-header .nav-link:hover {
   color: white;
   background-color: rgba(255, 255, 255, 0.15);
-  transform: translateY(-1px);
+  transform: translateY(-1px); /* Subtil lyft-effekt */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Aktiv länk för sidhuvudnavigation */
+/* Aktiva navigationslänkar */
 .main-nav .nav-link.active,
 .main-nav .router-link-active,
 .dashboard-header .nav-link.active,
@@ -420,7 +454,10 @@ body {
   font-weight: 600;
 }
 
-/* Användarinformation */
+/* ========================================================================
+   ANVÄNDARINFORMATION
+   ======================================================================== */
+
 .user-info {
   display: flex;
   align-items: center;
@@ -433,6 +470,7 @@ body {
   font-weight: 500;
 }
 
+/* Utloggningsknapp */
 .btn-outline-light {
   font-size: clamp(0.7rem, 2vw, 1rem);
   padding: clamp(0.25rem, 1vw, 0.5rem) clamp(0.5rem, 2vw, 1rem);
@@ -456,10 +494,13 @@ body {
   box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
 }
 
-/* Dashboard - responsiv container */
+/* ========================================================================
+   DASHBOARD-INNEHÅLL
+   ======================================================================== */
+
 .dashboard-content {
   padding: 2rem 0;
-  flex: 1;
+  flex: 1; /* Ta upp resterande utrymme */
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
@@ -473,24 +514,26 @@ body {
   }
 }
 
-/* SIDFOT */
+/* ========================================================================
+   SIDFOT
+   ======================================================================== */
 
 .footer {
   background: #f8fafc;
   color: white;
   padding: 2rem 0;
-  margin-top: auto;
+  margin-top: auto; /* Push footer till botten */
   display: flex;
   justify-content: center;
 }
 
 .footer .container-fluid {
-  background: #1e293b;
+  background: #1e293b; /* Samma färg som header */
   max-width: 1400px;
   margin: 0 auto;
   padding: 2rem clamp(1rem, 3vw, 2rem);
   width: 100%;
-  border-radius: 8px 8px 0 0;
+  border-radius: 8px 8px 0 0; /* Rundade hörn upptill */
 }
 
 .footer-content {
@@ -510,8 +553,11 @@ body {
   padding: 0;
 }
 
-/* KNAPPAR */
+/* ========================================================================
+   KNAPPAR
+   ======================================================================== */
 
+/* Primära knappar */
 .btn-primary {
   background: #1e293b;
   border: 1px solid #1e293b;
@@ -528,7 +574,7 @@ body {
   background: rgba(30, 41, 59, 0.8);
   border-color: rgba(30, 41, 59, 0.8);
   color: white;
-  transform: translateY(-1px);
+  transform: translateY(-1px); /* Lyft-effekt vid hover */
   box-shadow: 0 10px 25px rgba(30, 41, 59, 0.3);
 }
 
@@ -546,10 +592,12 @@ body {
   box-shadow: none;
 }
 
+/* Allmän knappstyling */
 .btn {
   transition: all 0.2s ease;
 }
 
+/* Alla knappar utom specialfall har blå primärfärg */
 .btn:not(.btn-outline-light):not(.btn-danger):not(.btn-delete) {
   background: #1e293b !important;
   border-color: #1e293b !important;
@@ -570,6 +618,7 @@ body {
   box-shadow: 0 0 0 0.2rem rgba(30, 41, 59, 0.25) !important;
 }
 
+/* Varningsknappar */
 .btn-danger {
   background: #b91c1c !important;
   border-color: #b91c1c !important;
@@ -590,18 +639,26 @@ body {
   box-shadow: 0 0 0 0.2rem rgba(185, 28, 28, 0.25) !important;
 }
 
+/* ========================================================================
+   BADGES
+   ======================================================================== */
+
 .badge.bg-success,
 .bg-success,
 span.badge.bg-success {
-  background-color: #16a34a !important;
+  background-color: #16a34a !important; /* WCAG-kompatibel grön */
   color: white !important;
 }
 
 .badge.bg-primary,
 span.badge.bg-primary {
-  background-color: #1e293b !important;
+  background-color: #1e293b !important; /* Varumärkesfärg */
   color: white !important;
 }
+
+/* ========================================================================
+   CSS CUSTOM PROPERTIES - Variabler för Bootstrap-integration
+   ======================================================================== */
 
 :root {
   --bs-success: #16a34a;
@@ -621,16 +678,23 @@ span.badge.bg-primary {
   color: #1e293b !important;
 }
 
+/* ========================================================================
+   KORT-KOMPONENTER
+   ======================================================================== */
+
 .card {
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-2px); /* Lyft-effekt vid hover */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* WAVE - Länkfärg validerar korrekt för WCAG 2.1 AA */
+/* ========================================================================
+   WCAG-KOMPATIBLA LÄNKAR - Tillgängliga länkfärger
+   ======================================================================== */
+
 .role-checklist a,
 .role-checklist a:link,
 .role-checklist a:visited,
@@ -664,12 +728,15 @@ span.badge.bg-primary {
 .role-posts a:focus,
 .post-management a:focus,
 .checklist-items a:focus {
-  outline: 2px solid #475569 !important;
+  outline: 2px solid #475569 !important; /* Tydlig fokusindikering */
   outline-offset: 2px !important;
 }
 
-/* WAVE - återställ storlekar för korrekt rubrikhierarki */
+/* ========================================================================
+   RUBRIKHIERARKI - Justering för korrekt validering i WAVE
+   ======================================================================== */
 
+/* Rubriker för admingränssnitt */
 .role-card .role-title {
   font-weight: 500 !important;
   font-size: 1.25rem !important;
@@ -747,10 +814,11 @@ div.modal-content div.modal-body h6 {
   line-height: 1.2 !important;
 }
 
-/* DASHBOARD */
-/* Dessa regler tvingar rätt storlekar även när HTML-taggar ändras semantiskt */
+/* ========================================================================
+   DASHBOARD RUBRIKHIERARKI
+   ======================================================================== */
 
-/* ProjectSelector - tvinga H2 att se ut som form-label */
+/* ProjectSelector: H2 label som ser ut som form-label */
 div.project-selector div.card div.card-body div.row div.col-md-8 h2#project-label,
 .project-selector .card .card-body .row .col-md-8 h2#project-label,
 .project-selector h2#project-label {
@@ -762,7 +830,7 @@ div.project-selector div.card div.card-body div.row div.col-md-8 h2#project-labe
   display: block !important;
 }
 
-/* ProjectSelector valt projekt - tvinga H3 att se ut som H6 */
+/* ProjectSelector: H3 projektnamn som ser ut som H6 */
 div.project-selector div.card div.card-body div.mt-3 h3.mb-1,
 .project-selector .card .card-body .mt-3 h3.mb-1,
 .project-selector .bg-light h3.mb-1 {
@@ -773,7 +841,7 @@ div.project-selector div.card div.card-body div.mt-3 h3.mb-1,
   margin-bottom: 0.25rem !important;
 }
 
-/* RoleChecklist - tvinga H3 att se ut som H5 */
+/* RoleChecklist: H3 sektion-titel som ser ut som H5 */
 div.role-checklist div.card.mb-4 div.card-header div.d-flex h3.mb-0,
 .role-checklist .card.mb-4 .card-header .d-flex h3.mb-0,
 .role-checklist > .card > .card-header > .d-flex > div > h3 {
@@ -784,7 +852,7 @@ div.role-checklist div.card.mb-4 div.card-header div.d-flex h3.mb-0,
   margin-bottom: 0 !important;
 }
 
-/* Checklistpunkter - tvinga H4 att se ut som H6 */
+/* Checklistpunkter: H4 som ser ut som H6 */
 div.role-checklist div.checklist-items div.card div.card-body div.d-flex div.flex-grow-1 h4.mb-2,
 .role-checklist .checklist-items .card .card-body .d-flex .flex-grow-1 h4.mb-2,
 .checklist-items .card-body .flex-grow-1 h4 {
@@ -795,7 +863,7 @@ div.role-checklist div.checklist-items div.card div.card-body div.d-flex div.fle
   margin-bottom: 0.5rem !important;
 }
 
-/* RolePosts individuella inlägg - tvinga H4 att se ut som H5 */
+/* RolePosts: H4 inläggstitlar som ser ut som H5 */
 div.role-posts div.card div.card-body div.d-flex div.flex-grow-1 h4.card-title.mb-2,
 .role-posts .card .card-body .d-flex .flex-grow-1 h4.card-title,
 .role-posts .card-body .flex-grow-1 h4.card-title {
@@ -806,7 +874,7 @@ div.role-posts div.card div.card-body div.d-flex div.flex-grow-1 h4.card-title.m
   margin-bottom: 0.5rem !important;
 }
 
-/* Tom checklista - tvinga H4 att se ut som H5 */
+/* Tom checklista: H4 meddelande som ser ut som H5 */
 div.role-checklist div.text-center.py-5 h4.mt-3.text-muted,
 .role-checklist .text-center.py-5 h4.mt-3,
 .role-checklist > div.text-center > h4 {
@@ -816,7 +884,7 @@ div.role-checklist div.text-center.py-5 h4.mt-3.text-muted,
   margin-top: 1rem !important;
 }
 
-/* Tom inlägg - tvinga H4 att se ut som H5 */
+/* Tomt inlägg: H4 meddelande som ser ut som H5 */
 div.role-posts div.text-center.py-4 h4.mt-3.text-muted,
 .role-posts .text-center.py-4 h4.mt-3,
 .role-posts > div.text-center > h4 {
@@ -826,9 +894,11 @@ div.role-posts div.text-center.py-4 h4.mt-3.text-muted,
   margin-top: 1rem !important;
 }
 
-/* 404-SIDAN */
+/* ========================================================================
+   404-SIDAN
+   ======================================================================== */
 
-/* H2 - 404-numret (tidigare H1) */
+/* H2: 404-numret (stort display-nummer) */
 .container .row.justify-content-center .col-lg-8 .text-center .mb-4 h2.display-1,
 .container .row.justify-content-center .col-lg-8 .text-center .mb-4 h2.display-1.fw-bold {
   font-size: 8rem !important;
@@ -836,7 +906,7 @@ div.role-posts div.text-center.py-4 h4.mt-3.text-muted,
   color: var(--bs-primary) !important;
 }
 
-/* H3 - "Sidan hittades inte" med ikon (tidigare H2) */
+/* H3: "Sidan hittades inte" med ikon */
 .container .row.justify-content-center .col-lg-8 .text-center h3.h1.mb-3,
 .container .row.justify-content-center .col-lg-8 .text-center > h3:has(i.bi-search),
 .container .row.justify-content-center .col-lg-8 .text-center > h3.h1:first-of-type {
@@ -846,7 +916,7 @@ div.role-posts div.text-center.py-4 h4.mt-3.text-muted,
   margin-bottom: 1rem !important;
 }
 
-/* H4 - Kort-titlar (tidigare H5) */
+/* H4: Kort-titlar (Gå tillbaka, Min instrumentpanel) */
 .container .row.justify-content-center .col-lg-8 .text-center .row.g-4.my-5 .card-title,
 .container .row.justify-content-center .col-lg-8 .text-center .row.g-4.my-5 h4.card-title.mt-3,
 .container .row.justify-content-center .col-lg-8 .text-center .card h4.card-title {
@@ -856,7 +926,7 @@ div.role-posts div.text-center.py-4 h4.mt-3.text-muted,
   margin-top: 1rem !important;
 }
 
-/* H5 - "Eller besök en av dessa sidor" (tidigare H4) */
+/* H5: "Eller besök denna/dessa sidor" */
 .container .row.justify-content-center .col-lg-8 .text-center .mt-5 h5.h5.mb-3,
 .container .row.justify-content-center .col-lg-8 .text-center div.mt-5 h5.h5,
 .container .row.justify-content-center .col-lg-8 .text-center > div:has(.d-flex.gap-2) h5 {
@@ -866,7 +936,7 @@ div.role-posts div.text-center.py-4 h4.mt-3.text-muted,
   margin-bottom: 1rem !important;
 }
 
-/* Fallback-selektorer för äldre browsers (utan :has()) */
+/* Fallback för äldre browsers som inte stöder :has() */
 .container .row.justify-content-center .col-lg-8 .text-center > h3 > i.bi-search {
   font-size: inherit !important;
 }
@@ -892,8 +962,104 @@ div.container div.row.justify-content-center div.col-lg-8 div.text-center .card-
   font-weight: 500 !important;
 }
 
-/* RESPONSIVITET */
+/* ========================================================================
+   STATUS-SIDAN
+   ======================================================================== */
 
+/* StatusView: H3 övergripande/specifikt projektstatus som ser ut som original H5 */
+div.status-overview div.card div.card-header h3.mb-0,
+.status-overview .card .card-header h3.mb-0,
+.status-overview > .card > .card-header > h3,
+.card-header h3.mb-0 {
+  font-size: 1.25rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+  color: inherit !important;
+  margin-bottom: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* StatusView: H4 projektnamn i grupperad vy som ser ut som original H6 */
+div.status-overview div.project-summary-card h4.mb-0,
+.status-overview .project-summary-card h4.mb-0,
+.project-summary-card > .d-flex > h4,
+.project-summary-card h4.mb-0 {
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+  color: inherit !important;
+  margin-bottom: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* StatusView: H4 rollnamn (Designer, Utvecklare, Testare) som ser ut som original H6 */
+div.status-overview div.progress-card h4.role-name,
+.status-overview .progress-card h4.role-name,
+.progress-card > .d-flex > .d-flex > h4.role-name,
+.progress-card h4.role-name,
+h4.role-name {
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  line-height: 1.2 !important;
+  color: inherit !important;
+  margin-bottom: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* StatusView: H5 statistik-rubriker (Totalt klara uppgifter) */
+div.status-overview div.bg-light h5.stat-label,
+.status-overview .bg-light h5.stat-label,
+.status-overview h5.stat-label,
+div.status-overview h5.stat-label,
+h5.stat-label,
+.bg-light h5.stat-label {
+  font-size: 0.875rem !important;
+  font-weight: 400 !important;
+  line-height: 1.25 !important;
+  margin-top: 0.25rem !important;
+  margin-bottom: 0 !important;
+  /* Använder Bootstrap's text-muted färg istället av egen färg */
+  display: block !important;
+}
+
+/* StatusView: Statistik-siffror */
+div.status-overview div.bg-light span.stat-number,
+.status-overview .bg-light span.stat-number,
+.status-overview span.stat-number,
+div.status-overview span.stat-number,
+span.stat-number,
+.bg-light span.stat-number {
+  font-size: 1.5rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  display: block !important;
+}
+
+/* StatusView: H4 "Ingen projektstatus tillgänglig" som ser ut som original H5 */
+div.status-overview div.text-center.py-5 h4.mt-3.text-muted,
+.status-overview .text-center.py-5 h4.mt-3,
+.status-overview > div.text-center > h4,
+.status-overview h4.mt-3.text-muted {
+  font-size: 1.25rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+  margin-top: 1rem !important;
+  margin-bottom: 0 !important;
+}
+
+/* Extra super-specifika selektorer för total säkerhet */
+div.status-overview div.card div.card-header > h3.mb-0 > i.bi-clipboard-data + span,
+div.status-overview div.card div.card-header > h3.mb-0 > i.bi-graph-up + span {
+  font-size: inherit !important;
+}
+
+/* ========================================================================
+   RESPONSIV DESIGN
+   ======================================================================== */
+
+/* Tablet och små desktop (768px och mindre) */
 @media (max-width: 768px) {
   .dashboard-header .d-flex {
     flex-direction: column;
@@ -905,7 +1071,7 @@ div.container div.row.justify-content-center div.col-lg-8 div.text-center .card-
     padding: 1.5rem 1rem;
   }
 
-  /* 404-sida responsiv anpassning */
+  /* 404-sida responsiv anpassning för tablets */
   .container .row.justify-content-center .col-lg-8 .text-center .mb-4 h2.display-1 {
     font-size: 6rem !important;
   }
@@ -924,6 +1090,7 @@ div.container div.row.justify-content-center div.col-lg-8 div.text-center .card-
   }
 }
 
+/* Mobila enheter (576px och mindre) */
 @media (max-width: 576px) {
   .login-content {
     padding: 1rem;
@@ -945,7 +1112,7 @@ div.container div.row.justify-content-center div.col-lg-8 div.text-center .card-
     padding: 1.5rem 0;
   }
 
-  /* 404-sida responsiv anpassning för mycket små skärmar */
+  /* 404-sida responsiv anpassning för mobiler */
   .container .row.justify-content-center .col-lg-8 .text-center .mb-4 h2.display-1 {
     font-size: 4.5rem !important;
   }
@@ -964,7 +1131,7 @@ div.container div.row.justify-content-center div.col-lg-8 div.text-center .card-
   }
 }
 
-/* Extra justeringar för mycket små skärmar */
+/* Extra små enheter (360px och mindre) */
 @media (max-width: 360px) {
   .login-content {
     padding: 0.75rem;
@@ -987,3 +1154,4 @@ div.container div.row.justify-content-center div.col-lg-8 div.text-center .card-
     gap: 0.6rem;
   }
 }
+
