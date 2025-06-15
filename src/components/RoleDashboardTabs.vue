@@ -10,7 +10,8 @@
       <ul class="nav nav-tabs" id="roleTabs" role="tablist">
         <li class="nav-item" role="presentation">
           <button class="nav-link" :class="{ active: activeTab === 'checklist' }" @click="activeTab = 'checklist'"
-            type="button">
+            type="button" role="tab" id="checklist-tab" :aria-selected="activeTab === 'checklist' ? 'true' : 'false'"
+            aria-controls="checklist-panel">
             <i class="bi bi-check2-square me-2"></i>
             Checklista
             <span v-if="checklistProgress" class="badge bg-secondary ms-2">
@@ -19,8 +20,9 @@
           </button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" :class="{ active: activeTab === 'posts' }" @click="activeTab = 'posts'"
-            type="button">
+          <button class="nav-link" :class="{ active: activeTab === 'posts' }" @click="activeTab = 'posts'" type="button"
+            role="tab" id="posts-tab" :aria-selected="activeTab === 'posts' ? 'true' : 'false'"
+            aria-controls="posts-panel">
             <i class="bi bi-file-text me-2"></i>
             Inlägg för {{ getRoleDisplayName(userRole) }}
             <span v-if="filteredPosts.length > 0" class="badge bg-primary ms-2">
@@ -34,13 +36,15 @@
       <div class="tab-content mt-3">
         <!-- Checklista flik -->
         <div v-show="activeTab === 'checklist'" class="tab-pane fade"
-          :class="{ 'show active': activeTab === 'checklist' }">
+          :class="{ 'show active': activeTab === 'checklist' }" role="tabpanel" id="checklist-panel"
+          aria-labelledby="checklist-tab">
           <RoleChecklist :project-id="selectedProjectId" :project-name="selectedProjectName" :user-role="userRole"
             @progress-updated="handleProgressUpdate" />
         </div>
 
         <!-- Inlägg flik -->
-        <div v-show="activeTab === 'posts'" class="tab-pane fade" :class="{ 'show active': activeTab === 'posts' }">
+        <div v-show="activeTab === 'posts'" class="tab-pane fade" :class="{ 'show active': activeTab === 'posts' }"
+          role="tabpanel" id="posts-panel" aria-labelledby="posts-tab">
           <RolePosts :user-role="userRole" :project-id="selectedProjectId" :project-name="selectedProjectName" />
         </div>
       </div>
@@ -132,6 +136,11 @@ const getRoleDisplayName = (role) => {
   background-color: white;
   border-bottom: 2px solid #334155;
   font-weight: 600;
+}
+
+.nav-link:focus {
+  outline: 2px solid #334155;
+  outline-offset: 2px;
 }
 
 .badge {
