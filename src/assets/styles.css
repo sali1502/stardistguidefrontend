@@ -1155,3 +1155,16 @@ div.status-overview div.card div.card-header > h3.mb-0 > i.bi-graph-up + span {
   }
 }
 
+ /* Screen reader-only styling för tillgänglighet */
+    .sr-only {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+

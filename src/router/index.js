@@ -54,7 +54,6 @@ const routes = [
   },
 
   // Rollspecifika instrumentpaneler med åtkomstkontroll
-
   // Admin har tillgång till alla sidor
   {
     path: '/dashboard/admin',
@@ -126,19 +125,29 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
 
-  // Sätt dynamisk sidtitel baserat på rutt och användarroll
+  // Sätt dynamisk sidtitel baserat på rutt
   if (to.meta.title) {
     let title = to.meta.title
 
-    // Anpassa titel för dashboard-sidor med användarens rollnamn
+    // Anpassa titel baserat på vilken dashboard som besöks
     if (authStore.isAuthenticated && to.path.includes('dashboard')) {
-      const roleDisplay = authStore.getRoleDisplayName(authStore.userRole)
-      if (roleDisplay) {
-        title = `${roleDisplay} Dashboard`
-      }
+      title = to.meta.title
     }
 
     document.title = `${title} - Guide för webbtillgänglighet`
+    
+    // Meddela skärmläsare om titeländring via ARIA live region
+    const announcer = document.getElementById('page-announcer')
+    if (announcer && authStore.isAuthenticated) {
+      // Meddela för inloggade användare och undvik upprepning för samma sida
+      if (to.path !== from.path) {
+        if (to.path.includes('dashboard')) {
+          announcer.textContent = `Navigerat till ${title}`
+        } else if (to.meta.title) {
+          announcer.textContent = `Navigerat till ${title}`
+        }
+      }
+    }
   } else {
     document.title = 'Guide för webbtillgänglighet'
   }

@@ -22,6 +22,13 @@
   <!-- Vue.js-applikationens rootelement där hela SPA:n renderas -->
   <div id="app"></div>
 
+   <!-- Global ARIA live region för att meddela sidtitel-ändringar till skärmläsare -->
+  <div id="page-announcer" 
+       aria-live="polite" 
+       aria-atomic="true"
+       class="sr-only">
+  </div>
+
   <!-- Vue.js-applikationens startskript -->
   <script type="module" src="/src/main.js"></script>
 </body>
