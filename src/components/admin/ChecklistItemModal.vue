@@ -1,72 +1,84 @@
 <!-- components/admin/ChecklistItemModal.vue - modal för att skapa och redigera checklistpunkter med unikhetstvalidering -->
 
 <template>
-  <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.7);">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
+  <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.7);" aria-modal="true"
+    role="dialog" :aria-labelledby="modalTitleId" @click.self="handleBackdropClick" @keydown.esc="handleEscape">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content" ref="modalContent">
         <div class="modal-header">
-          <h5 class="modal-title text-blue-darkest">
-            <i class="bi bi-check2-square me-2"></i>
+          <h5 class="modal-title text-blue-darkest" :id="modalTitleId">
+            <i class="bi bi-check2-square me-2" aria-hidden="true"></i>
             {{ isEditing ? 'Redigera' : 'Lägg till' }} checklistpunkt - {{ getRoleDisplayName(role) }}
           </h5>
-          <button type="button" class="btn-close" @click="$emit('close')"><span
-              class="visually-hidden">Stäng</span></button>
+          <button type="button" class="btn-close" @click="handleClose" @keydown.enter="handleClose"
+            @keydown.space.prevent="handleClose" aria-label="Stäng modal">
+          </button>
         </div>
 
         <form @submit.prevent="handleSubmit">
           <div class="modal-body">
             <!-- Titel för checklistpunkt -->
             <div class="mb-3">
-              <label for="title" class="form-label">
-                Titel <span class="text-danger">*</span>
+              <label for="checklistTitle" class="form-label">
+                Titel <span class="text-danger" aria-label="obligatoriskt fält">*</span>
               </label>
-              <input id="title" v-model="form.title" type="text" class="form-control"
+              <input id="checklistTitle" ref="firstInput" v-model="form.title" type="text" class="form-control"
                 :class="{ 'is-invalid': hasBeenTouched.title && errors.title }" placeholder="Skriv en titel" required
-                @blur="hasBeenTouched.title = true" />
-              <div v-if="hasBeenTouched.title && errors.title" class="invalid-feedback">
+                autocomplete="off" @blur="hasBeenTouched.title = true" @keydown="handleFormKeydown"
+                :aria-describedby="getAriaDescribedBy('title')"
+                :aria-invalid="hasBeenTouched.title && errors.title ? 'true' : 'false'" />
+              <div v-if="hasBeenTouched.title && errors.title" id="title-error" class="invalid-feedback" role="alert"
+                aria-live="polite">
                 {{ errors.title }}
               </div>
             </div>
 
             <!-- Innehåll/beskrivning av checklistpunkt -->
             <div class="mb-3">
-              <label for="content" class="form-label">
-                Innehåll <span class="text-danger">*</span>
+              <label for="checklistContent" class="form-label">
+                Innehåll <span class="text-danger" aria-label="obligatoriskt fält">*</span>
               </label>
-              <textarea id="content" v-model="form.content" class="form-control"
+              <textarea id="checklistContent" v-model="form.content" class="form-control"
                 :class="{ 'is-invalid': hasBeenTouched.content && errors.content }" rows="4"
-                placeholder="Beskriv vad som ska göras..." required @blur="hasBeenTouched.content = true"></textarea>
-              <div v-if="hasBeenTouched.content && errors.content" class="invalid-feedback">
-                {{ errors.content }}
-              </div>
-              <div class="form-text">
-                <i class="bi bi-link-45deg me-1"></i>
+                placeholder="Beskriv vad som ska göras..." required @blur="hasBeenTouched.content = true"
+                @keydown="handleFormKeydown" :aria-describedby="getAriaDescribedBy('content', 'content-help')"
+                :aria-invalid="hasBeenTouched.content && errors.content ? 'true' : 'false'"></textarea>
+              <div id="content-help" class="form-text">
+                <i class="bi bi-link-45deg me-1" aria-hidden="true"></i>
                 Du kan inkludera hela webbadresser med https:// (t.ex. https://digg.se) som blir automatiskt klickbara
                 länkar. Skriv även instruktioner och andra detaljer som {{ getRoleDisplayName(role).toLowerCase() }}
                 behöver.
               </div>
+              <div v-if="hasBeenTouched.content && errors.content" id="content-error" class="invalid-feedback"
+                role="alert" aria-live="polite">
+                {{ errors.content }}
+              </div>
             </div>
 
             <!-- Information om rollen och checklistans syfte -->
-            <div class="alert alert-info" role="alert">
-              <i class="bi bi-info-circle me-2"></i>
+            <div class="alert alert-info" role="region" aria-label="Information om checklistpunkt">
+              <i class="bi bi-info-circle me-2" aria-hidden="true"></i>
               <strong>För {{ getRoleDisplayName(role) }}:</strong> Denna punkt kommer att visas i {{
                 getRoleDisplayName(role).toLowerCase() }}ns checklista och kan bockas av när uppgiften är klar.
             </div>
 
             <!-- Felmeddelande från API vid problem -->
-            <div v-if="apiError" class="alert alert-danger" role="alert">
-              <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <div v-if="apiError" class="alert alert-danger" role="alert" aria-live="assertive" ref="errorAlert">
+              <i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i>
               {{ apiError }}
             </div>
           </div>
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" @click="$emit('close')">
+            <button type="button" class="btn btn-secondary" @click="handleClose" @keydown.enter="handleClose"
+              @keydown.space.prevent="handleClose" :disabled="loading" ref="cancelButton">
               Avbryt
             </button>
-            <button type="submit" class="btn btn-primary" :disabled="loading || !isFormValid">
-              <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
+            <button type="submit" class="btn btn-primary" :disabled="loading || !isFormValid"
+              @keydown="handleFormKeydown" ref="submitButton"
+              :aria-describedby="loading ? 'submit-loading' : undefined">
+              <span v-if="loading" class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+              <span v-if="loading" id="submit-loading" class="visually-hidden">Laddar...</span>
               {{ isEditing ? 'Uppdatera' : 'Lägg till' }} punkt
             </button>
           </div>
@@ -77,7 +89,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 
 // Props från föräldrakomponent
 const props = defineProps({
@@ -100,11 +112,28 @@ const props = defineProps({
   existingItems: {
     type: Array,
     default: () => []
+  },
+  returnFocusTo: {
+    type: Object,
+    default: null
   }
 })
 
 // Events som skickas till föräldrakomponent
 const emit = defineEmits(['save', 'close'])
+
+// Refs för DOM-element
+const firstInput = ref(null)
+const modalContent = ref(null)
+const cancelButton = ref(null)
+const submitButton = ref(null)
+const errorAlert = ref(null)
+
+// Element som hade fokus innan modalen öppnades
+const previousActiveElement = ref(null)
+
+// Unik ID för modal-titel (för ARIA)
+const modalTitleId = `modal-title-${Math.random().toString(36).substr(2, 9)}`
 
 // Formulärdata för checklistpunkt
 const form = ref({
@@ -130,6 +159,75 @@ const isFormValid = computed(() => {
     Object.keys(errors.value).length === 0
 })
 
+// Hjälpfunktion för aria-describedby
+const getAriaDescribedBy = (fieldName, additionalId = null) => {
+  const parts = []
+  if (errors.value[fieldName] && hasBeenTouched.value[fieldName]) {
+    parts.push(`${fieldName}-error`)
+  }
+  if (additionalId) {
+    parts.push(additionalId)
+  }
+  return parts.length > 0 ? parts.join(' ') : undefined
+}
+
+// Focus trap - håll fokus inom modalen
+const trapFocus = (event) => {
+  if (!modalContent.value) return
+
+  const focusableElements = modalContent.value.querySelectorAll(
+    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+  )
+
+  const firstElement = focusableElements[0]
+  const lastElement = focusableElements[focusableElements.length - 1]
+
+  if (event.key === 'Tab') {
+    if (event.shiftKey) {
+      // Shift+Tab
+      if (document.activeElement === firstElement) {
+        event.preventDefault()
+        lastElement.focus()
+      }
+    } else {
+      // Tab
+      if (document.activeElement === lastElement) {
+        event.preventDefault()
+        firstElement.focus()
+      }
+    }
+  }
+}
+
+// Hantera tangentbordsnavigering i formuläret
+const handleFormKeydown = (event) => {
+  // Hantera focus trap
+  trapFocus(event)
+}
+
+// Hantera Escape-tangent
+const handleEscape = (event) => {
+  if (event.key === 'Escape') {
+    handleClose()
+  }
+}
+
+// Hantera klick på bakgrund
+const handleBackdropClick = () => {
+  handleClose()
+}
+
+// Hantera stängning av modal
+const handleClose = () => {
+  // Återställ fokus till elementet som hade fokus innan modalen öppnades
+  if (props.returnFocusTo) {
+    props.returnFocusTo.focus()
+  } else if (previousActiveElement.value) {
+    previousActiveElement.value.focus()
+  }
+  emit('close')
+}
+
 // Validera att titeln är unik bland befintliga checklistpunkter
 const validateUniqueTitle = (title, existingItems, currentItemId) => {
   if (!title || !existingItems || existingItems.length === 0) {
@@ -137,13 +235,13 @@ const validateUniqueTitle = (title, existingItems, currentItemId) => {
   }
 
   const trimmedTitle = title.trim().toLowerCase()
-  
+
   return !existingItems.some(item => {
     // Exkludera aktuell item vid redigering
     if (currentItemId && (item.id === currentItemId || item._id === currentItemId)) {
       return false
     }
-    
+
     return item.title && item.title.trim().toLowerCase() === trimmedTitle
   })
 }
@@ -152,75 +250,17 @@ const validateUniqueTitle = (title, existingItems, currentItemId) => {
 const getRoleDisplayName = (role) => {
   const names = {
     'designer': 'Designer',
-    'developer': 'Utvecklare', 
+    'developer': 'Utvecklare',
     'tester': 'Testare'
   }
   return names[role] || role
-}
-
-// Klickbara länkar - tillgänglighetsanpassade
-const makeLinksClickable = (text) => {
-  if (!text) return ''
-  
-  const urlRegex = /https?:\/\/[^\s<>"{}|\\^`\[\]]+(?:#[^\s<>"{}|\\^`\[\]]*)?/gi
-  
-  return text.replace(urlRegex, (url) => {
-    let cleanUrl = url
-    let punctuation = ''
-    
-    // Hantera interpunktion i slutet av URL:er
-    const punctuationMatch = url.match(/([.,!?;]+)$/)
-    if (punctuationMatch) {
-      cleanUrl = url.slice(0, -punctuationMatch[1].length)
-      punctuation = punctuationMatch[1]
-    }
-    
-    const safeUrl = cleanUrl.replace(/\s/g, '%20')
-    
-    try {
-      const urlObj = new URL(cleanUrl)
-      const domain = urlObj.hostname.replace('www.', '')
-      const pathParts = urlObj.pathname.split('/').filter(part => part.length > 0)
-      
-      let linkText = domain
-      let description = domain
-      
-      // Bygg länktext med path-information
-      if (pathParts.length > 0) {
-        const lastPart = pathParts[pathParts.length - 1]
-        if (lastPart.length > 1 && !lastPart.includes('.')) {
-          let readablePath = lastPart.replace(/-/g, ' ').replace(/_/g, ' ')
-          
-          // Klipp av om för långt
-          if (readablePath.length > 30) {
-            readablePath = readablePath.substring(0, 27) + '...'
-          }
-          
-          linkText = `${domain} - ${readablePath}`
-          description = `${readablePath} på ${domain}`
-        }
-      }
-      
-      return `<a href="${safeUrl}" 
-                 target="_blank" 
-                 rel="noopener noreferrer" 
-                 title="Öppnar ${description} i nytt fönster">${linkText}</a>${punctuation}`
-      
-    } catch (e) {
-      const fallbackText = cleanUrl.split('/')[2] || 'Extern länk'
-      return `<a href="${safeUrl}" 
-                 target="_blank" 
-                 rel="noopener noreferrer" 
-                 title="Öppnar extern webbplats i nytt fönster">${fallbackText}</a>${punctuation}`
-    }
-  })
 }
 
 // Validera formulärfält
 const validateForm = () => {
   errors.value = {}
 
-  // Validera titel
+  // Validera titel med stöd för svenska tecken
   if (!form.value.title.trim()) {
     errors.value.title = 'Titel är obligatorisk'
   } else if (form.value.title.trim().length < 3) {
@@ -256,6 +296,14 @@ const handleSubmit = async () => {
 
   // Validera innan formuläret skickas
   if (!validateForm()) {
+    // Sätt fokus på första fältet med fel
+    await nextTick()
+    const firstErrorField = Object.keys(errors.value)[0]
+    if (firstErrorField === 'title' && firstInput.value) {
+      firstInput.value.focus()
+    } else if (firstErrorField === 'content') {
+      document.getElementById('checklistContent')?.focus()
+    }
     return
   }
 
@@ -267,25 +315,84 @@ const handleSubmit = async () => {
       content: form.value.content.trim()
     }
 
-    const result = await emit('save', itemData)
-
-    // Hantera fel från föräldrakomponent
-    if (result && result.success === false) {
-      apiError.value = result.message || 'Ett fel uppstod vid sparande'
-      if (result.errors) {
-        errors.value = { ...errors.value, ...result.errors }
+    // Skicka data till föräldrakomponent med callback för hantering av resultat
+    emit('save', itemData, (result) => {
+      // Hantera undefined/null resultat
+      if (!result) {
+        apiError.value = 'Ingen respons från servern'
+        loading.value = false
+        focusErrorAlert()
+        return
       }
-    } else if (result && result.error) {
-      apiError.value = result.error
-    } else if (result && result.success === true) {
-      emit('close')
-    }
+
+      // Hantera explicit fel (success: false)
+      if (result.success === false) {
+        apiError.value = result.message || 'Ett fel uppstod'
+
+        // Hantera fältspecifika fel om de finns
+        if (result.errors) {
+          errors.value = { ...errors.value, ...result.errors }
+        }
+        loading.value = false
+        focusErrorAlert()
+        return
+      }
+
+      // Hantera fel via error-egenskap
+      if (result.error) {
+        apiError.value = result.error
+        loading.value = false
+        focusErrorAlert()
+        return
+      }
+
+      // Hantera fel via message utan success-flagga
+      if (result.message && result.success !== true) {
+        apiError.value = result.message
+        loading.value = false
+        focusErrorAlert()
+        return
+      }
+
+      // Hantera HTTP-felkoder
+      if (result.status >= 400 || result.statusCode >= 400) {
+        apiError.value = result.message || 'Ett fel uppstod vid sparande av checklistpunkt'
+        loading.value = false
+        focusErrorAlert()
+        return
+      }
+
+      // Framgång - stäng modal
+      loading.value = false
+      handleClose()
+    })
 
   } catch (error) {
     // Hantera oväntade fel under formulärhantering
-    apiError.value = 'Ett oväntat fel uppstod'
-  } finally {
+    if (error.response) {
+      // HTTP-fel med response från server
+      const errorMessage = error.response.data?.message ||
+        error.response.data?.error ||
+        `Server error: ${error.response.status}`
+      apiError.value = errorMessage
+    } else if (error.message) {
+      // Vanligt JavaScript-fel
+      apiError.value = error.message
+    } else {
+      // Fallback för okända fel
+      apiError.value = 'Ett oväntat fel uppstod'
+    }
     loading.value = false
+    focusErrorAlert()
+  }
+}
+
+// Sätt fokus på felmeddelande
+const focusErrorAlert = async () => {
+  await nextTick()
+  if (errorAlert.value) {
+    errorAlert.value.focus()
+    errorAlert.value.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
   }
 }
 
@@ -311,8 +418,14 @@ watch(() => props.item, (newItem) => {
   }
 }, { immediate: true })
 
-// Initiera formulär när komponenten laddas
-onMounted(() => {
+// Initiera formulär och sätt fokus när komponenten laddas
+onMounted(async () => {
+  // Spara referens till elementet som hade fokus innan modalen öppnades
+  previousActiveElement.value = document.activeElement
+
+  // Lägg till event listener för tangentbord
+  document.addEventListener('keydown', handleEscape)
+
   if (props.item && props.isEditing) {
     // Redigeringsläge - fyll i befintliga data
     form.value = {
@@ -333,11 +446,30 @@ onMounted(() => {
       title: false,
       content: false
     }
+
+    // Säkerställ att fälten är tomma
+    setTimeout(() => {
+      form.value.title = ''
+      form.value.content = ''
+    }, 0)
   }
 
   // Rensa alla fel vid start
   errors.value = {}
   apiError.value = ''
+
+  // Sätt fokus på första input-fältet
+  await nextTick()
+  setTimeout(() => {
+    if (firstInput.value) {
+      firstInput.value.focus()
+    }
+  }, 150)
+})
+
+// Rensa event listeners när komponenten tas bort
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleEscape)
 })
 </script>
 
@@ -365,6 +497,47 @@ onMounted(() => {
   background-color: #f1f5f9 !important;
   border-color: #cbd5e1 !important;
   color: #1e293b !important;
+}
+
+.alert {
+  border: none;
+  border-radius: 8px;
+}
+
+.alert[tabindex="-1"]:focus {
+  outline: 2px solid #0d6efd;
+  outline-offset: 2px;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #495057;
+}
+
+.form-text {
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Fokusindikator */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #0d6efd;
+  outline-offset: 2px;
 }
 
 ::placeholder {

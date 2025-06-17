@@ -1,29 +1,33 @@
 <!-- components/admin/PostFormModal.vue - modal för att skapa och redigera rollspecifika inlägg -->
 
 <template>
-  <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
-    <div class="modal-dialog">
-      <div class="modal-content">
+  <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" aria-modal="true"
+    role="dialog" :aria-labelledby="modalTitleId" @click.self="handleBackdropClick" @keydown.escape="handleEscape">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content" ref="modalContent">
         <div class="modal-header">
-          <h4 class="modal-title">
-            <i :class="isEditing ? 'bi bi-pencil' : 'bi bi-plus-lg'" class="me-2"></i>
+          <h5 class="modal-title" :id="modalTitleId">
+            <i :class="isEditing ? 'bi bi-pencil' : 'bi bi-plus-lg'" class="me-2" aria-hidden="true"></i>
             {{ isEditing ? 'Redigera inlägg' : 'Skapa nytt inlägg' }}
-          </h4>
-          <button type="button" class="btn-close" @click="$emit('close')"><span
-              class="visually-hidden">Stäng</span></button>
+          </h5>
+          <button type="button" class="btn-close" @click="handleClose" aria-label="Stäng modal">
+          </button>
         </div>
 
-        <form @submit.prevent="handleSubmit">
+        <form @submit.prevent="handleSubmit" novalidate>
           <div class="modal-body">
             <!-- Titel för inlägget -->
             <div class="mb-3">
               <label for="title" class="form-label">
-                Titel <span class="text-danger">*</span>
+                Titel <span class="text-danger" aria-label="obligatoriskt">*</span>
               </label>
-              <input id="title" v-model="form.title" type="text" class="form-control"
+              <input id="title" ref="firstInput" v-model="form.title" type="text" class="form-control"
                 :class="{ 'is-invalid': hasBeenTouched.title && errors.title }" placeholder="Skriv en titel" required
-                @blur="hasBeenTouched.title = true" />
-              <div v-if="hasBeenTouched.title && errors.title" class="invalid-feedback">
+                @blur="hasBeenTouched.title = true" @keydown="handleFormKeydown"
+                :aria-describedby="getAriaDescribedBy('title')"
+                :aria-invalid="hasBeenTouched.title && errors.title ? 'true' : 'false'" autocomplete="off" />
+              <div v-if="hasBeenTouched.title && errors.title" id="title-error" class="invalid-feedback" role="alert"
+                aria-live="polite">
                 {{ errors.title }}
               </div>
             </div>
@@ -31,21 +35,24 @@
             <!-- Rollval (följer backend enum) -->
             <div class="mb-3">
               <label for="role" class="form-label">
-                Roll <span class="text-danger">*</span>
+                Roll <span class="text-danger" aria-label="obligatoriskt">*</span>
               </label>
               <select id="role" v-model="form.role" class="form-select"
                 :class="{ 'is-invalid': hasBeenTouched.role && errors.role }" required
-                @blur="hasBeenTouched.role = true" @change="hasBeenTouched.role = true">
+                @blur="hasBeenTouched.role = true" @change="handleRoleChange" @keydown="handleFormKeydown"
+                :aria-describedby="getAriaDescribedBy('role', 'role-info')"
+                :aria-invalid="hasBeenTouched.role && errors.role ? 'true' : 'false'">
                 <option value="">Välj roll</option>
                 <option value="designer">Designer</option>
                 <option value="developer">Utvecklare</option>
                 <option value="tester">Testare</option>
               </select>
-              <div v-if="hasBeenTouched.role && errors.role" class="invalid-feedback">
+              <div v-if="hasBeenTouched.role && errors.role" id="role-error" class="invalid-feedback" role="alert"
+                aria-live="polite">
                 {{ errors.role }}
               </div>
-              <div class="form-text">
-                <i class="bi bi-info-circle me-1"></i>
+              <div id="role-info" class="form-text">
+                <i class="bi bi-info-circle me-1" aria-hidden="true"></i>
                 Admins kan se alla inlägg oavsett roll.
               </div>
             </div>
@@ -53,42 +60,51 @@
             <!-- Innehåll för inlägget -->
             <div class="mb-3">
               <label for="content" class="form-label">
-                Innehåll <span class="text-danger">*</span>
+                Innehåll <span class="text-danger" aria-label="obligatoriskt">*</span>
               </label>
               <textarea id="content" v-model="form.content" class="form-control"
                 :class="{ 'is-invalid': hasBeenTouched.content && errors.content }" rows="3"
-                placeholder="Skriv ditt innehåll här..." required @blur="hasBeenTouched.content = true"></textarea>
-              <div class="form-text">
-                <i class="bi bi-link-45deg me-1"></i>
+                placeholder="Skriv ditt innehåll här..." required @blur="hasBeenTouched.content = true"
+                @keydown="handleFormKeydown" :aria-describedby="getAriaDescribedBy('content', 'content-info')"
+                :aria-invalid="hasBeenTouched.content && errors.content ? 'true' : 'false'"></textarea>
+              <div id="content-info" class="form-text">
+                <i class="bi bi-link-45deg me-1" aria-hidden="true"></i>
                 Skriv hela webbadresser med https:// (t.ex. https://digg.se) så blir de automatiskt klickbara länkar som
                 öppnas i nytt fönster.
               </div>
-              <div v-if="hasBeenTouched.content && errors.content" class="invalid-feedback">
+              <div v-if="hasBeenTouched.content && errors.content" id="content-error" class="invalid-feedback"
+                role="alert" aria-live="polite">
                 {{ errors.content }}
               </div>
             </div>
 
             <!-- Rollbeskrivning (visas när roll är vald) -->
-            <div v-if="form.role" class="alert alert-info py-2">
-              <div class="d-flex align-items-center">
-                <i :class="getRoleIcon(form.role)" class="me-2"></i>
-                <small>{{ getRoleDescription(form.role) }}</small>
-              </div>
+            <div v-if="form.role" class="alert alert-info" role="status" aria-live="polite">
+              <h6>
+                <i :class="getRoleIcon(form.role)" class="me-2" aria-hidden="true"></i>
+                {{ getRoleDisplayName(form.role) }}
+              </h6>
+              <p class="mb-0 small">{{ getRoleDescription(form.role) }}</p>
             </div>
 
             <!-- Felmeddelande från API vid problem -->
-            <div v-if="apiError" class="alert alert-danger py-2">
-              <i class="bi bi-exclamation-triangle-fill me-2"></i>
-              <small>{{ apiError }}</small>
+            <div v-if="apiError" class="alert alert-danger" role="alert" aria-live="assertive" tabindex="-1"
+              ref="errorAlert">
+              <i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i>
+              {{ apiError }}
             </div>
           </div>
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary" @click="$emit('close')" :disabled="loading">
+            <button type="button" class="btn btn-outline-secondary" @click="handleClose" :disabled="loading"
+              ref="cancelButton">
               Avbryt
             </button>
-            <button type="submit" class="btn btn-primary" :disabled="loading || !isFormValid">
-              <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
+            <button type="submit" class="btn btn-primary" :disabled="loading || !isFormValid"
+              :aria-busy="loading ? 'true' : 'false'" ref="submitButton">
+              <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true">
+                <span class="visually-hidden">Bearbetar...</span>
+              </span>
               {{ isEditing ? 'Uppdatera' : 'Skapa' }} inlägg
             </button>
           </div>
@@ -99,7 +115,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 
 // Props från föräldrakomponent
 const props = defineProps({
@@ -110,11 +126,25 @@ const props = defineProps({
   isEditing: {
     type: Boolean,
     default: false
+  },
+  returnFocusTo: {
+    type: Object,
+    default: null
   }
 })
 
 // Events som skickas till föräldrakomponent
 const emit = defineEmits(['save', 'close'])
+
+// Refs för DOM-element
+const firstInput = ref(null)
+const modalContent = ref(null)
+const cancelButton = ref(null)
+const submitButton = ref(null)
+const errorAlert = ref(null)
+
+// Unik ID för modal-titel (för ARIA)
+const modalTitleId = `modal-title-${Math.random().toString(36).substr(2, 9)}`
 
 // Formulärdata för inlägg
 const form = ref({
@@ -142,6 +172,99 @@ const isFormValid = computed(() => {
     form.value.content.trim() &&
     Object.keys(errors.value).length === 0
 })
+
+// Hjälpfunktion för aria-describedby
+const getAriaDescribedBy = (fieldName, additionalId = null) => {
+  const parts = []
+  if (errors.value[fieldName] && hasBeenTouched.value[fieldName]) {
+    parts.push(`${fieldName}-error`)
+  }
+  if (additionalId) {
+    parts.push(additionalId)
+  }
+  return parts.length > 0 ? parts.join(' ') : undefined
+}
+
+// Hantera rollförändring
+const handleRoleChange = () => {
+  hasBeenTouched.value.role = true
+  // Annonsera rollbeskrivning för skärmläsare
+  if (form.value.role) {
+    setTimeout(() => {
+      const description = getRoleDescription(form.value.role)
+      // Skapa ett temporärt meddelande för skärmläsare
+      announceToScreenReader(`Roll vald: ${getRoleDisplayName(form.value.role)}. ${description}`)
+    }, 100)
+  }
+}
+
+// Annonsera meddelanden till skärmläsare
+const announceToScreenReader = (message) => {
+  const announcement = document.createElement('div')
+  announcement.setAttribute('aria-live', 'polite')
+  announcement.setAttribute('aria-atomic', 'true')
+  announcement.className = 'visually-hidden'
+  document.body.appendChild(announcement)
+
+  setTimeout(() => {
+    announcement.textContent = message
+    setTimeout(() => {
+      document.body.removeChild(announcement)
+    }, 1000)
+  }, 100)
+}
+
+// Focus trap - håll fokus inom modalen
+const trapFocus = (event) => {
+  if (!modalContent.value) return
+
+  const focusableElements = modalContent.value.querySelectorAll(
+    'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+  )
+
+  const firstElement = focusableElements[0]
+  const lastElement = focusableElements[focusableElements.length - 1]
+
+  if (event.key === 'Tab') {
+    if (event.shiftKey) {
+      // Shift+Tab
+      if (document.activeElement === firstElement) {
+        event.preventDefault()
+        lastElement.focus()
+      }
+    } else {
+      // Tab
+      if (document.activeElement === lastElement) {
+        event.preventDefault()
+        firstElement.focus()
+      }
+    }
+  }
+}
+
+// Hantera tangentbordsnavigering i formuläret
+const handleFormKeydown = (event) => {
+  trapFocus(event)
+}
+
+// Hantera Escape-tangent
+const handleEscape = () => {
+  if (!loading.value) {
+    handleClose()
+  }
+}
+
+// Hantera klick på bakgrund
+const handleBackdropClick = () => {
+  if (!loading.value) {
+    handleClose()
+  }
+}
+
+// Hantera stängning av modal
+const handleClose = () => {
+  emit('close')
+}
 
 // Validera formulärfält
 const validateForm = () => {
@@ -185,6 +308,16 @@ const handleSubmit = async () => {
 
   // Validera innan formuläret skickas
   if (!validateForm()) {
+    // Fokusera på första fältet med fel
+    await nextTick()
+    const firstErrorField = document.querySelector('.is-invalid')
+    if (firstErrorField) {
+      firstErrorField.focus()
+      const fieldName = firstErrorField.id
+      if (errors.value[fieldName]) {
+        announceToScreenReader(`Fel i formuläret: ${errors.value[fieldName]}`)
+      }
+    }
     return
   }
 
@@ -197,35 +330,92 @@ const handleSubmit = async () => {
       content: form.value.content.trim()
     }
 
-    const result = await emit('save', postData)
-
-    // Hantera fel från föräldrakomponent
-    if (result && result.success === false) {
-      // Backend returnerar fel
-      apiError.value = result.message || 'Ett fel uppstod'
-
-      if (result.errors) {
-        errors.value = { ...errors.value, ...result.errors }
+    // Skicka data till föräldrakomponent med callback för hantering av resultat
+    emit('save', postData, (result) => {
+      // Hantera undefined/null resultat
+      if (!result) {
+        apiError.value = 'Ingen respons från servern'
+        loading.value = false
+        focusErrorAlert()
+        return
       }
-    } else if (result && result.error) {
-      // API-fel struktur (från api.js)
-      apiError.value = result.error
 
-      // Om det finns fältspecifika fel
-      if (result.field && result.error) {
-        errors.value = {
-          [result.field]: result.error
+      // Hantera explicit fel (success: false)
+      if (result.success === false) {
+        apiError.value = result.message || 'Ett fel uppstod'
+
+        // Hantera fältspecifika fel om de finns
+        if (result.errors) {
+          errors.value = { ...errors.value, ...result.errors }
         }
+        loading.value = false
+        focusErrorAlert()
+        return
       }
-    } else if (result && result.success === true) {
-      // Stäng modal vid framgång
-      emit('close')
-    }
+
+      // Hantera fel via erroregenskap
+      if (result.error) {
+        apiError.value = result.error
+
+        // Om det finns fältspecifika fel
+        if (result.field && result.error) {
+          errors.value = {
+            [result.field]: result.error
+          }
+        }
+        loading.value = false
+        focusErrorAlert()
+        return
+      }
+
+      // Hantera fel via message utan successflagga
+      if (result.message && result.success !== true) {
+        apiError.value = result.message
+        loading.value = false
+        focusErrorAlert()
+        return
+      }
+
+      // Hantera HTTP-felkoder
+      if (result.status >= 400 || result.statusCode >= 400) {
+        apiError.value = result.message || 'Ett fel uppstod vid skapande av inlägg'
+        loading.value = false
+        focusErrorAlert()
+        return
+      }
+
+      // Framgång - stäng modal
+      loading.value = false
+      announceToScreenReader(`Inlägg ${props.isEditing ? 'uppdaterat' : 'skapat'} framgångsrikt`)
+      handleClose()
+    })
+
   } catch (error) {
     // Hantera oväntade fel under formulärhantering
-    apiError.value = 'Ett oväntat fel uppstod'
-  } finally {
+    if (error.response) {
+      // HTTP-fel med response från server
+      const errorMessage = error.response.data?.message ||
+        error.response.data?.error ||
+        `Server error: ${error.response.status}`
+      apiError.value = errorMessage
+    } else if (error.message) {
+      // Vanligt JavaScript-fel
+      apiError.value = error.message
+    } else {
+      // Fallback för okända fel
+      apiError.value = 'Ett oväntat fel uppstod'
+    }
     loading.value = false
+    focusErrorAlert()
+  }
+}
+
+// Sätt fokus på felmeddelande
+const focusErrorAlert = async () => {
+  await nextTick()
+  if (errorAlert.value) {
+    errorAlert.value.focus()
+    errorAlert.value.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
   }
 }
 
@@ -274,7 +464,7 @@ watch(() => props.post, (newPost) => {
       role: newPost.role || '',
       content: newPost.content || ''
     }
-    // Vid redigering markera alla fält som redan berörda.
+    // Vid redigering markera alla fält som redan berörda
     hasBeenTouched.value = {
       title: true,
       role: true,
@@ -283,8 +473,11 @@ watch(() => props.post, (newPost) => {
   }
 }, { immediate: true })
 
-// Initiera formulär när komponenten laddas
-onMounted(() => {
+// Initiera formulär och sätt fokus när komponenten laddas
+onMounted(async () => {
+  // Lägg till event listener för tangentbord
+  document.addEventListener('keydown', trapFocus)
+
   if (props.post && props.isEditing) {
     // Redigeringsläge - fyll i befintliga data
     form.value = {
@@ -309,11 +502,33 @@ onMounted(() => {
       role: false,
       content: false
     }
+
+    // Säkerställ att fälten är tomma
+    setTimeout(() => {
+      form.value.title = ''
+      form.value.role = ''
+      form.value.content = ''
+    }, 0)
   }
 
   // Rensa alla fel vid start
   errors.value = {}
   apiError.value = ''
+
+  // Sätt fokus på första input-fältet
+  await nextTick()
+  setTimeout(() => {
+    if (firstInput.value) {
+      firstInput.value.focus()
+      // Annonsera att modalen har öppnats
+      announceToScreenReader(`Modal öppnad: ${props.isEditing ? 'Redigera inlägg' : 'Skapa nytt inlägg'}`)
+    }
+  }, 150)
+})
+
+// Rensa event listeners när komponenten tas bort
+onUnmounted(() => {
+  document.removeEventListener('keydown', trapFocus)
 })
 </script>
 
@@ -342,6 +557,11 @@ onMounted(() => {
   border-radius: 8px;
 }
 
+.alert[tabindex="-1"]:focus {
+  outline: 2px solid #0d6efd;
+  outline-offset: 2px;
+}
+
 .modal-dialog {
   max-width: 500px;
 }
@@ -351,15 +571,19 @@ onMounted(() => {
   min-height: 80px;
 }
 
+/* Förbättrad fokusindikator för tangentbordsnavigering */
 .form-control:focus,
-.form-select:focus {
-  border-color: #86b7fe;
+.form-select:focus,
+.btn:focus,
+.btn-close:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
   box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
 
 .form-text {
   color: #6c757d;
-  font-size: 0.8em;
+  font-size: 0.875rem;
 }
 
 .alert-info {
@@ -372,6 +596,36 @@ onMounted(() => {
   background-color: #f8d7da;
   border-color: #f5c6cb;
   color: #721c24;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+::placeholder {
+  color: #6c757d !important;
+  opacity: 1;
+}
+
+::-moz-placeholder {
+  color: #6c757d !important;
+  opacity: 1;
+}
+
+::-webkit-input-placeholder {
+  color: #6c757d !important;
+}
+
+::-ms-input-placeholder {
+  color: #6c757d !important;
 }
 
 /* Responsiv anpassning för olika skärmstorlekar */

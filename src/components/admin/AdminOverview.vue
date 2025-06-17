@@ -1,9 +1,10 @@
 <!-- components/admin/AdminOverview.vue - adminöversikt med statistik och navigation till olika adminfunktioner -->
+
 <template>
   <div class="admin-overview">
     <!-- Felmeddelande vid problem med datainhämtning -->
     <div v-if="errorMessage" class="alert alert-warning mb-4" role="alert">
-      <i class="bi bi-exclamation-triangle me-2"></i>
+      <i class="bi bi-exclamation-triangle me-2" aria-hidden="true"></i>
       {{ errorMessage }}
     </div>
 
@@ -11,11 +12,13 @@
     <div class="row g-3 justify-content-center">
       <!-- Användarstatistik -->
       <div class="col-md-3 col-lg-3">
-        <div class="card stat-card clickable-card" @click="navigateToUsers">
+        <div class="card stat-card clickable-card" @click="navigateToUsers" @keydown.enter="navigateToUsers"
+          @keydown.space.prevent="navigateToUsers" tabindex="0" role="button"
+          :aria-label="`Visa användarhantering, totalt ${stats.users.total} användare`">
           <div class="card-body text-center">
-            <i class="bi bi-people stat-icon"></i>
+            <i class="bi bi-people stat-icon" aria-hidden="true"></i>
             <h2 class="h3 stat-number">
-              <span v-if="isLoading" class="spinner-border spinner-border-sm"></span>
+              <span v-if="isLoading" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
               <span v-else>{{ stats.users.total }}</span>
             </h2>
             <p class="stat-label">Användare</p>
@@ -26,11 +29,13 @@
 
       <!-- Projektstatistik -->
       <div class="col-md-3 col-lg-3">
-        <div class="card stat-card clickable-card" @click="navigateToProjects">
+        <div class="card stat-card clickable-card" @click="navigateToProjects" @keydown.enter="navigateToProjects"
+          @keydown.space.prevent="navigateToProjects" tabindex="0" role="button"
+          :aria-label="`Visa projekthantering, totalt ${stats.projects.total} projekt`">
           <div class="card-body text-center">
-            <i class="bi bi-folder stat-icon"></i>
+            <i class="bi bi-folder stat-icon" aria-hidden="true"></i>
             <h2 class="h3 stat-number">
-              <span v-if="isLoading" class="spinner-border spinner-border-sm"></span>
+              <span v-if="isLoading" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
               <span v-else>{{ stats.projects.total }}</span>
             </h2>
             <p class="stat-label">Totalt projekt</p>
@@ -41,11 +46,13 @@
 
       <!-- Inläggsstatistik -->
       <div class="col-md-3 col-lg-3">
-        <div class="card stat-card clickable-card" @click="navigateToPosts">
+        <div class="card stat-card clickable-card" @click="navigateToPosts" @keydown.enter="navigateToPosts"
+          @keydown.space.prevent="navigateToPosts" tabindex="0" role="button"
+          :aria-label="`Visa inläggshantering, totalt ${stats.posts.total} inlägg`">
           <div class="card-body text-center">
-            <i class="bi bi-file-text stat-icon"></i>
+            <i class="bi bi-file-text stat-icon" aria-hidden="true"></i>
             <h2 class="h3 stat-number">
-              <span v-if="isLoading" class="spinner-border spinner-border-sm"></span>
+              <span v-if="isLoading" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
               <span v-else>{{ stats.posts.total }}</span>
             </h2>
             <p class="stat-label">Totalt inlägg</p>
@@ -61,7 +68,7 @@
         <div class="card">
           <div class="card-header">
             <h2 class="h5 mb-0">
-              <i class="bi bi-speedometer2 me-2"></i>
+              <i class="bi bi-speedometer2 me-2" aria-hidden="true"></i>
               Rollbaserade dashboards
             </h2>
             <small class="text-muted">Få snabb överblick över olika rollers arbetsflöden</small>
@@ -70,10 +77,12 @@
             <div class="row g-3">
               <!-- Designer Dashboard -->
               <div class="col-md-4">
-                <div class="role-card designer-card" @click="navigateToRole('designer')">
+                <div class="role-card designer-card" @click="navigateToRole('designer')"
+                  @keydown.enter="navigateToRole('designer')" @keydown.space.prevent="navigateToRole('designer')"
+                  tabindex="0" role="button" aria-label="Gå till Designer dashboard">
                   <div class="role-card-body">
                     <div class="role-header">
-                      <i class="bi bi-palette-fill role-icon"></i>
+                      <i class="bi bi-palette-fill role-icon" aria-hidden="true"></i>
                       <h3 class="role-title">Designer</h3>
                     </div>
                     <p class="role-description">
@@ -81,7 +90,7 @@
                     </p>
                     <div class="role-actions">
                       <span class="action-text">
-                        <i class="bi bi-arrow-right me-1"></i>
+                        <i class="bi bi-arrow-right me-1" aria-hidden="true"></i>
                         Visa dashboard
                       </span>
                     </div>
@@ -91,10 +100,12 @@
 
               <!-- Utvecklare Dashboard -->
               <div class="col-md-4">
-                <div class="role-card developer-card" @click="navigateToRole('developer')">
+                <div class="role-card developer-card" @click="navigateToRole('developer')"
+                  @keydown.enter="navigateToRole('developer')" @keydown.space.prevent="navigateToRole('developer')"
+                  tabindex="0" role="button" aria-label="Gå till Utvecklare dashboard">
                   <div class="role-card-body">
                     <div class="role-header">
-                      <i class="bi bi-code-slash role-icon"></i>
+                      <i class="bi bi-code-slash role-icon" aria-hidden="true"></i>
                       <h3 class="role-title">Utvecklare</h3>
                     </div>
                     <p class="role-description">
@@ -102,7 +113,7 @@
                     </p>
                     <div class="role-actions">
                       <span class="action-text">
-                        <i class="bi bi-arrow-right me-1"></i>
+                        <i class="bi bi-arrow-right me-1" aria-hidden="true"></i>
                         Visa dashboard
                       </span>
                     </div>
@@ -112,10 +123,12 @@
 
               <!-- Testare Dashboard -->
               <div class="col-md-4">
-                <div class="role-card tester-card" @click="navigateToRole('tester')">
+                <div class="role-card tester-card" @click="navigateToRole('tester')"
+                  @keydown.enter="navigateToRole('tester')" @keydown.space.prevent="navigateToRole('tester')"
+                  tabindex="0" role="button" aria-label="Gå till Testare dashboard">
                   <div class="role-card-body">
                     <div class="role-header">
-                      <i class="bi bi-bug-fill role-icon"></i>
+                      <i class="bi bi-bug-fill role-icon" aria-hidden="true"></i>
                       <h3 class="role-title">Testare</h3>
                     </div>
                     <p class="role-description">
@@ -123,7 +136,7 @@
                     </p>
                     <div class="role-actions">
                       <span class="action-text">
-                        <i class="bi bi-arrow-right me-1"></i>
+                        <i class="bi bi-arrow-right me-1" aria-hidden="true"></i>
                         Visa dashboard
                       </span>
                     </div>

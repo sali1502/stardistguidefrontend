@@ -1,30 +1,52 @@
 <!-- components/admin/UserDeleteModal.vue - bekräftelsedialog för borttagning av användare -->
 
 <template>
-  <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal fade show d-block" 
+       tabindex="-1" 
+       style="background-color: rgba(0,0,0,0.5);"
+       aria-modal="true"
+       role="alertdialog"
+       :aria-labelledby="modalTitleId"
+       :aria-describedby="modalDescriptionId"
+       @click.self="$emit('cancel')"
+       @keydown.escape="$emit('cancel')">
     <div class="modal-dialog modal-sm">
       <div class="modal-content">
         <div class="modal-header border-0">
-          <h4 class="modal-title text-slate-darkest">
+          <h4 class="modal-title text-slate-darkest" :id="modalTitleId">
             Bekräfta borttagning
           </h4>
-          <button type="button" class="btn-close" @click="$emit('cancel')"><span
-              class="visually-hidden">Stäng</span></button>
+          <button type="button" 
+                  class="btn-close" 
+                  @click="$emit('cancel')"
+                  aria-label="Stäng dialog">
+          </button>
         </div>
 
         <div class="modal-body text-center">
-          <i class="bi bi-question-circle text-slate-medium" style="font-size: 3rem;"></i>
-          <h5 class="mt-3 mb-3 text-slate-dark">
+          <i class="bi bi-question-circle text-slate-medium" style="font-size: 3rem;" aria-hidden="true"></i>
+          <h5 class="mt-3 mb-3 text-slate-dark" :id="modalDescriptionId">
             Är du säker på att du vill radera användaren
             <strong class="text-slate-darkest">{{ user.username }}</strong>?
           </h5>
+          
+          <div class="alert alert-warning" role="region" aria-label="Varning">
+            <i class="bi bi-exclamation-triangle me-2" aria-hidden="true"></i>
+            <span class="small">Detta kan inte ångras. Användarens data kommer att tas bort permanent.</span>
+          </div>
         </div>
 
         <div class="modal-footer border-0 justify-content-center">
-          <button type="button" class="btn btn-slate-outline" @click="$emit('cancel')">
+          <button type="button" 
+                  ref="cancelButton"
+                  class="btn btn-slate-outline" 
+                  @click="$emit('cancel')">
             Avbryt
           </button>
-          <button type="button" class="btn btn-danger-muted" @click="$emit('confirm')">
+          <button type="button" 
+                  class="btn btn-danger-muted" 
+                  @click="$emit('confirm')"
+                  aria-label="Bekräfta radering av användare">
             Radera
           </button>
         </div>
@@ -34,6 +56,8 @@
 </template>
 
 <script setup>
+import { ref, onMounted, nextTick } from 'vue'
+
 // Props från föräldrakomponent
 const props = defineProps({
   user: {
@@ -44,6 +68,21 @@ const props = defineProps({
 
 // Events som skickas till föräldrakomponent
 const emit = defineEmits(['confirm', 'cancel'])
+
+// Ref för avbryt-knappen
+const cancelButton = ref(null)
+
+// Unika ID:n för ARIA
+const modalTitleId = `delete-modal-title-${Math.random().toString(36).substr(2, 9)}`
+const modalDescriptionId = `delete-modal-desc-${Math.random().toString(36).substr(2, 9)}`
+
+// Sätt fokus på avbryt-knappen när modal öppnas
+onMounted(async () => {
+  await nextTick()
+  if (cancelButton.value) {
+    cancelButton.value.focus()
+  }
+})
 </script>
 
 <style scoped>
@@ -79,6 +118,21 @@ const emit = defineEmits(['confirm', 'cancel'])
 
 .text-slate-medium {
   color: #475569 !important;
+}
+
+.alert-warning {
+  background-color: #fff3cd;
+  border-color: #ffecb5;
+  color: #664d03;
+  border: none;
+  border-radius: 6px;
+}
+
+/* Fokusindikator för tangentbordsnavigering */
+.btn:focus,
+.btn-close:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
 }
 
 .btn-slate-outline {
@@ -125,5 +179,17 @@ const emit = defineEmits(['confirm', 'cancel'])
   border-color: #743d3d;
   color: white;
   box-shadow: 0 0 0 0.2rem rgba(97, 50, 50, 0.25);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }
 </style>

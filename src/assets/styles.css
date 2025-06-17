@@ -1168,3 +1168,153 @@ div.status-overview div.card div.card-header > h3.mb-0 > i.bi-graph-up + span {
       border: 0 !important;
     }
 
+  /* ========================================================================
+   TILLGÄNGLIGHET - FOKUSMARKERING
+   ======================================================================== */
+
+/* Global fokusmarkering för alla interaktiva element */
+*:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Dölj fokusmarkering för musklik, visa bara för tangentbordsnavigation */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Visa tydlig fokusmarkering för tangentbordsnavigation */
+*:focus-visible {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+}
+
+/* Specifik fokusmarkering för knappar */
+button:focus,
+.btn:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.2);
+}
+
+/* Fokusmarkering för kort och klickbara div-element */
+.clickable-card:focus,
+.role-card:focus,
+[role="button"]:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.15);
+}
+
+/* Fokusmarkering för formulärfält */
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 1px;
+  border-color: #0066cc;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2);
+}
+
+/* Fokusmarkering för länkar */
+a:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+  text-decoration: underline;
+}
+
+/* Särskild fokusmarkering för navigationselement */
+.nav-link:focus,
+.nav-tabs .nav-link:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.2);
+}
+
+/* Fokusmarkering för tabeller och rader */
+.table tbody tr:focus,
+.user-card:focus,
+.user-row:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 1px;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.15);
+}
+
+/* Fokusmarkering för modal-element */
+.modal-content:focus,
+.modal-header button:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+}
+
+/* Anpassning för mörka bakgrunder */
+.bg-dark *:focus,
+.navbar-dark .navbar-nav .nav-link:focus,
+.dashboard-header .nav-link:focus,
+.login-header .nav-link:focus {
+  outline-color: #66b3ff;
+  box-shadow: 0 0 0 4px rgba(102, 179, 255, 0.3);
+}
+
+/* Skip links för tangentbordsnavigation */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #000;
+  color: white;
+  padding: 8px;
+  border-radius: 4px;
+  text-decoration: none;
+  z-index: 100;
+  transition: top 0.3s;
+}
+
+.skip-link:focus {
+  top: 6px;
+  outline: 2px solid #66b3ff;
+}
+
+/* Hög kontrast läge för tillgänglighet */
+@media (prefers-contrast: high) {
+  *:focus,
+  *:focus-visible {
+    outline: 3px solid #000;
+    outline-offset: 2px;
+    background-color: #ffff00;
+    color: #000;
+  }
+}
+
+/* Reducerad rörelse för användare som föredrar det */
+@media (prefers-reduced-motion: reduce) {
+  *:focus {
+    transition: none;
+  }
+}
+
+/* Fokusmarkering för custom checkbox/radio */
+input[type="checkbox"]:focus,
+input[type="radio"]:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+}
+
+/* Fokusmarkering för Bootstrap komponenter */
+.form-check-input:focus {
+  border-color: #0066cc;
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 0.25rem rgba(0, 102, 204, 0.25);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #0066cc;
+  outline: 2px solid #0066cc;
+  outline-offset: 1px;
+  box-shadow: 0 0 0 0.25rem rgba(0, 102, 204, 0.25);
+}
+
+

@@ -7,7 +7,7 @@
       class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
       <div>
         <h2 class="mb-1">
-          <i class="bi bi-folder me-2"></i>
+          <i class="bi bi-folder me-2" aria-hidden="true"></i>
           Projekthantering
         </h2>
         <p class="text-muted mb-0">
@@ -15,65 +15,66 @@
         </p>
       </div>
       <button class="btn btn-primary btn-sm d-md-none" @click="openCreateModal" :disabled="projectsStore.loading">
-        <i class="bi bi-plus-lg me-2"></i>
+        <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>
         Nytt projekt
       </button>
-      <button class="btn btn-primary d-none d-md-block" @click="openCreateModal" :disabled="projectsStore.loading">
-        <i class="bi bi-plus-lg me-2"></i>
+      <button class="btn btn-primary d-none d-md-block" @click="openCreateModal" :disabled="projectsStore.loading"
+        ref="createButton">
+        <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>
         Skapa projekt
       </button>
     </div>
 
-    <!-- Felmeddelande -->
-    <div v-if="projectsStore.error" class="alert alert-danger" role="alert">
-      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <!-- Felmeddelande från store -->
+    <div v-if="projectsStore.error" class="alert alert-danger" role="alert" aria-live="assertive">
+      <i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i>
       {{ projectsStore.error }}
       <button type="button" class="btn-close float-end" @click="projectsStore.clearError"
         aria-label="Stäng felmeddelande"></button>
     </div>
 
-    <!-- Framgångsmeddelande -->
-    <div v-if="successMessage" class="alert alert-success" role="alert">
-      <i class="bi bi-check-circle-fill me-2"></i>
+    <!-- Framgångsmeddelande (med stäng-knapp som ignoreras av skärmläsare, försvinner efter 20 sek) -->
+    <div v-if="successMessage" class="alert alert-success" role="alert" aria-live="assertive" aria-atomic="true">
+      <i class="bi bi-check-circle-fill me-2" aria-hidden="true"></i>
       {{ successMessage }}
-      <button type="button" class="btn-close float-end" @click="successMessage = ''"
-        aria-label="Stäng meddelande"></button>
+      <button type="button" class="btn-close float-end" @click="successMessage = ''" aria-hidden="true" tabindex="-1">
+      </button>
     </div>
 
-    <!-- Projekttabell -->
+    <!-- Projekttabell med responsiv design -->
     <div class="card">
       <div class="card-header">
-        <h3 class="mb-0">
-          <i class="bi bi-table me-2"></i>
+        <h3 class="mb-0" id="project-table-heading">
+          <i class="bi bi-table me-2" aria-hidden="true"></i>
           Projektlista
         </h3>
       </div>
       <div class="card-body">
         <!-- Laddningsindikator -->
-        <div v-if="projectsStore.loading" class="text-center py-4">
+        <div v-if="projectsStore.loading" class="text-center py-4" role="status" aria-live="polite">
           <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Laddar...</span>
           </div>
-          <p class="mt-2 text-muted">Laddar projekt...</p>
+          <p class="mt-2 text-muted" aria-hidden="true">Laddar projekt...</p>
         </div>
 
-        <!-- Projekttabell för stora skärmar -->
+        <!-- Projekttabell för olika skärmstorlekar -->
         <div v-else-if="projectsStore.projects.length > 0">
           <!-- Desktop tabell (stora skärmar) -->
           <div class="table-responsive d-none d-lg-block">
-            <table class="table table-hover">
+            <table class="table table-hover" aria-labelledby="project-table-heading">
               <thead class="table-light">
                 <tr>
-                  <th>Projektnamn</th>
-                  <th>Skapad</th>
-                  <th width="150">Åtgärder</th>
+                  <th scope="col">Projektnamn</th>
+                  <th scope="col">Skapad</th>
+                  <th scope="col" width="150">Åtgärder</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="project in projectsStore.projects" :key="project.id || project._id">
                   <td>
                     <div class="d-flex align-items-center">
-                      <i class="bi bi-folder text-blue-medium me-2"></i>
+                      <i class="bi bi-folder text-blue-medium me-2" aria-hidden="true"></i>
                       <div>
                         <div class="fw-bold">{{ project.name }}</div>
                         <div class="text-muted small">3 checklistor</div>
@@ -84,18 +85,21 @@
                     <small>{{ formatDate(project.createdAt) }}</small>
                   </td>
                   <td>
-                    <div class="btn-group btn-group-sm" role="group">
+                    <div class="btn-group btn-group-sm" role="group" :aria-label="`Åtgärder för ${project.name}`">
                       <button class="btn btn-outline-primary" @click="openEditModal(project)"
-                        :disabled="projectsStore.loading" title="Redigera projekt">
-                        <i class="bi bi-pencil"></i>
+                        :disabled="projectsStore.loading" :aria-label="`Redigera projekt ${project.name}`"
+                        :ref="el => setButtonRef(el, `edit-${project.id || project._id}`)">
+                        <i class="bi bi-pencil" aria-hidden="true"></i>
                       </button>
                       <button class="btn btn-outline-secondary" @click="openChecklistModal(project)"
-                        :disabled="projectsStore.loading" title="Hantera checklistor">
-                        <i class="bi bi-check2-square"></i>
+                        :disabled="projectsStore.loading" :aria-label="`Hantera checklistor för ${project.name}`"
+                        :ref="el => setButtonRef(el, `checklist-${project.id || project._id}`)">
+                        <i class="bi bi-check2-square" aria-hidden="true"></i>
                       </button>
                       <button class="btn btn-delete" @click="confirmDelete(project)" :disabled="projectsStore.loading"
-                        title="Ta bort projekt">
-                        <i class="bi bi-trash"></i>
+                        :aria-label="`Ta bort projekt ${project.name}`"
+                        :ref="el => setButtonRef(el, `delete-${project.id || project._id}`)">
+                        <i class="bi bi-trash" aria-hidden="true"></i>
                       </button>
                     </div>
                   </td>
@@ -106,18 +110,18 @@
 
           <!-- Medium tabell (tablets) -->
           <div class="table-responsive d-none d-md-block d-lg-none">
-            <table class="table table-hover">
+            <table class="table table-hover" aria-labelledby="project-table-heading">
               <thead class="table-light">
                 <tr>
-                  <th>Projektnamn</th>
-                  <th width="150">Åtgärder</th>
+                  <th scope="col">Projektnamn</th>
+                  <th scope="col" width="150">Åtgärder</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="project in projectsStore.projects" :key="project.id || project._id">
                   <td>
                     <div class="d-flex align-items-center">
-                      <i class="bi bi-folder text-blue-medium me-2"></i>
+                      <i class="bi bi-folder text-blue-medium me-2" aria-hidden="true"></i>
                       <div>
                         <div class="fw-bold">{{ project.name }}</div>
                         <div class="text-muted small">{{ formatDate(project.createdAt) }}</div>
@@ -125,18 +129,21 @@
                     </div>
                   </td>
                   <td>
-                    <div class="btn-group btn-group-sm" role="group">
+                    <div class="btn-group btn-group-sm" role="group" :aria-label="`Åtgärder för ${project.name}`">
                       <button class="btn btn-outline-primary" @click="openEditModal(project)"
-                        :disabled="projectsStore.loading" title="Redigera projekt">
-                        <i class="bi bi-pencil"></i>
+                        :disabled="projectsStore.loading" :aria-label="`Redigera projekt ${project.name}`"
+                        :ref="el => setButtonRef(el, `edit-${project.id || project._id}`)">
+                        <i class="bi bi-pencil" aria-hidden="true"></i>
                       </button>
                       <button class="btn btn-outline-success" @click="openChecklistModal(project)"
-                        :disabled="projectsStore.loading" title="Hantera checklistor">
-                        <i class="bi bi-check2-square"></i>
+                        :disabled="projectsStore.loading" :aria-label="`Hantera checklistor för ${project.name}`"
+                        :ref="el => setButtonRef(el, `checklist-${project.id || project._id}`)">
+                        <i class="bi bi-check2-square" aria-hidden="true"></i>
                       </button>
                       <button class="btn btn-delete" @click="confirmDelete(project)" :disabled="projectsStore.loading"
-                        title="Ta bort projekt">
-                        <i class="bi bi-trash"></i>
+                        :aria-label="`Ta bort projekt ${project.name}`"
+                        :ref="el => setButtonRef(el, `delete-${project.id || project._id}`)">
+                        <i class="bi bi-trash" aria-hidden="true"></i>
                       </button>
                     </div>
                   </td>
@@ -150,36 +157,39 @@
             <div v-for="project in projectsStore.projects" :key="project.id || project._id" class="project-row mb-2">
               <div class="d-flex justify-content-between align-items-center p-3">
                 <div class="d-flex align-items-center flex-grow-1">
-                  <i class="bi bi-folder text-blue-medium me-3"></i>
+                  <i class="bi bi-folder text-blue-medium me-3" aria-hidden="true"></i>
                   <div class="me-3">
                     <div class="fw-bold">{{ project.name }}</div>
                     <div class="text-muted small">{{ formatDate(project.createdAt) }}</div>
                   </div>
                 </div>
-                <div class="btn-group btn-group-sm" role="group">
+                <div class="btn-group btn-group-sm" role="group" :aria-label="`Åtgärder för ${project.name}`">
                   <button class="btn btn-outline-primary" @click="openEditModal(project)"
-                    :disabled="projectsStore.loading" title="Redigera projekt">
-                    <i class="bi bi-pencil"></i>
+                    :disabled="projectsStore.loading" :aria-label="`Redigera projekt ${project.name}`"
+                    :ref="el => setButtonRef(el, `edit-${project.id || project._id}`)">
+                    <i class="bi bi-pencil" aria-hidden="true"></i>
                   </button>
                   <button class="btn btn-outline-secondary" @click="openChecklistModal(project)"
-                    :disabled="projectsStore.loading" title="Hantera checklistor">
-                    <i class="bi bi-check2-square"></i>
+                    :disabled="projectsStore.loading" :aria-label="`Hantera checklistor för ${project.name}`"
+                    :ref="el => setButtonRef(el, `checklist-${project.id || project._id}`)">
+                    <i class="bi bi-check2-square" aria-hidden="true"></i>
                   </button>
                   <button class="btn btn-delete" @click="confirmDelete(project)" :disabled="projectsStore.loading"
-                    title="Ta bort projekt">
-                    <i class="bi bi-trash"></i>
+                    :aria-label="`Ta bort projekt ${project.name}`"
+                    :ref="el => setButtonRef(el, `delete-${project.id || project._id}`)">
+                    <i class="bi bi-trash" aria-hidden="true"></i>
                   </button>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Mobil kortlayout -->
+          <!-- Mobil kortlayout för små skärmar -->
           <div class="d-sm-none">
             <div v-for="project in projectsStore.projects" :key="project.id || project._id" class="project-card mb-3">
               <div class="d-flex justify-content-between align-items-start">
                 <div class="d-flex align-items-start flex-grow-1">
-                  <i class="bi bi-folder text-blue-medium me-3 mt-1"></i>
+                  <i class="bi bi-folder text-blue-medium me-3 mt-1" aria-hidden="true"></i>
                   <div class="flex-grow-1">
                     <div class="fw-bold mb-1">{{ project.name }}</div>
                     <div class="text-muted small mt-1">
@@ -190,18 +200,21 @@
                     </div>
                   </div>
                 </div>
-                <div class="btn-group btn-group-sm ms-2" role="group">
+                <div class="btn-group btn-group-sm ms-2" role="group" :aria-label="`Åtgärder för ${project.name}`">
                   <button class="btn btn-outline-primary" @click="openEditModal(project)"
-                    :disabled="projectsStore.loading" title="Redigera projekt">
-                    <i class="bi bi-pencil"></i>
+                    :disabled="projectsStore.loading" :aria-label="`Redigera projekt ${project.name}`"
+                    :ref="el => setButtonRef(el, `edit-${project.id || project._id}`)">
+                    <i class="bi bi-pencil" aria-hidden="true"></i>
                   </button>
                   <button class="btn btn-outline-secondary" @click="openChecklistModal(project)"
-                    :disabled="projectsStore.loading" title="Hantera checklistor">
-                    <i class="bi bi-check2-square"></i>
+                    :disabled="projectsStore.loading" :aria-label="`Hantera checklistor för ${project.name}`"
+                    :ref="el => setButtonRef(el, `checklist-${project.id || project._id}`)">
+                    <i class="bi bi-check2-square" aria-hidden="true"></i>
                   </button>
                   <button class="btn btn-delete" @click="confirmDelete(project)" :disabled="projectsStore.loading"
-                    title="Ta bort projekt">
-                    <i class="bi bi-trash"></i>
+                    :aria-label="`Ta bort projekt ${project.name}`"
+                    :ref="el => setButtonRef(el, `delete-${project.id || project._id}`)">
+                    <i class="bi bi-trash" aria-hidden="true"></i>
                   </button>
                 </div>
               </div>
@@ -211,7 +224,7 @@
 
         <!-- Tom lista - inga projekt -->
         <div v-else class="text-center py-4">
-          <i class="bi bi-folder text-muted" style="font-size: 3rem;"></i>
+          <i class="bi bi-folder text-muted" style="font-size: 3rem;" aria-hidden="true"></i>
           <h5 class="mt-3 text-muted">Inga projekt hittades</h5>
           <p class="text-muted">Skapa ditt första projekt genom att klicka på "Skapa projekt"</p>
         </div>
@@ -219,20 +232,21 @@
     </div>
 
     <!-- Modal för att skapa/redigera projekt -->
-    <ProjectFormModal v-if="showModal" :project="editingProject" :is-editing="isEditing" @save="handleSave"
-      @close="closeModal" />
+    <ProjectFormModal v-if="showModal" :project="editingProject" :is-editing="isEditing"
+      :return-focus-to="modalReturnFocusElement" @save="handleSave" @close="closeModal" />
 
     <!-- Modal för att bekräfta borttagning -->
     <ProjectDeleteModal v-if="showDeleteModal" :project="projectToDelete" @confirm="handleDelete"
       @cancel="cancelDelete" />
 
     <!-- Modal för checklisthantering -->
-    <ProjectChecklistModal v-if="showChecklistModal" :project="projectForChecklists" @close="closeChecklistModal" />
+    <ProjectChecklistModal v-if="showChecklistModal" :project="projectForChecklists"
+      :return-focus-to="checklistModalReturnFocusElement" @close="closeChecklistModal" />
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, nextTick } from 'vue'
 import { useProjectsStore } from '@/stores/projects'
 import ProjectFormModal from './ProjectFormModal.vue'
 import ProjectDeleteModal from './ProjectDeleteModal.vue'
@@ -248,6 +262,19 @@ const editingProject = ref(null)
 const projectToDelete = ref(null)
 const projectForChecklists = ref(null)
 const successMessage = ref('')
+const createButton = ref(null)
+const modalReturnFocusElement = ref(null)
+const checklistModalReturnFocusElement = ref(null)
+
+// Objekt för att hålla referenser till knappar
+const buttonRefs = ref({})
+
+// Funktion för att sätta knapp-referenser
+const setButtonRef = (el, key) => {
+  if (el) {
+    buttonRefs.value[key] = el
+  }
+}
 
 // Skapa eller redigera projekt styrs av isEditing
 const isEditing = computed(() => !!editingProject.value)
@@ -255,17 +282,38 @@ const isEditing = computed(() => !!editingProject.value)
 // Funktioner för att öppna och stänga modaler
 const openCreateModal = () => {
   editingProject.value = null
+  modalReturnFocusElement.value = document.activeElement
   showModal.value = true
 }
 
 const openEditModal = (project) => {
   editingProject.value = { ...project }
+  modalReturnFocusElement.value = document.activeElement
   showModal.value = true
 }
 
-const closeModal = () => {
+const closeModal = async () => {
   showModal.value = false
   editingProject.value = null
+
+  // Återställ fokus till rätt element
+  await nextTick()
+
+  if (!isEditing.value && projectsStore.projects.length > 0) {
+    // Vid skapande av nytt projekt, sätt fokus på första redigera-knappen
+    const firstProject = projectsStore.projects[0]
+    const firstEditButton = buttonRefs.value[`edit-${firstProject.id || firstProject._id}`]
+    if (firstEditButton) {
+      setTimeout(() => {
+        firstEditButton.focus()
+      }, 100)
+    }
+  } else if (modalReturnFocusElement.value) {
+    // Annars återställ fokus till elementet som öppnade modalen
+    setTimeout(() => {
+      modalReturnFocusElement.value.focus()
+    }, 100)
+  }
 }
 
 const confirmDelete = (project) => {
@@ -280,12 +328,21 @@ const cancelDelete = () => {
 
 const openChecklistModal = (project) => {
   projectForChecklists.value = project
+  checklistModalReturnFocusElement.value = document.activeElement
   showChecklistModal.value = true
 }
 
-const closeChecklistModal = () => {
+const closeChecklistModal = async () => {
   showChecklistModal.value = false
   projectForChecklists.value = null
+
+  // Återställ fokus till elementet som öppnade modalen
+  await nextTick()
+  if (checklistModalReturnFocusElement.value) {
+    setTimeout(() => {
+      checklistModalReturnFocusElement.value.focus()
+    }, 100)
+  }
 }
 
 // Hantera sparning av projekt (skapa eller uppdatera)
@@ -305,13 +362,13 @@ const handleSave = async (projectData, callback) => {
       successMessage.value = result.message || 'Operationen lyckades'
       closeModal()
 
-      // Rensa framgångsmeddelandet efter fem sekunder
+      // Rensa framgångsmeddelandet efter 20 sekunder (WCAG 2.2.1 standard)
       setTimeout(() => {
         successMessage.value = ''
-      }, 5000)
+      }, 20000)
     }
 
-    // Anropa callback med resultatet om den finns
+    // Anropa callback med resultatet för felhantering i modal
     const finalResult = result || { success: false, message: 'Inget svar från server' }
 
     if (callback) {
@@ -343,10 +400,10 @@ const handleDelete = async () => {
     if (result && result.success) {
       successMessage.value = result.message
 
-      // Rensa meddelandet efter fem sekunder
+      // Rensa meddelandet efter 20 sekunder (WCAG 2.2.1 standard)
       setTimeout(() => {
         successMessage.value = ''
-      }, 5000)
+      }, 20000)
     }
 
     cancelDelete()
@@ -493,30 +550,31 @@ onMounted(() => {
   color: white !important;
 }
 
-/* Fix för små skärmar - förbättra responsivitet för projektkort */
+/* Små skärmar - förbättra responsivitet för projektkort */
 @media (max-width: 400px) {
   .project-card {
     padding: 0.75rem;
   }
-  
+
   /* Direkt övergång till vertikal layout vid 400px för att undvika hopp */
   .project-card .d-flex {
     flex-direction: column;
     gap: 0.5rem;
   }
-  
+
   .project-card .btn-group {
     align-self: flex-end;
     margin-top: 0.5rem;
-    min-width: 120px; /* Lite bredare för tre knappar */
+    min-width: 120px;
     flex-shrink: 0;
   }
-  
+
   .project-card .flex-grow-1 {
-    min-width: 0; /* Tillåt content att krympa */
+    min-width: 0;
+    /* Tillåt content att krympa */
     word-break: break-word;
   }
-  
+
   .project-card .fw-bold {
     line-height: 1.2;
     word-break: break-word;
@@ -530,5 +588,25 @@ onMounted(() => {
   word-wrap: break-word;
   hyphens: auto;
   line-height: 1.3;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Fokusindikator */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid #0d6efd;
+  outline-offset: 2px;
 }
 </style>
