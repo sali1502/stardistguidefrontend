@@ -737,6 +737,21 @@ span.badge.bg-primary {
    ======================================================================== */
 
 /* Rubriker för admingränssnitt */
+
+/* UserFormModal: H4 modal-titel */
+.user-form-modal .modal-content h4.modal-title {
+  font-size: 1.25rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+}
+
+/* UserFormModal: H5 rollbeskrivning */
+.user-form-modal .modal-content .modal-body h5 {
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+}
+
 .role-card .role-title {
   font-weight: 500 !important;
   font-size: 1.25rem !important;

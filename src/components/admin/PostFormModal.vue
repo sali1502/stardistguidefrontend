@@ -1,7 +1,7 @@
 <!-- components/admin/PostFormModal.vue - modal för att skapa och redigera rollspecifika inlägg -->
 
 <template>
-  <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" aria-modal="true"
+  <div class="modal fade show d-block post-form-modal" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" aria-modal="true"
     role="dialog" :aria-labelledby="modalTitleId" @click.self="handleBackdropClick" @keydown.escape="handleEscape">
     <div class="modal-dialog" role="document">
       <div class="modal-content" ref="modalContent">
@@ -34,20 +34,49 @@
 
             <!-- Rollval (följer backend enum) -->
             <div class="mb-3">
-              <label for="role" class="form-label">
+              <div id="role-label" class="form-label">
                 Roll <span class="text-danger" aria-label="obligatoriskt">*</span>
-              </label>
-              <select id="role" v-model="form.role" class="form-select"
-                :class="{ 'is-invalid': hasBeenTouched.role && errors.role }" required
-                @blur="hasBeenTouched.role = true" @change="handleRoleChange" @keydown="handleFormKeydown"
-                :aria-describedby="getAriaDescribedBy('role', 'role-info')"
-                :aria-invalid="hasBeenTouched.role && errors.role ? 'true' : 'false'">
-                <option value="">Välj roll</option>
-                <option value="designer">Designer</option>
-                <option value="developer">Utvecklare</option>
-                <option value="tester">Testare</option>
-              </select>
-              <div v-if="hasBeenTouched.role && errors.role" id="role-error" class="invalid-feedback" role="alert"
+              </div>
+              <div class="dropdown w-100">
+                <button id="role" class="btn btn-light dropdown-toggle w-100 text-start form-control"
+                  :class="{ 'is-invalid': hasBeenTouched.role && errors.role }"
+                  type="button" data-bs-toggle="dropdown"
+                  aria-labelledby="role-label"
+                  :aria-describedby="getAriaDescribedBy('role', 'role-info')"
+                  :aria-invalid="hasBeenTouched.role && errors.role ? 'true' : 'false'"
+                  :disabled="loading"
+                  @blur="hasBeenTouched.role = true"
+                  @keydown="handleFormKeydown">
+                  {{ getRoleDisplayName(form.role) || 'Välj roll' }}
+                </button>
+                <ul class="dropdown-menu w-100">
+                  <li>
+                    <a class="dropdown-item" href="#" @click.prevent="selectRole('designer')"
+                      :class="{ active: form.role === 'designer' }"
+                      style="text-decoration: none !important">
+                      <i class="bi bi-palette-fill me-2" aria-hidden="true"></i>
+                      Designer
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="#" @click.prevent="selectRole('developer')"
+                      :class="{ active: form.role === 'developer' }"
+                      style="text-decoration: none !important">
+                      <i class="bi bi-code-slash me-2" aria-hidden="true"></i>
+                      Utvecklare
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="#" @click.prevent="selectRole('tester')"
+                      :class="{ active: form.role === 'tester' }"
+                      style="text-decoration: none !important">
+                      <i class="bi bi-bug-fill me-2" aria-hidden="true"></i>
+                      Testare
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div v-if="hasBeenTouched.role && errors.role" id="role-error" class="invalid-feedback d-block" role="alert"
                 aria-live="polite">
                 {{ errors.role }}
               </div>
@@ -183,6 +212,21 @@ const getAriaDescribedBy = (fieldName, additionalId = null) => {
     parts.push(additionalId)
   }
   return parts.length > 0 ? parts.join(' ') : undefined
+}
+
+// Hantera rollval från dropdown
+const selectRole = (role) => {
+  form.value.role = role
+  hasBeenTouched.value.role = true
+  
+  // Validera direkt
+  validateForm()
+  
+  // Annonsera rollbeskrivning för skärmläsare om en roll valts
+  if (role) {
+    const description = getRoleDescription(role)
+    announceToScreenReader(`Roll vald: ${getRoleDisplayName(role)}. ${description}`)
+  }
 }
 
 // Hantera rollförändring
@@ -626,6 +670,93 @@ onUnmounted(() => {
 
 ::-ms-input-placeholder {
   color: #6c757d !important;
+}
+
+/* Dropdown styling (Bootstrap) - för att överskrida global CSS */
+.post-form-modal .dropdown .dropdown-menu .dropdown-item {
+  text-decoration: none !important;
+}
+
+.post-form-modal .dropdown .dropdown-menu .dropdown-item:hover {
+  text-decoration: none !important;
+}
+
+.post-form-modal .dropdown .dropdown-menu .dropdown-item:focus {
+  text-decoration: none !important;
+}
+
+.post-form-modal .dropdown .dropdown-menu .dropdown-item.active {
+  text-decoration: none !important;
+}
+
+/* För att överskrida alla globala regler */
+.post-form-modal .dropdown-menu a.dropdown-item {
+  text-decoration: none !important;
+}
+
+.post-form-modal .dropdown-menu a.dropdown-item:link,
+.post-form-modal .dropdown-menu a.dropdown-item:visited,
+.post-form-modal .dropdown-menu a.dropdown-item:hover,
+.post-form-modal .dropdown-menu a.dropdown-item:active,
+.post-form-modal .dropdown-menu a.dropdown-item:focus {
+  text-decoration: none !important;
+}
+
+/* Dropdown som formulärfält */
+.dropdown .btn.form-control {
+  text-align: left;
+  background: #f9fafb;
+  border: 2px solid #e5e7eb;
+  color: #1a1a1a;
+  font-weight: normal;
+}
+
+.dropdown .btn.form-control:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #e5e7eb;
+  color: #1a1a1a;
+}
+
+.dropdown .btn.form-control:focus {
+  background: white;
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  color: #1a1a1a;
+}
+
+.dropdown .btn.form-control.is-invalid {
+  border-color: #b91c1c;
+  background: #fef2f2;
+}
+
+.dropdown .btn.form-control.is-invalid:focus {
+  border-color: #b91c1c;
+  box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.25);
+}
+
+.dropdown-menu {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e5e7eb;
+}
+
+.dropdown-item.active {
+  background-color: #e9ecef;
+  color: #212529;
+  text-decoration: none !important;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.dropdown-item.active:hover {
+  background-color: #dee2e6;
+  text-decoration: none !important;
+}
+
+/* Visa felmeddelande för dropdown */
+.invalid-feedback.d-block {
+  display: block !important;
 }
 
 /* Responsiv anpassning för olika skärmstorlekar */

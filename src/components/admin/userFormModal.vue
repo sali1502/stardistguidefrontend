@@ -1,15 +1,15 @@
 <!-- components/admin/UserFormModal.vue - modal för att skapa och redigera användare -->
 
 <template>
-  <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" aria-modal="true"
+  <div class="modal fade show d-block user-form-modal" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" aria-modal="true"
     role="dialog" :aria-labelledby="modalTitleId" @click.self="handleBackdropClick" @keydown.esc="handleEscape">
     <div class="modal-dialog" role="document">
       <div class="modal-content" ref="modalContent">
         <div class="modal-header">
-          <h5 class="modal-title" :id="modalTitleId">
+          <h4 class="modal-title" :id="modalTitleId">
             <i :class="isEditing ? 'bi bi-pencil' : 'bi bi-plus-lg'" class="me-2" aria-hidden="true"></i>
             {{ isEditing ? 'Redigera användare' : 'Skapa ny användare' }}
-          </h5>
+          </h4>
           <button type="button" class="btn-close" @click="handleClose" @keydown.enter="handleClose"
             @keydown.space.prevent="handleClose" aria-label="Stäng modal">
           </button>
@@ -35,21 +35,53 @@
 
             <!-- Rollval för användaren -->
             <div class="mb-3">
-              <label for="role" class="form-label">
+              <div id="role-label" class="form-label">
                 Roll <span class="text-danger" aria-label="obligatoriskt fält">*</span>
-              </label>
-              <select id="role" v-model="form.role" class="form-select"
-                :class="{ 'is-invalid': hasBeenTouched.role && errors.role }" required
-                @blur="hasBeenTouched.role = true" @change="handleRoleChange" @keydown="handleFormKeydown"
-                :aria-describedby="getAriaDescribedBy('role')"
-                :aria-invalid="hasBeenTouched.role && errors.role ? 'true' : 'false'">
-                <option value="">Välj roll</option>
-                <option value="admin">Administratör</option>
-                <option value="designer">Designer</option>
-                <option value="developer">Utvecklare</option>
-                <option value="tester">Testare</option>
-              </select>
-              <div v-if="hasBeenTouched.role && errors.role" id="role-error" class="invalid-feedback" role="alert"
+              </div>
+              <div class="dropdown w-100">
+                <button id="role" class="btn btn-light dropdown-toggle w-100 text-start form-control"
+                  :class="{ 'is-invalid': hasBeenTouched.role && errors.role }"
+                  type="button" data-bs-toggle="dropdown"
+                  aria-labelledby="role-label"
+                  :aria-describedby="getAriaDescribedBy('role')"
+                  :aria-invalid="hasBeenTouched.role && errors.role ? 'true' : 'false'"
+                  :disabled="loading"
+                  @blur="hasBeenTouched.role = true"
+                  @keydown="handleFormKeydown">
+                  {{ getRoleDisplayName(form.role) || 'Välj roll' }}
+                </button>
+                <ul class="dropdown-menu w-100">
+                  <li>
+                    <a class="dropdown-item" href="#" @click.prevent="selectRole('admin')"
+                      :class="{ active: form.role === 'admin' }">
+                      <i class="bi bi-gear-fill me-2" aria-hidden="true"></i>
+                      Administratör
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="#" @click.prevent="selectRole('designer')"
+                      :class="{ active: form.role === 'designer' }">
+                      <i class="bi bi-palette-fill me-2" aria-hidden="true"></i>
+                      Designer
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="#" @click.prevent="selectRole('developer')"
+                      :class="{ active: form.role === 'developer' }">
+                      <i class="bi bi-code-slash me-2" aria-hidden="true"></i>
+                      Utvecklare
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="#" @click.prevent="selectRole('tester')"
+                      :class="{ active: form.role === 'tester' }">
+                      <i class="bi bi-bug-fill me-2" aria-hidden="true"></i>
+                      Testare
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div v-if="hasBeenTouched.role && errors.role" id="role-error" class="invalid-feedback d-block" role="alert"
                 aria-live="polite">
                 {{ errors.role }}
               </div>
@@ -88,10 +120,10 @@
             <!-- Beskrivning av vald roll -->
             <div v-if="form.role" class="alert alert-info" role="region"
               :aria-label="`Information om rollen ${getRoleDisplayName(form.role)}`">
-              <h6>
+              <h5>
                 <i :class="getRoleIcon(form.role)" class="me-2" aria-hidden="true"></i>
                 {{ getRoleDisplayName(form.role) }}
-              </h6>
+              </h5>
               <p class="mb-0 small">{{ getRoleDescription(form.role) }}</p>
             </div>
 
@@ -190,6 +222,21 @@ const getAriaDescribedBy = (fieldName, additionalId = null) => {
     parts.push(additionalId)
   }
   return parts.length > 0 ? parts.join(' ') : undefined
+}
+
+// Hantera rollval från dropdown
+const selectRole = (role) => {
+  form.value.role = role
+  hasBeenTouched.value.role = true
+  
+  // Validera direkt
+  validateForm()
+  
+  // Annonsera rollbeskrivning för skärmläsare om en roll valts
+  if (role) {
+    const description = getRoleDescription(role)
+    announceToScreenReader(`Roll vald: ${getRoleDisplayName(role)}. ${description}`)
+  }
 }
 
 // Hantera rollförändring
@@ -637,5 +684,84 @@ select:focus-visible {
 
 ::-ms-input-placeholder {
   color: #6c757d !important;
+}
+
+/* Dropdown styling */
+.dropdown-item {
+  text-decoration: none !important;
+}
+
+.dropdown-item:hover {
+  text-decoration: none !important;
+}
+
+/* Dropdown (Bootstrap) som formulärfält */
+.dropdown .btn.form-control {
+  text-align: left;
+  background: #f9fafb;
+  border: 2px solid #e5e7eb;
+  color: #1a1a1a;
+  font-weight: normal;
+}
+
+.dropdown .btn.form-control:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #e5e7eb;
+  color: #1a1a1a;
+}
+
+.dropdown .btn.form-control:focus {
+  background: white;
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  color: #1a1a1a;
+}
+
+.dropdown .btn.form-control.is-invalid {
+  border-color: #b91c1c;
+  background: #fef2f2;
+}
+
+.dropdown .btn.form-control.is-invalid:focus {
+  border-color: #b91c1c;
+  box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.25);
+}
+
+.dropdown-menu {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e5e7eb;
+}
+
+.dropdown-item.active {
+  background-color: #e9ecef;
+  color: #212529;
+  text-decoration: none !important;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.dropdown-item.active:hover {
+  background-color: #dee2e6;
+  text-decoration: none !important;
+}
+
+/* Visa felmeddelande för dropdown */
+.invalid-feedback.d-block {
+  display: block !important;
+}
+
+/* Modal-specifika h4 och h5 stilar */
+.user-form-modal .modal-title {
+  font-size: 1.25rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+}
+
+.user-form-modal .modal-body h5 {
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
 }
 </style>
