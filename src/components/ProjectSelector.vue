@@ -1,7 +1,12 @@
-<!-- components/ProjectSelector.vue - dropdown-komponent för att välja och hantera projekt med visning av progression -->
+<!-- components/ProjectSelector.vue - dropdown-meny som visar tillgängliga projekt och status för valt projekt -->
 
 <template>
   <div class="project-selector">
+    <!-- ARIA live region för att meddela projektval -->
+    <div class="visually-hidden" aria-live="polite" aria-atomic="true">
+      {{ ariaLiveMessage }}
+    </div>
+
     <div class="card">
       <div class="card-body">
         <div class="row align-items-center">
@@ -14,7 +19,8 @@
             <!-- Bootstrap dropdown-meny  -->
             <div class="dropdown w-100">
               <button class="btn btn-light dropdown-toggle w-100 text-start" type="button" data-bs-toggle="dropdown"
-                aria-labelledby="project-label" :disabled="loading">
+                aria-labelledby="project-label" :disabled="loading"
+                :aria-describedby="selectedProject ? 'selected-project-status' : null">
                 {{ selectedProjectName || 'Välj ett projekt...' }}
               </button>
               <ul class="dropdown-menu w-100 mobile-dropdown">
@@ -33,7 +39,8 @@
                 <template v-else>
                   <li v-for="project in projects" :key="project.id || project._id">
                     <a class="dropdown-item" href="#" @click.prevent="selectProject(project)"
-                      :class="{ active: selectedProject === (project.id || project._id) }">
+                      :class="{ active: selectedProject === (project.id || project._id) }"
+                      :aria-current="selectedProject === (project.id || project._id) ? 'true' : 'false'">
                       {{ project.name }}
                     </a>
                   </li>
@@ -67,7 +74,7 @@
         </div>
 
         <!-- Visar info för valt projekt -->
-        <div v-if="currentProject" class="mt-3 p-3 bg-light rounded">
+        <div v-if="currentProject" class="mt-3 p-3 bg-light rounded" id="selected-project-status">
           <div class="d-flex justify-content-between align-items-center">
             <div>
               <h3 class="mb-1">{{ currentProject.name }}</h3>
@@ -108,6 +115,7 @@ const loading = ref(true)
 const loadingProgress = ref(false)
 const selectedProject = ref(props.modelValue || '')
 const projectProgress = ref([])
+const ariaLiveMessage = ref('')
 
 // Beräknat värde för aktuellt valt projekt
 const currentProject = computed(() => {
@@ -140,6 +148,13 @@ const projectStatus = computed(() => {
 const selectProject = (project) => {
   const projectId = project ? (project.id || project._id) : ''
   selectedProject.value = projectId
+
+  // Uppdatera ARIA live message för skärmläsare
+  if (project) {
+    ariaLiveMessage.value = `Projekt ${project.name} har valts`
+  } else {
+    ariaLiveMessage.value = 'Projektval har rensats'
+  }
 
   emit('update:modelValue', projectId)
   emit('project-selected', project)
@@ -224,6 +239,19 @@ onMounted(() => {
 </script>
 
 <style scoped>
+/* Lägg till visuellt dold klass för ARIA live regions */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
 .project-selector {
   margin-bottom: 1.5rem;
 }

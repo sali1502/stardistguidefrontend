@@ -1,7 +1,12 @@
-<!-- components/RoleChecklist.vue - checklistkomponent som visar och hanterar rollspecifika uppgifter för valt projekt -->
+<!-- components/RoleChecklist.vue - interaktiv checklista för olika användarroller (designer, utvecklare, testare) -->
 
 <template>
   <div class="role-checklist">
+    <!-- ARIA live region för att meddela checkliständringar -->
+    <div class="visually-hidden" aria-live="polite" aria-atomic="true">
+      {{ ariaLiveMessage }}
+    </div>
+
     <!-- Header för checklista med rollspecifik information -->
     <div class="card mb-4">
       <div class="card-header">
@@ -39,8 +44,10 @@
 
     <!-- Checklistinnehåll med uppgifter -->
     <div v-else-if="checklist && checklist.items && checklist.items.length > 0">
-      <div class="progress mb-4" style="height: 10px;">
-        <div class="progress-bar bg-success" :style="{ width: progressPercentage + '%' }" role="progressbar"></div>
+      <div class="progress mb-4" style="height: 10px;" role="progressbar"
+        :aria-valuenow="Math.round(progressPercentage)" aria-valuemin="0" aria-valuemax="100"
+        :aria-label="`Progression: ${Math.round(progressPercentage)} procent slutfört`">
+        <div class="progress-bar bg-success" :style="{ width: progressPercentage + '%' }"></div>
       </div>
 
       <div class="checklist-items">
@@ -50,13 +57,14 @@
             <div class="d-flex align-items-start">
               <div class="form-check me-3 mt-1">
                 <input :id="`item-${index}`" v-model="item.completed" type="checkbox" class="form-check-input"
-                  @change="handleItemToggle(item, item.completed)" :disabled="updating" />
+                  @change="handleItemToggle(item, item.completed)" :disabled="updating"
+                  :aria-describedby="`item-desc-${index}`" />
                 <label :for="`item-${index}`" class="form-check-label visually-hidden">
-                  Markera som klar
+                  Markera {{ item.title }} som klar
                 </label>
               </div>
 
-              <div class="flex-grow-1">
+              <div class="flex-grow-1" :id="`item-desc-${index}`">
                 <h4 class="mb-2" :class="{ 'text-decoration-line-through text-muted': item.completed }">
                   {{ item.title }}
                 </h4>
@@ -65,7 +73,7 @@
                 </div>
               </div>
 
-              <div class="ms-3">
+              <div class="ms-3" aria-hidden="true">
                 <i v-if="item.completed" class="bi bi-check-circle-fill text-success" style="font-size: 1.25rem;"></i>
                 <i v-else class="bi bi-circle text-muted" style="font-size: 1.25rem;"></i>
               </div>
@@ -105,13 +113,14 @@ const props = defineProps({
 })
 
 // Events som kan skickas till föräldrakomponent
-const emit = defineEmits([])
+const emit = defineEmits(['progress-updated'])
 
 // Reaktiv data för checklisthantering
 const checklist = ref(null)
 const loading = ref(false)
 const error = ref('')
 const updating = ref(false)
+const ariaLiveMessage = ref('')
 
 // Beräkna antal slutförda uppgifter
 const completedCount = computed(() => {
@@ -179,15 +188,24 @@ const toggleChecklistItem = async (item, completed) => {
     )
 
     if (result.success) {
-      // Backend uppdaterar progression automatiskt
+      // Uppdatera ARIA live message för skärmläsare
+      ariaLiveMessage.value = `${item.title} har markerats som ${completed ? 'slutförd' : 'ej slutförd'}`
+
+      // Emit progress update
+      emit('progress-updated', {
+        completedItems: completedCount.value,
+        totalItems: totalCount.value
+      })
     } else {
       // Återställ checkboxen vid fel
       item.completed = !completed
+      ariaLiveMessage.value = `Kunde inte uppdatera ${item.title}`
     }
 
   } catch (err) {
     // Återställ checkboxen vid fel
     item.completed = !completed
+    ariaLiveMessage.value = `Ett fel uppstod vid uppdatering av ${item.title}`
   } finally {
     updating.value = false
   }
@@ -283,6 +301,19 @@ watch(() => [props.projectId, props.userRole], () => {
 </script>
 
 <style scoped>
+/* Lägg till visuellt dold klass för ARIA live regions */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
 .card {
   border: none;
   box-shadow: 0 2px 8px rgba(30, 41, 59, 0.1);

@@ -1,4 +1,4 @@
-<!-- views/TesterDashboard.vue - Dashboard för testarrollen -->
+<!-- views/TesterDashboard.vue - Vy för testarrollen -->
 
 <template>
   <BaseDashboard>

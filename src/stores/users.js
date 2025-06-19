@@ -1,4 +1,4 @@
-// stores/users.js - Pinia-store för användarhantering med Options API
+// stores/users.js - Pinia-store för användarhantering 
 
 import { defineStore } from 'pinia'
 import { userService } from '@/services/userService'

@@ -1,4 +1,4 @@
-<!-- components/admin/userManagement.vue - administrationskomponent för att hantera användare med CRUD-operationer och responsiv design -->
+<!-- components/admin/userManagement.vue - adminskomponent för att hantera användare med CRUD-operationer -->
 
 <template>
   <div class="user-management">

@@ -1,6 +1,6 @@
 // config/api.js
-
 // Centraliserad API-konfiguration med automatisk autentisering och felhantering
+
 import axios from 'axios'
 import { useAuthStore } from '@/stores/auth'
 

@@ -1,4 +1,3 @@
-
 <!-- views/AdminDashboard.vue - Vy för admin -->
  
 <template>

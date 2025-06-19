@@ -1,4 +1,4 @@
-<!-- components/RolePosts.vue - komponent som visar rollspecifika inlägg filtrerade för användarens roll (designer, utvecklare eller testare) -->
+<!-- components/RolePosts.vue - -visar rollspecifika inlägg på dashboard -->
 
 <template>
   <div class="role-posts">
@@ -26,22 +26,23 @@
 
     <!-- Lista med inlägg för användarens roll -->
     <div v-else>
-      <div v-for="post in posts" :key="post._id || post.id" class="card mb-3">
+      <article v-for="post in posts" :key="post._id || post.id" class="card mb-3" :aria-label="`Inlägg: ${post.title}`"
+        tabindex="0">
         <div class="card-body">
           <div class="d-flex align-items-start">
-            <i :class="getRoleIcon(post.role)" class="me-3 mt-1"></i>
+            <i :class="getRoleIcon(post.role)" class="me-3 mt-1" aria-hidden="true"></i>
             <div class="flex-grow-1">
               <h4 class="card-title mb-2">{{ post.title }}</h4>
               <div class="card-text" v-html="makeLinksClickable(post.content)"></div>
               <div class="mt-3 d-flex justify-content-end align-items-center">
-                <small class="text-muted">
+                <time class="text-muted" :datetime="getISODate(post.createdAt)">
                   {{ formatDate(post.createdAt) }}
-                </small>
+                </time>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </article>
     </div>
   </div>
 </template>
@@ -75,6 +76,7 @@ const makeLinksClickable = (text) => {
   if (!text) return ''
 
   const urlRegex = /https?:\/\/[^\s<>"{}|\\^`\[\]]+(?:#[^\s<>"{}|\\^`\[\]]*)?/gi
+  const processedUrls = new Set() // Håll reda på bearbetade URL:er
 
   return text.replace(urlRegex, (url) => {
     let cleanUrl = url
@@ -86,6 +88,12 @@ const makeLinksClickable = (text) => {
       cleanUrl = url.slice(0, -punctuationMatch[1].length)
       punctuation = punctuationMatch[1]
     }
+
+    // Om vi redan har bearbetat denna URL, returnera den som vanlig text
+    if (processedUrls.has(cleanUrl)) {
+      return url
+    }
+    processedUrls.add(cleanUrl)
 
     const safeUrl = cleanUrl.replace(/\s/g, '%20')
 
@@ -158,6 +166,12 @@ const formatDate = (dateString) => {
   })
 }
 
+// Hämta ISO-datum för time element
+const getISODate = (dateString) => {
+  if (!dateString) return ''
+  return new Date(dateString).toISOString()
+}
+
 // Hämta inlägg från backend och filtrera baserat på användarens roll
 const fetchPosts = async () => {
   try {
@@ -209,6 +223,18 @@ onMounted(() => {
 .card:hover {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   transform: translateY(-2px);
+}
+
+.card:focus {
+  outline: 3px solid #334155;
+  outline-offset: 2px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.card:focus-visible {
+  outline: 3px solid #334155;
+  outline-offset: 2px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 .card-title {

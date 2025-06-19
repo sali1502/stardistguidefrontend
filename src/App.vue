@@ -1,5 +1,4 @@
 <!-- App.vue -->
-
 <!-- Rotkomponent för Vue-applikationen - hanterar routing och autentiseringsinitiering -->
 
 <template>

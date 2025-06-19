@@ -1,5 +1,4 @@
 /* main.js */
-
 /* Huvudfil för Vue-applikationen - konfigurerar och startar appen */
 
 import { createApp } from 'vue'
