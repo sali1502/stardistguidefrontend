@@ -1292,7 +1292,7 @@ a:focus {
 }
 
 /* Hög kontrast läge för tillgänglighet */
-@media (prefers-contrast: high) {
+@media (prefers-contrast: more) {
   *:focus,
   *:focus-visible {
     outline: 3px solid #000;
@@ -1330,6 +1330,19 @@ input[type="radio"]:focus {
   outline: 2px solid #0066cc;
   outline-offset: 1px;
   box-shadow: 0 0 0 0.25rem rgba(0, 102, 204, 0.25);
+}
+
+/* Extra små skärmar - 320px och mindre */
+@media (max-width: 350px) {
+  .btn-outline-light {
+    font-size: 0.75rem !important;
+    padding: 0.25rem 0.4rem !important;
+  }
+  
+  /* Dölj "Logga ut" text, visa bara ikon */
+  .dashboard-header .btn-outline-light {
+    min-width: auto;
+  }
 }
 
 

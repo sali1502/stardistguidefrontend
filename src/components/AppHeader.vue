@@ -1,5 +1,5 @@
 <!-- components/AppHeader.vue - sidhuvud med navigation, logotyp och utloggningsfunktion -->
- 
+
 <template>
   <div class="dashboard-header">
     <div class="container-fluid">
@@ -14,8 +14,12 @@
           </router-link>
           <router-link to="/status" class="nav-link me-3">Status</router-link>
           <button @click="handleLogout" class="btn btn-outline-light btn-sm" :disabled="isLoggingOut">
-            <span v-if="isLoggingOut" class="spinner-border spinner-border-sm me-1"></span>
-            {{ isLoggingOut ? 'Loggar ut...' : 'Logga ut' }}
+            <span v-if="isLoggingOut" class="spinner-border spinner-border-sm"></span>
+            <i v-else class="bi bi-box-arrow-right d-inline d-sm-none" aria-hidden="true"></i>
+            <span class="d-none d-sm-inline">
+              {{ isLoggingOut ? 'Loggar ut...' : 'Logga ut' }}
+            </span>
+            <span class="sr-only d-sm-none">{{ isLoggingOut ? 'Loggar ut' : 'Logga ut' }}</span>
           </button>
         </div>
       </div>

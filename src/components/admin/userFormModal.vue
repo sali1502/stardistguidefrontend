@@ -54,28 +54,24 @@
                   <li>
                     <a class="dropdown-item" href="#" @click.prevent="selectRole('admin')"
                       :class="{ active: form.role === 'admin' }">
-                      <i class="bi bi-gear-fill me-2" aria-hidden="true"></i>
                       Administratör
                     </a>
                   </li>
                   <li>
                     <a class="dropdown-item" href="#" @click.prevent="selectRole('designer')"
                       :class="{ active: form.role === 'designer' }">
-                      <i class="bi bi-palette-fill me-2" aria-hidden="true"></i>
                       Designer
                     </a>
                   </li>
                   <li>
                     <a class="dropdown-item" href="#" @click.prevent="selectRole('developer')"
                       :class="{ active: form.role === 'developer' }">
-                      <i class="bi bi-code-slash me-2" aria-hidden="true"></i>
                       Utvecklare
                     </a>
                   </li>
                   <li>
                     <a class="dropdown-item" href="#" @click.prevent="selectRole('tester')"
                       :class="{ active: form.role === 'tester' }">
-                      <i class="bi bi-bug-fill me-2" aria-hidden="true"></i>
                       Testare
                     </a>
                   </li>
@@ -705,8 +701,8 @@ select:focus-visible {
 }
 
 .dropdown .btn.form-control:hover:not(:disabled) {
-  background: #f9fafb;
-  border-color: #e5e7eb;
+  background: #f3f4f6;
+  border-color: #d1d5db;
   color: #1a1a1a;
 }
 
@@ -725,6 +721,36 @@ select:focus-visible {
 .dropdown .btn.form-control.is-invalid:focus {
   border-color: #b91c1c;
   box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.25);
+}
+
+/* Skriv över global Bootstrap-dropdown */
+.dropdown .btn.form-control,
+.dropdown .btn.form-control:not(.btn-outline-light):not(.btn-danger):not(.btn-delete) {
+  background: #f9fafb !important;
+  border: 2px solid #e5e7eb !important;
+  color: #1a1a1a !important;
+}
+
+.dropdown .btn.form-control:hover:not(:disabled),
+.dropdown .btn.form-control:not(.btn-outline-light):not(.btn-danger):not(.btn-delete):hover {
+  background: #f3f4f6 !important;
+  border-color: #d1d5db !important;
+  color: #1a1a1a !important;
+}
+
+.dropdown .btn.form-control:focus,
+.dropdown .btn.form-control:not(.btn-outline-light):not(.btn-danger):not(.btn-delete):focus {
+  background: white !important;
+  border-color: #86b7fe !important;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25) !important;
+  color: #1a1a1a !important;
+}
+
+.dropdown .btn.form-control:active,
+.dropdown .btn.form-control:not(.btn-outline-light):not(.btn-danger):not(.btn-delete):active {
+  background: white !important;
+  border-color: #86b7fe !important;
+  color: #1a1a1a !important;
 }
 
 .dropdown-menu {
