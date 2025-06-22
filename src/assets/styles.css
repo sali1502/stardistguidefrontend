@@ -1332,7 +1332,7 @@ input[type="radio"]:focus {
   box-shadow: 0 0 0 0.25rem rgba(0, 102, 204, 0.25);
 }
 
-/* Extra små skärmar - 320px och mindre */
+/* Extra små skärmar - 350px och mindre */
 @media (max-width: 350px) {
   .btn-outline-light {
     font-size: 0.75rem !important;
