@@ -32,6 +32,7 @@
               </div>
               <div v-if="hasBeenTouched.name && errors.name" id="name-error" class="invalid-feedback" role="alert"
                 aria-live="polite">
+                <i class="bi bi-exclamation-triangle-fill me-1"></i>
                 {{ errors.name }}
               </div>
             </div>

@@ -1,8 +1,9 @@
 <!-- components/admin/UserFormModal.vue - modal för att skapa och redigera användare -->
 
 <template>
-  <div class="modal fade show d-block user-form-modal" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" aria-modal="true"
-    role="dialog" :aria-labelledby="modalTitleId" @click.self="handleBackdropClick" @keydown.esc="handleEscape">
+  <div class="modal fade show d-block user-form-modal" tabindex="-1" style="background-color: rgba(0,0,0,0.5);"
+    aria-modal="true" role="dialog" :aria-labelledby="modalTitleId" @click.self="handleBackdropClick"
+    @keydown.esc="handleEscape">
     <div class="modal-dialog" role="document">
       <div class="modal-content" ref="modalContent">
         <div class="modal-header">
@@ -29,6 +30,7 @@
                 :aria-invalid="hasBeenTouched.username && errors.username ? 'true' : 'false'" />
               <div v-if="hasBeenTouched.username && errors.username" id="username-error" class="invalid-feedback"
                 role="alert" aria-live="polite">
+                <i class="bi bi-exclamation-triangle-fill me-1"></i>
                 {{ errors.username }}
               </div>
             </div>
@@ -40,14 +42,10 @@
               </div>
               <div class="dropdown w-100">
                 <button id="role" class="btn btn-light dropdown-toggle w-100 text-start form-control"
-                  :class="{ 'is-invalid': hasBeenTouched.role && errors.role }"
-                  type="button" data-bs-toggle="dropdown"
-                  aria-labelledby="role-label"
-                  :aria-describedby="getAriaDescribedBy('role')"
-                  :aria-invalid="hasBeenTouched.role && errors.role ? 'true' : 'false'"
-                  :disabled="loading"
-                  @blur="hasBeenTouched.role = true"
-                  @keydown="handleFormKeydown">
+                  :class="{ 'is-invalid': hasBeenTouched.role && errors.role }" type="button" data-bs-toggle="dropdown"
+                  aria-labelledby="role-label" :aria-describedby="getAriaDescribedBy('role')"
+                  :aria-invalid="hasBeenTouched.role && errors.role ? 'true' : 'false'" :disabled="loading"
+                  @blur="hasBeenTouched.role = true" @keydown="handleFormKeydown">
                   {{ getRoleDisplayName(form.role) || 'Välj roll' }}
                 </button>
                 <ul class="dropdown-menu w-100">
@@ -77,8 +75,9 @@
                   </li>
                 </ul>
               </div>
-              <div v-if="hasBeenTouched.role && errors.role" id="role-error" class="invalid-feedback d-block" role="alert"
-                aria-live="polite">
+              <div v-if="hasBeenTouched.role && errors.role" id="role-error" class="invalid-feedback d-block"
+                role="alert" aria-live="polite">
+                <i class="bi bi-exclamation-triangle-fill me-1"></i>
                 {{ errors.role }}
               </div>
             </div>
@@ -109,6 +108,7 @@
               </div>
               <div v-if="hasBeenTouched.password && errors.password" id="password-error" class="invalid-feedback"
                 role="alert" aria-live="polite">
+                <i class="bi bi-exclamation-triangle-fill me-1"></i>
                 {{ errors.password }}
               </div>
             </div>
@@ -224,10 +224,10 @@ const getAriaDescribedBy = (fieldName, additionalId = null) => {
 const selectRole = (role) => {
   form.value.role = role
   hasBeenTouched.value.role = true
-  
+
   // Validera direkt
   validateForm()
-  
+
   // Annonsera rollbeskrivning för skärmläsare om en roll valts
   if (role) {
     const description = getRoleDescription(role)

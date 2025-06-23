@@ -28,6 +28,7 @@
                 :aria-invalid="hasBeenTouched.title && errors.title ? 'true' : 'false'" autocomplete="off" />
               <div v-if="hasBeenTouched.title && errors.title" id="title-error" class="invalid-feedback" role="alert"
                 aria-live="polite">
+                <i class="bi bi-exclamation-triangle-fill me-1"></i>
                 {{ errors.title }}
               </div>
             </div>
@@ -75,6 +76,7 @@
               </div>
               <div v-if="hasBeenTouched.role && errors.role" id="role-error" class="invalid-feedback d-block" role="alert"
                 aria-live="polite">
+                <i class="bi bi-exclamation-triangle-fill me-1"></i>
                 {{ errors.role }}
               </div>
               <div id="role-info" class="form-text">
@@ -100,6 +102,7 @@
               </div>
               <div v-if="hasBeenTouched.content && errors.content" id="content-error" class="invalid-feedback"
                 role="alert" aria-live="polite">
+                <i class="bi bi-exclamation-triangle-fill me-1"></i>
                 {{ errors.content }}
               </div>
             </div>

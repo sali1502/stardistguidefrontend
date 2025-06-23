@@ -32,6 +32,7 @@
                     :class="{ 'is-invalid': errors.username }" placeholder="Ange ditt användarnamn" required
                     :disabled="loading" @input="clearFieldErrors" autocomplete="username" />
                   <div v-if="errors.username" class="invalid-feedback">
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i>
                     {{ errors.username }}
                   </div>
                 </div>
@@ -43,6 +44,7 @@
                     :class="{ 'is-invalid': errors.password }" placeholder="Ange ditt lösenord" :disabled="loading"
                     @input="clearFieldErrors" autocomplete="current-password" />
                   <div v-if="errors.password" class="invalid-feedback">
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i>
                     {{ errors.password }}
                   </div>
                 </div>
