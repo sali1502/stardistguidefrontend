@@ -120,7 +120,7 @@ onMounted(async () => {
   color: #64748b !important;
 }
 
-/* Förbättrad fokusindikator för tangentbordsnavigering */
+/* Fokusindikator för tangentbordsnavigering */
 .btn:focus,
 .btn-close:focus {
   outline: 2px solid #0066cc;

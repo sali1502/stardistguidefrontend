@@ -21,7 +21,7 @@
             <!-- Användarnamn -->
             <div class="mb-3">
               <label for="username" class="form-label">
-                Användarnamn <span class="text-danger" aria-label="obligatoriskt fält">*</span>
+                Användarnamn <span class="text-danger" aria-hidden="true">*</span>
               </label>
               <input id="username" ref="firstInput" v-model="form.username" type="text" class="form-control"
                 :class="{ 'is-invalid': hasBeenTouched.username && errors.username }" placeholder="Skriv användarnamn"
@@ -38,7 +38,7 @@
             <!-- Rollval för användaren -->
             <div class="mb-3">
               <div id="role-label" class="form-label">
-                Roll <span class="text-danger" aria-label="obligatoriskt fält">*</span>
+                Roll <span class="text-danger" aria-hidden="true">*</span>
               </div>
               <div class="dropdown w-100">
                 <button id="role" class="btn btn-light dropdown-toggle w-100 text-start form-control"

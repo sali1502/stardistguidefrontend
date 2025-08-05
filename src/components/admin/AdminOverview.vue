@@ -75,7 +75,7 @@
           </div>
           <div class="card-body">
             <div class="row g-3">
-              <!-- Designer Dashboard -->
+              <!-- Designer dashboard -->
               <div class="col-md-4">
                 <div class="role-card designer-card" @click="navigateToRole('designer')"
                   @keydown.enter="navigateToRole('designer')" @keydown.space.prevent="navigateToRole('designer')"
@@ -98,7 +98,7 @@
                 </div>
               </div>
 
-              <!-- Utvecklare Dashboard -->
+              <!-- Utvecklare dashboard -->
               <div class="col-md-4">
                 <div class="role-card developer-card" @click="navigateToRole('developer')"
                   @keydown.enter="navigateToRole('developer')" @keydown.space.prevent="navigateToRole('developer')"
@@ -121,7 +121,7 @@
                 </div>
               </div>
 
-              <!-- Testare Dashboard -->
+              <!-- Testare dashboard -->
               <div class="col-md-4">
                 <div class="role-card tester-card" @click="navigateToRole('tester')"
                   @keydown.enter="navigateToRole('tester')" @keydown.space.prevent="navigateToRole('tester')"
@@ -201,7 +201,7 @@ const testConnection = async () => {
 // Events för navigering till olika adminsektioner
 const emit = defineEmits(['navigate'])
 
-// Navigeringsfunktioner för administratörsgränssnittet
+// Navigeringsfunktioner för admingränssnittet
 const navigateToUsers = () => {
   emit('navigate', 'users')
 }

@@ -36,7 +36,7 @@
           <div class="card-body">
             <!-- Progressionskort för varje roll i projektet -->
             <div class="row g-4" role="list" aria-label="Progression per roll">
-              <div v-for="progress in projectProgress" :key="progress._id" class="col-md-4" role="listitem">
+              <div v-for="progress in projectProgress" :key="progress._id" class="col-md-4">
                 <div class="progress-card" :aria-label="`${getRoleDisplayName(progress.role)} progression`">
                   <!-- Rollnamn och procentuella framsteg -->
                   <div class="d-flex justify-content-between align-items-center mb-3">
@@ -110,7 +110,7 @@
 
             <!-- Grupperade projekt med rollframsteg -->
             <div class="row g-3" role="list" aria-label="Lista över alla projekt">
-              <div v-for="projectGroup in groupedProgress" :key="projectGroup.projectId" class="col-12" role="listitem">
+              <div v-for="projectGroup in groupedProgress" :key="projectGroup.projectId" class="col-12">
                 <div class="project-summary-card"
                   :aria-label="`Projekt ${projectGroup.projectName}, ${Math.round(getProjectOverallProgress(projectGroup.progress))} procent slutfört`">
                   <!-- Projektnamn och övergripande framsteg -->

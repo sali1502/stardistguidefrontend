@@ -2,7 +2,7 @@
 <!-- Rotkomponent för Vue-applikationen - hanterar routing och autentiseringsinitiering -->
 
 <template>
-  <div id="app">
+  <div class="app-container">
     <!-- Router outlet för alla sidkomponenter -->
     <router-view />
   </div>
@@ -24,7 +24,7 @@ onMounted(() => {
 
 <style>
 /* Styling för hela applikationen */
-#app {
+.app-container {
   font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 }
 </style>

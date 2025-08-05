@@ -20,7 +20,7 @@
             <!-- Projektnamn -->
             <div class="mb-3">
               <label for="projectName" class="form-label">
-                Projektnamn <span class="text-danger" aria-label="obligatoriskt fält">*</span>
+                Projektnamn <span class="text-danger" aria-hidden="true">*</span>
               </label>
               <input id="projectName" ref="firstInput" v-model="form.name" type="text" class="form-control"
                 :class="{ 'is-invalid': hasBeenTouched.name && errors.name }" placeholder="Skriv projektnamn" required
@@ -45,9 +45,9 @@
               </h5>
               <p class="mb-2 small">När du skapar ett nytt projekt kommer följande att skapas automatiskt:</p>
               <ul class="mb-0 small">
-                <li><strong>Checklista för designer</strong> med 3 standardpunkter</li>
-                <li><strong>Checklista för utvecklare</strong> med 3 standardpunkter</li>
-                <li><strong>Checklista för testare</strong> med 3 standardpunkter</li>
+                <li><strong>Checklista för designer</strong> med 17 standardpunkter</li>
+                <li><strong>Checklista för utvecklare</strong> med 26 standardpunkter</li>
+                <li><strong>Checklista för testare</strong> med 4 standardpunkter</li>
               </ul>
             </div>
 

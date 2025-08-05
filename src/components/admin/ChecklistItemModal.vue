@@ -17,10 +17,11 @@
 
         <form @submit.prevent="handleSubmit">
           <div class="modal-body">
+
             <!-- Titel för checklistpunkt -->
             <div class="mb-3">
               <label for="checklistTitle" class="form-label">
-                Titel <span class="text-danger" aria-label="obligatoriskt fält">*</span>
+                Titel <span class="text-danger" aria-hidden="true">*</span>
               </label>
               <input id="checklistTitle" ref="firstInput" v-model="form.title" type="text" class="form-control"
                 :class="{ 'is-invalid': hasBeenTouched.title && errors.title }" placeholder="Skriv en titel" required
@@ -37,7 +38,7 @@
             <!-- Innehåll/beskrivning av checklistpunkt -->
             <div class="mb-3">
               <label for="checklistContent" class="form-label">
-                Innehåll <span class="text-danger" aria-label="obligatoriskt fält">*</span>
+                Innehåll <span class="text-danger" aria-hidden="true">*</span>
               </label>
               <textarea id="checklistContent" v-model="form.content" class="form-control"
                 :class="{ 'is-invalid': hasBeenTouched.content && errors.content }" rows="4"

@@ -48,8 +48,8 @@
               <li class="nav-item" role="presentation">
                 <button class="nav-link" :class="{ active: activeRole === 'developer' }"
                   @click="activeRole = 'developer'" @keydown="handleTabKeydown" role="tab"
-                  :aria-selected="activeRole === 'developer' ? 'true' : 'false'" :aria-controls="`tabpanel-developer`"
-                  :id="`tab-developer`" ref="developerTab">
+                  :aria-selected="activeRole === 'developer' ? 'true' : 'false'" :id="`tab-developer`"
+                  ref="developerTab">
                   <i class="bi bi-code-slash me-2" aria-hidden="true"></i>
                   Utvecklare
                   <span class="badge bg-blue-medium ms-2">{{ getItemCount('developer') }}</span>
@@ -71,6 +71,7 @@
           <div class="tab-content">
             <div class="tab-pane active" role="tabpanel" :id="`tabpanel-${activeRole}`"
               :aria-labelledby="`tab-${activeRole}`">
+
               <!-- Laddningsindikator -->
               <div v-if="loading" class="text-center py-4" role="status" aria-live="polite">
                 <div class="spinner-border text-primary" role="status">
@@ -475,7 +476,7 @@ const handleItemSave = async (itemData, callback) => {
       successMessage.value = result.message
       closeItemModal()
 
-      // Rensa framgångsmeddelandet automatiskt efter 20 sekunder (WCAG 2.2.1 standard)
+      // Rensa framgångsmeddelandet automatiskt efter 20 sekunder (WCAG 2.2.1)
       setTimeout(() => {
         successMessage.value = ''
       }, 20000)
@@ -525,7 +526,7 @@ const handleItemDelete = async () => {
       checklists[activeRole.value] = checklistService.formatChecklistForDisplay(result.checklist)
       successMessage.value = result.message
 
-      // Rensa framgångsmeddelandet automatiskt efter 20 sekunder (WCAG 2.2.1 standard)
+      // Rensa framgångsmeddelandet automatiskt efter 20 sekunder (WCAG 2.2.1)
       setTimeout(() => {
         successMessage.value = ''
       }, 20000)

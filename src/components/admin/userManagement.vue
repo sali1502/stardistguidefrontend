@@ -68,7 +68,7 @@
                   <th scope="col">Användarnamn</th>
                   <th scope="col">Roll</th>
                   <th scope="col">Skapad</th>
-                  <th scope="col" width="120">Åtgärder</th>
+                  <th scope="col" style="width: 120px">Åtgärder</th>
                 </tr>
               </thead>
               <tbody>
@@ -115,7 +115,7 @@
                 <tr>
                   <th scope="col">Användarnamn</th>
                   <th scope="col">Roll</th>
-                  <th scope="col" width="120">Åtgärder</th>
+                  <th scope="col" style="width: 120px">Åtgärder</th>
                 </tr>
               </thead>
               <tbody>
@@ -581,7 +581,7 @@ onMounted(() => {
   color: white !important;
 }
 
-/* Fix för små skärmar - förbättra responsivitet för användarkort */
+/* Fix för små skärmar - förbättrar responsivitet för användarkort */
 @media (max-width: 400px) {
   .user-card {
     padding: 0.75rem;

@@ -2,7 +2,7 @@
 
 <template>
   <div class="project-management">
-    <!-- Sidhuvud med titel och skapaknapp -->
+    <!-- Sidhuvud med titel och skapa-knapp -->
     <div
       class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
       <div>
@@ -67,7 +67,7 @@
                 <tr>
                   <th scope="col">Projektnamn</th>
                   <th scope="col">Skapad</th>
-                  <th scope="col" width="150">Åtgärder</th>
+                  <th scope="col" style="width: 150px">Åtgärder</th>
                 </tr>
               </thead>
               <tbody>
@@ -114,7 +114,7 @@
               <thead class="table-light">
                 <tr>
                   <th scope="col">Projektnamn</th>
-                  <th scope="col" width="150">Åtgärder</th>
+                  <th scope="col" style="width: 150px">Åtgärder</th>
                 </tr>
               </thead>
               <tbody>

@@ -71,7 +71,7 @@
                   <th scope="col">Roll</th>
                   <th scope="col">Innehåll</th>
                   <th scope="col">Skapad</th>
-                  <th scope="col" width="120">Åtgärder</th>
+                  <th scope="col" style="width: 120px">Åtgärder</th>
                 </tr>
               </thead>
               <tbody>
@@ -127,7 +127,7 @@
                 <tr>
                   <th scope="col">Titel</th>
                   <th scope="col">Roll</th>
-                  <th scope="col" width="120">Åtgärder</th>
+                  <th scope="col" style="width: 120px">Åtgärder</th>
                 </tr>
               </thead>
               <tbody>
@@ -171,7 +171,7 @@
 
           <!-- Mobil kortlayout för små skärmar -->
           <div class="d-md-none" role="list" aria-label="Lista över inlägg">
-            <article v-for="post in postsStore.posts" :key="post.id || post._id" class="post-card mb-3" role="listitem"
+            <article v-for="post in postsStore.posts" :key="post.id || post._id" class="post-card mb-3"
               :aria-label="`Inlägg: ${post.title}`">
               <div class="d-flex justify-content-between align-items-start">
                 <div class="d-flex align-items-start flex-grow-1">
@@ -244,7 +244,7 @@ const modalReturnFocusElement = ref(null)
 // Objekt för att hålla referenser till knappar
 const buttonRefs = ref({})
 
-// Funktion för att sätta button referenser
+// Funktion för att sätta knapp-referenser
 const setButtonRef = (el, key) => {
   if (el) {
     buttonRefs.value[key] = el
@@ -274,7 +274,7 @@ const closeModal = async () => {
   await nextTick()
 
   if (!isEditing.value && postsStore.posts.length > 0) {
-    // Om vi skapade ett nytt inlägg, sätt fokus på första redigera-knappen
+    // Vid skapande av nytt inlägg, sätt fokus på första redigera-knappen
     const firstPost = postsStore.posts[0]
     const firstEditButton = buttonRefs.value[`edit-${firstPost.id || firstPost._id}`]
     if (firstEditButton) {
@@ -435,7 +435,7 @@ const truncateContent = (content, maxLength) => {
   const urlRegex = /https?:\/\/[^\s<>"{}|\\^`\[\]]+/gi
   const urls = content.match(urlRegex) || []
 
-  // Om texten innehåller URLs, var försiktig med trunkering
+  // Om texten innehåller URLs
   if (urls.length > 0) {
     // Hitta position för första URL
     const firstUrlStart = content.search(urlRegex)
@@ -560,7 +560,7 @@ onMounted(() => {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
-/* Förbättrad fokusindikator för tangentbordsnavigering */
+/* Fokusindikator för tangentbordsnavigering */
 .btn:focus,
 .btn-close:focus {
   outline: 2px solid #0066cc;
@@ -613,7 +613,7 @@ onMounted(() => {
   color: white !important;
 }
 
-/* Fix för små skärmar - förbättra responsivitet */
+/* Fix för små skärmar - förbättrad responsivitet */
 @media (max-width: 400px) {
   .post-card {
     padding: 0.75rem;
