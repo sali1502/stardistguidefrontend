@@ -1,4 +1,4 @@
-<!-- components/admin/ProjectManagement.vue - adminkomponent för att hantera projekt med CRUD-operationer och checklisthantering -->
+<!-- components/admin/ProjectManagement.vue - Adminkomponent för att hantera projekt med CRUD-operationer och checklisthantering -->
 
 <template>
   <div class="project-management">
@@ -362,7 +362,7 @@ const handleSave = async (projectData, callback) => {
       successMessage.value = result.message || 'Operationen lyckades'
       closeModal()
 
-      // Rensa framgångsmeddelandet efter 20 sekunder (WCAG 2.2.1 standard)
+      // Rensa framgångsmeddelandet efter 20 sekunder (WCAG 2.1 standard)
       setTimeout(() => {
         successMessage.value = ''
       }, 20000)
@@ -400,7 +400,7 @@ const handleDelete = async () => {
     if (result && result.success) {
       successMessage.value = result.message
 
-      // Rensa meddelandet efter 20 sekunder (WCAG 2.2.1 standard)
+      // Rensa meddelandet efter 20 sekunder (WCAG 2.1 standard)
       setTimeout(() => {
         successMessage.value = ''
       }, 20000)
@@ -550,7 +550,7 @@ onMounted(() => {
   color: white !important;
 }
 
-/* Små skärmar - förbättra responsivitet för projektkort */
+/* Små skärmar */
 @media (max-width: 400px) {
   .project-card {
     padding: 0.75rem;
@@ -571,7 +571,6 @@ onMounted(() => {
 
   .project-card .flex-grow-1 {
     min-width: 0;
-    /* Tillåt content att krympa */
     word-break: break-word;
   }
 
@@ -582,7 +581,7 @@ onMounted(() => {
   }
 }
 
-/* Förbättra hantering av långa projektnamn på alla skärmstorlekar */
+/* Hantering av långa projektnamn på alla skärmstorlekar */
 .project-card .fw-bold {
   overflow-wrap: break-word;
   word-wrap: break-word;

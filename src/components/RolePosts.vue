@@ -1,4 +1,4 @@
-<!-- components/RolePosts.vue - -visar rollspecifika inlägg på dashboard -->
+<!-- components/RolePosts.vue - -Visar rollspecifika inlägg på dashboard -->
 
 <template>
   <div class="role-posts">
@@ -76,7 +76,7 @@ const makeLinksClickable = (text) => {
   if (!text) return ''
 
   const urlRegex = /https?:\/\/[^\s<>"{}|\\^`\[\]]+(?:#[^\s<>"{}|\\^`\[\]]*)?/gi
-  const processedUrls = new Set() // Håll reda på bearbetade URL:er
+  const processedUrls = new Set()
 
   return text.replace(urlRegex, (url) => {
     let cleanUrl = url
@@ -89,7 +89,6 @@ const makeLinksClickable = (text) => {
       punctuation = punctuationMatch[1]
     }
 
-    // Om vi redan har bearbetat denna URL, returnera den som vanlig text
     if (processedUrls.has(cleanUrl)) {
       return url
     }

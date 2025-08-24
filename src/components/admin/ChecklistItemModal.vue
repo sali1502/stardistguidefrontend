@@ -1,4 +1,4 @@
-<!-- components/admin/ChecklistItemModal.vue - modal för att skapa och redigera checklistpunkter med unikhetstvalidering -->
+<!-- components/admin/ChecklistItemModal.vue - Modal för att skapa och redigera checklistpunkter med unikhetstvalidering -->
 
 <template>
   <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.7);" aria-modal="true"

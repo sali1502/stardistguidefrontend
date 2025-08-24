@@ -1,4 +1,4 @@
-<!-- components/admin/ChecklistItemDeleteModal.vue - bekräftelsedialog för borttagning av checklistpunkter -->
+<!-- components/admin/ChecklistItemDeleteModal.vue - Bekräftelsedialog för borttagning av checklistpunkter -->
 
 <template>
   <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.8);" aria-modal="true"

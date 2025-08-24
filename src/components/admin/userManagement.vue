@@ -1,4 +1,4 @@
-<!-- components/admin/userManagement.vue - adminskomponent för att hantera användare med CRUD-operationer -->
+<!-- components/admin/userManagement.vue - Adminskomponent för att hantera användare med CRUD-operationer -->
 
 <template>
   <div class="user-management">
@@ -327,7 +327,7 @@ const handleSave = async (userData, callback) => {
       successMessage.value = result.message || 'Operationen lyckades'
       closeModal()
 
-      // Rensa framgångsmeddelandet efter 20 sekunder (WCAG 2.2.1 standard)
+      // Rensa framgångsmeddelandet efter 20 sekunder (WCAG 2.1 standard)
       setTimeout(() => {
         successMessage.value = ''
       }, 20000)
@@ -365,7 +365,7 @@ const handleDelete = async () => {
     if (result && result.success) {
       successMessage.value = result.message
 
-      // Rensa meddelandet efter 20 sekunder (WCAG 2.2.1 standard)
+      // Rensa meddelandet efter 20 sekunder (WCAG 2.1 standard)
       setTimeout(() => {
         successMessage.value = ''
       }, 20000)
@@ -581,7 +581,7 @@ onMounted(() => {
   color: white !important;
 }
 
-/* Fix för små skärmar - förbättrar responsivitet för användarkort */
+/* Responsivitet för användarkort */
 @media (max-width: 400px) {
   .user-card {
     padding: 0.75rem;
@@ -602,7 +602,6 @@ onMounted(() => {
 
   .user-card .flex-grow-1 {
     min-width: 0;
-    /* Tillåt content att krympa */
     word-break: break-word;
   }
 
@@ -613,7 +612,7 @@ onMounted(() => {
   }
 }
 
-/* Förbättra hantering av långa användarnamn på alla skärmstorlekar */
+/* Hantering av långa användarnamn på alla skärmstorlekar */
 .user-card .fw-bold {
   overflow-wrap: break-word;
   word-wrap: break-word;

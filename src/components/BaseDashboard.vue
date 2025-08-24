@@ -1,4 +1,4 @@
-<!-- components/BaseDashboard.vue - huvudlayout för instrumentpanelen med autentiseringskontroll och användarinfo -->
+<!-- components/BaseDashboard.vue - Huvudlayout för instrumentpanelen med autentiseringskontroll och användarinfo -->
 
 <template>
   <div class="dashboard-container">

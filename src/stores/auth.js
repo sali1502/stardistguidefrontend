@@ -31,7 +31,7 @@ export const useAuthStore = defineStore('auth', () => {
       const response = await userService.login(username, password)
       
       if (response.success) {
-        // Spara användardata och token i både state och localStorage
+        // Spara användardata och token i både Pinia Store (state) och localStorage
         user.value = response.user
         token.value = response.token
         isAuthenticated.value = true

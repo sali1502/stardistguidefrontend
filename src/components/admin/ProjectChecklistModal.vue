@@ -1,4 +1,4 @@
-<!-- components/admin/ProjectChecklistModal.vue - modal för att hantera checklistpunkter för alla roller inom ett projekt -->
+<!-- components/admin/ProjectChecklistModal.vue - Modal för att hantera checklistpunkter för alla roller inom ett projekt -->
 
 <template>
   <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" aria-modal="true"
@@ -476,7 +476,7 @@ const handleItemSave = async (itemData, callback) => {
       successMessage.value = result.message
       closeItemModal()
 
-      // Rensa framgångsmeddelandet automatiskt efter 20 sekunder (WCAG 2.2.1)
+      // Rensa framgångsmeddelandet automatiskt efter 20 sekunder (WCAG 2.1)
       setTimeout(() => {
         successMessage.value = ''
       }, 20000)

@@ -1,4 +1,4 @@
-<!-- components/admin/PostManagement.vue - administrationskomponent för att hantera inlägg med CRUD-operationer och responsiv design -->
+<!-- components/admin/PostManagement.vue - Administrationskomponent för att hantera inlägg med CRUD-operationer och responsiv design -->
 
 <template>
   <div class="post-management">
@@ -355,7 +355,7 @@ const handleDelete = async () => {
     if (result && result.success) {
       successMessage.value = result.message
 
-      // Rensa meddelandet efter 20 sekunder (WCAG 2.2.1 standard)
+      // Rensa meddelandet efter 20 sekunder (WCAG 2.1 standard)
       setTimeout(() => {
         successMessage.value = ''
       }, 20000)
@@ -446,7 +446,7 @@ const truncateContent = (content, maxLength) => {
       const urlEnd = firstUrlStart + firstUrl.length
 
       if (urlEnd > maxLength) {
-        // URL:en skulle klippas av - trunkera före URL:en istället
+        // Om URL:en klipps av - trunkera före URL:en istället
         if (firstUrlStart > 20) {
           return content.substring(0, firstUrlStart - 1).trim() + '...'
         } else {
@@ -645,7 +645,7 @@ onMounted(() => {
   }
 }
 
-/* Förbättra hantering av långa titlar på alla skärmstorlekar */
+/* Hantering av långa titlar på alla skärmstorlekar */
 .post-card .fw-bold {
   overflow-wrap: break-word;
   word-wrap: break-word;

@@ -1,4 +1,4 @@
-<!-- components/admin/ProjectFormModal.vue - modal för att skapa och redigera projekt med automatisk checklistgenerering från backend -->
+<!-- components/admin/ProjectFormModal.vue - Modal för att skapa och redigera projekt med automatisk checklistgenerering från backend -->
 
 <template>
   <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" aria-modal="true"
@@ -229,7 +229,7 @@ const handleSubmit = async () => {
   // Rensa tidigare API-fel
   apiError.value = ''
 
-  // Validera innan vi skickar
+  // Validera innan data skickas
   if (!validateForm()) {
     // Sätt fokus på första fältet med fel
     await nextTick()

@@ -1,4 +1,4 @@
-<!-- components/RoleDashboardTabs.vue - komponent som kombinerar projektväljare, checklista och rollspecifika inlägg -->
+<!-- components/RoleDashboardTabs.vue - Komponent som kombinerar projektväljare, checklista och rollspecifika inlägg -->
 
 <template>
   <div class="role-dashboard-tabs">

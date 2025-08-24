@@ -1,4 +1,4 @@
-<!-- components/AppHeader.vue - sidhuvud med navigation, logotyp och utloggningsfunktion -->
+<!-- components/AppHeader.vue - Sidhuvud med navigation, logotyp och utloggningsfunktion -->
 
 <template>
   <div class="dashboard-header">

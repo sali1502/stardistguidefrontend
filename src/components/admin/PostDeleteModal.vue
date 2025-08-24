@@ -1,4 +1,4 @@
-<!-- components/admin/PostDeleteModal.vue - bekräftelsedialog för borttagning av inlägg -->
+<!-- components/admin/PostDeleteModal.vue - Bekräftelsedialog för borttagning av inlägg -->
 
 <template>
   <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" aria-modal="true"
@@ -104,7 +104,7 @@ const truncateContent = (content, maxLength) => {
   const urls = content.match(urlRegex)
 
   if (urls && urls.length > 0) {
-    // Om innehållet börjar med en URL, visa bara domänen
+    // Om innehållet börjar med en URL, visa bara domänen och max 20 extra tecken
     if (content.trim().startsWith(urls[0])) {
       try {
         const url = new URL(urls[0])
@@ -117,7 +117,7 @@ const truncateContent = (content, maxLength) => {
           return domain
         }
       } catch (e) {
-        // Om URL parsing misslyckas, använd standard trunkering
+        // Felaktig URL - använd standard trunkering med maxLength (50 tecken)
       }
     }
   }

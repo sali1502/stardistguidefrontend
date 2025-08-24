@@ -1,4 +1,4 @@
-<!-- components/admin/AdminOverview.vue - adminöversikt med statistik och navigation till olika adminfunktioner -->
+<!-- components/admin/AdminOverview.vue - Adminöversikt med statistik och navigation till olika adminfunktioner -->
 
 <template>
   <div class="admin-overview">
@@ -369,7 +369,7 @@ onMounted(() => {
   letter-spacing: 0.5px;
 }
 
-/* Kort för roller - styling */
+/* Kort för roller */
 .role-card {
   background: #fff;
   border: 2px solid #e2e8f0;

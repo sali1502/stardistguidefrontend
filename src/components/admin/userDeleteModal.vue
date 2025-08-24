@@ -1,25 +1,16 @@
-<!-- components/admin/UserDeleteModal.vue - bekräftelsedialog för borttagning av användare -->
+<!-- components/admin/UserDeleteModal.vue - Bekräftelsedialog för borttagning av användare -->
 
 <template>
-  <div class="modal fade show d-block" 
-       tabindex="-1" 
-       style="background-color: rgba(0,0,0,0.5);"
-       aria-modal="true"
-       role="alertdialog"
-       :aria-labelledby="modalTitleId"
-       :aria-describedby="modalDescriptionId"
-       @click.self="$emit('cancel')"
-       @keydown.escape="$emit('cancel')">
+  <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" aria-modal="true"
+    role="alertdialog" :aria-labelledby="modalTitleId" :aria-describedby="modalDescriptionId"
+    @click.self="$emit('cancel')" @keydown.escape="$emit('cancel')">
     <div class="modal-dialog modal-sm">
       <div class="modal-content">
         <div class="modal-header border-0">
           <h4 class="modal-title text-slate-darkest" :id="modalTitleId">
             Bekräfta borttagning
           </h4>
-          <button type="button" 
-                  class="btn-close" 
-                  @click="$emit('cancel')"
-                  aria-label="Stäng dialog">
+          <button type="button" class="btn-close" @click="$emit('cancel')" aria-label="Stäng dialog">
           </button>
         </div>
 
@@ -29,7 +20,7 @@
             Är du säker på att du vill radera användaren
             <strong class="text-slate-darkest">{{ user.username }}</strong>?
           </h5>
-          
+
           <div class="alert alert-warning" role="region" aria-label="Varning">
             <i class="bi bi-exclamation-triangle me-2" aria-hidden="true"></i>
             <span class="small">Detta kan inte ångras. Användarens data kommer att tas bort permanent.</span>
@@ -37,16 +28,11 @@
         </div>
 
         <div class="modal-footer border-0 justify-content-center">
-          <button type="button" 
-                  ref="cancelButton"
-                  class="btn btn-slate-outline" 
-                  @click="$emit('cancel')">
+          <button type="button" ref="cancelButton" class="btn btn-slate-outline" @click="$emit('cancel')">
             Avbryt
           </button>
-          <button type="button" 
-                  class="btn btn-danger-muted" 
-                  @click="$emit('confirm')"
-                  aria-label="Bekräfta radering av användare">
+          <button type="button" class="btn btn-danger-muted" @click="$emit('confirm')"
+            aria-label="Bekräfta radering av användare">
             Radera
           </button>
         </div>

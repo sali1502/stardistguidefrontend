@@ -1,4 +1,4 @@
-<!-- components/ProjectSelector.vue - dropdown-meny som visar tillgängliga projekt och status för valt projekt -->
+<!-- components/ProjectSelector.vue - Dropdown-meny som visar tillgängliga projekt och status för valt projekt -->
 
 <template>
   <div class="project-selector">

@@ -21,7 +21,7 @@ const routes = [
     redirect: '/login'
   },
 
-  // Inloggningssida - endast för icke-inloggade användare
+  // Inloggningssida - för icke-inloggade användare
   {
     path: '/login',
     name: 'Login',
@@ -135,7 +135,7 @@ router.beforeEach((to, from, next) => {
     }
 
     document.title = `${title} - Guide för webbtillgänglighet`
-    
+
     // Meddela skärmläsare om titeländring via ARIA live region
     const announcer = document.getElementById('page-announcer')
     if (announcer && authStore.isAuthenticated) {

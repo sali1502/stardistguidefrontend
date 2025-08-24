@@ -1,5 +1,5 @@
 /* main.js */
-/* Huvudfil för Vue-applikationen - konfigurerar och startar appen */
+/* Huvudfil för Vue-applikationen - Konfigurerar och startar appen */
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'

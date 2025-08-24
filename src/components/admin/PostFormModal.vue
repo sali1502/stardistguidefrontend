@@ -1,8 +1,9 @@
-<!-- components/admin/PostFormModal.vue - modal för att skapa och redigera rollspecifika inlägg -->
+<!-- components/admin/PostFormModal.vue - Modal för att skapa och redigera rollspecifika inlägg -->
 
 <template>
-  <div class="modal fade show d-block post-form-modal" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" aria-modal="true"
-    role="dialog" :aria-labelledby="modalTitleId" @click.self="handleBackdropClick" @keydown.escape="handleEscape">
+  <div class="modal fade show d-block post-form-modal" tabindex="-1" style="background-color: rgba(0,0,0,0.5);"
+    aria-modal="true" role="dialog" :aria-labelledby="modalTitleId" @click.self="handleBackdropClick"
+    @keydown.escape="handleEscape">
     <div class="modal-dialog" role="document">
       <div class="modal-content" ref="modalContent">
         <div class="modal-header">
@@ -40,42 +41,35 @@
               </div>
               <div class="dropdown w-100">
                 <button id="role" class="btn btn-light dropdown-toggle w-100 text-start form-control"
-                  :class="{ 'is-invalid': hasBeenTouched.role && errors.role }"
-                  type="button" data-bs-toggle="dropdown"
-                  aria-labelledby="role-label"
-                  :aria-describedby="getAriaDescribedBy('role', 'role-info')"
-                  :aria-invalid="hasBeenTouched.role && errors.role ? 'true' : 'false'"
-                  :disabled="loading"
-                  @blur="hasBeenTouched.role = true"
-                  @keydown="handleFormKeydown">
+                  :class="{ 'is-invalid': hasBeenTouched.role && errors.role }" type="button" data-bs-toggle="dropdown"
+                  aria-labelledby="role-label" :aria-describedby="getAriaDescribedBy('role', 'role-info')"
+                  :aria-invalid="hasBeenTouched.role && errors.role ? 'true' : 'false'" :disabled="loading"
+                  @blur="hasBeenTouched.role = true" @keydown="handleFormKeydown">
                   {{ getRoleDisplayName(form.role) || 'Välj roll' }}
                 </button>
                 <ul class="dropdown-menu w-100">
                   <li>
                     <a class="dropdown-item" href="#" @click.prevent="selectRole('designer')"
-                      :class="{ active: form.role === 'designer' }"
-                      style="text-decoration: none !important">
+                      :class="{ active: form.role === 'designer' }" style="text-decoration: none !important">
                       Designer
                     </a>
                   </li>
                   <li>
                     <a class="dropdown-item" href="#" @click.prevent="selectRole('developer')"
-                      :class="{ active: form.role === 'developer' }"
-                      style="text-decoration: none !important">
+                      :class="{ active: form.role === 'developer' }" style="text-decoration: none !important">
                       Utvecklare
                     </a>
                   </li>
                   <li>
                     <a class="dropdown-item" href="#" @click.prevent="selectRole('tester')"
-                      :class="{ active: form.role === 'tester' }"
-                      style="text-decoration: none !important">
+                      :class="{ active: form.role === 'tester' }" style="text-decoration: none !important">
                       Testare
                     </a>
                   </li>
                 </ul>
               </div>
-              <div v-if="hasBeenTouched.role && errors.role" id="role-error" class="invalid-feedback d-block" role="alert"
-                aria-live="polite">
+              <div v-if="hasBeenTouched.role && errors.role" id="role-error" class="invalid-feedback d-block"
+                role="alert" aria-live="polite">
                 <i class="bi bi-exclamation-triangle-fill me-1"></i>
                 {{ errors.role }}
               </div>
@@ -218,10 +212,10 @@ const getAriaDescribedBy = (fieldName, additionalId = null) => {
 const selectRole = (role) => {
   form.value.role = role
   hasBeenTouched.value.role = true
-  
+
   // Validera direkt
   validateForm()
-  
+
   // Annonsera rollbeskrivning för skärmläsare om en roll valts
   if (role) {
     const description = getRoleDescription(role)

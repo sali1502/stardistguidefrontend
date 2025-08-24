@@ -1,4 +1,4 @@
-<!-- components/RoleChecklist.vue - interaktiv checklista för olika användarroller (designer, utvecklare, testare) -->
+<!-- components/RoleChecklist.vue - Interaktiv checklista för olika användarroller (designer, utvecklare, testare) -->
 
 <template>
   <div class="role-checklist">
@@ -191,7 +191,7 @@ const toggleChecklistItem = async (item, completed) => {
       // Uppdatera ARIA live message för skärmläsare
       ariaLiveMessage.value = `${item.title} har markerats som ${completed ? 'slutförd' : 'ej slutförd'}`
 
-      // Emit progress update
+      // Meddela projektframsteg
       emit('progress-updated', {
         completedItems: completedCount.value,
         totalItems: totalCount.value
@@ -407,7 +407,6 @@ watch(() => [props.projectId, props.userRole], () => {
   outline-offset: 2px !important;
 }
 
-/* Ytterligare säkerhet för alla länktyper */
 .checklist-items a,
 .checklist-items a:link,
 .checklist-items a:visited {

@@ -1,4 +1,4 @@
-<!-- components/admin/UserFormModal.vue - modal för att skapa och redigera användare -->
+<!-- components/admin/UserFormModal.vue - Modal för att skapa och redigera användare -->
 
 <template>
   <div class="modal fade show d-block user-form-modal" tabindex="-1" style="background-color: rgba(0,0,0,0.5);"
@@ -35,7 +35,7 @@
               </div>
             </div>
 
-            <!-- Rollval för användaren -->
+            <!-- Rollval för användare -->
             <div class="mb-3">
               <div id="role-label" class="form-label">
                 Roll <span class="text-danger" aria-hidden="true">*</span>

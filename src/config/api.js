@@ -1,13 +1,13 @@
 // config/api.js
-// Centraliserad API-konfiguration med automatisk autentisering och felhantering
+// Centraliserad API-konfiguration med automatisk autentisering och felhantering med Axios
 
 import axios from 'axios'
 import { useAuthStore } from '@/stores/auth'
 
-// Grundläggande API-konfiguration
+// Backend API bas-URL - använder miljövariabel eller fallback till produktionserver
 export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://accessibility-guide-backend.onrender.com'
 
-// Samlade API-slutpunkter för enkel underhållning
+// Samlade API-slutpunkter
 export const API_ENDPOINTS = {
   LOGIN: '/users/login',
   USERS: '/users',
@@ -17,7 +17,7 @@ export const API_ENDPOINTS = {
   PROGRESS: '/progress'
 }
 
-// Skapa huvudsaklig axios-instans med standardinställningar
+// Axios-instans med standardinställningar
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000, // 10 sekunder timeout
@@ -26,13 +26,13 @@ const apiClient = axios.create({
   }
 })
 
-// Interceptor för utgående förfrågningar - lägg till autentisering automatiskt
+// Interceptor för utgående förfrågningar - lägger till autentisering automatiskt
 apiClient.interceptors.request.use(
   (config) => {
     const authStore = useAuthStore()
     const token = authStore.token || localStorage.getItem('auth_token')
     
-    // Lägg till JWT-token i Authorization-header om det finns
+    // Lägger till JWT-token i Authorization-header om det finns
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
@@ -44,7 +44,7 @@ apiClient.interceptors.request.use(
   }
 )
 
-// Interceptor för inkommande svar - hantera fel och automatisk utloggning
+// Interceptor för inkommande svar - hanterar fel och automatisk utloggning
 apiClient.interceptors.response.use(
   (response) => {
     return response
@@ -52,7 +52,7 @@ apiClient.interceptors.response.use(
   (error) => {
     const authStore = useAuthStore()
     
-    // Hantera olika typer av fel baserat på HTTP-status
+    // Hanterar olika typer av fel baserat på HTTP-status
     if (error.response) {
       const { status, data } = error.response
       
@@ -104,34 +104,34 @@ apiClient.interceptors.response.use(
   }
 )
 
-// Metoder för vanliga HTTP-operationer
+// CRUD för API-operationer
 export const api = {
-  // Hämta data från servern
+  // GET - Hämta data
   get: (url, config = {}) => {
     return apiClient.get(url, config)
   },
   
-  // Skicka ny data till servern
+  // POST - Skicka ny data
   post: (url, data = {}, config = {}) => {
     return apiClient.post(url, data, config)
   },
   
-  // Uppdatera befintlig data (fullständig ersättning)
+  // PUT - Uppdatera befintlig data (fullständig)
   put: (url, data = {}, config = {}) => {
     return apiClient.put(url, data, config)
   },
   
-  // Uppdatera befintlig data (partiell uppdatering)
+  // PATCH - Uppdatera befintlig data (partiell)
   patch: (url, data = {}, config = {}) => {
     return apiClient.patch(url, data, config)
   },
   
-  // Ta bort data från servern
+  // DELETE - Ta bort data
   delete: (url, config = {}) => {
     return apiClient.delete(url, config)
   }
 }
 
-// Exportera axios-instansen för avancerad användning vid behov
+// Exportera Axios-instansen för avancerad användning vid behov
 export { apiClient }
 export default api
